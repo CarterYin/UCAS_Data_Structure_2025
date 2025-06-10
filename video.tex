@@ -1,0 +1,563 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{STKaiti} % 设置加粗字体为 STKaiti 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{尹超,\ 2023K8009926003}
+    \chead{数据结构与算法课程设计报告}
+    \lhead{Report}
+
+
+%文档信息设置
+\title{视频演示稿：迷宫生成与求解程序 }
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2025.6}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的课程设计报告的演示视频的讲稿。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+
+
+
+
+
+
+
+
+
+% Script-specific commands
+\newcommand{\oral}[1]{\textit{#1}} % For oral instructions/narration
+\newcommand{\operation}[1]{\textbf{#1}} % For on-screen operations/actions
+
+% Start of the Video Script Section
+\chapter*{视频演示稿：迷宫生成与求解程序} % Using \chapter* for a clear, unnumbered title for this section
+\addcontentsline{toc}{chapter}{视频演示稿：迷宫生成与求解程序} % Optional: if you want this in ToC
+
+\begin{center}
+    \textbf{视频时长目标：} 不超过3分钟
+\end{center}
+\vspace{1em}
+
+\hrulefill
+\vspace{1em}
+
+\noindent \textbf{(开场：程序GUI界面已打开，可以先展示一个已生成的矩形迷宫)}
+
+\section*{步骤1：开场白与程序概述 (预计用时: 0:00 - 0:25)}
+\begin{itemize}[leftmargin=*]
+    \item \oral{“大家好！今天我将为大家演示一款基于Python和Tkinter图形库开发的迷宫生成与求解程序。这款程序不仅能够动态创建和展示常见的矩形迷宫，还能生成结构独特的三角形迷宫。更重要的是，它集成了两种经典的寻路算法——广度优先搜索（BFS）和深度优先搜索（DFS）——来高效地找出迷宫中的路径。”}
+    \item \operation{(可选，快速演示) 快速点击“Clear Path”清除当前路径，然后点击“Solve (BFS)”或“Solve (DFS)”快速展示一次路径求解效果。}
+\end{itemize}
+
+\section*{步骤2：核心数据结构剖析 (预计用时: 0:25 - 1:05)}
+\begin{itemize}[leftmargin=*]
+    \item \oral{“我们首先深入剖析程序的核心数据结构。迷宫的逻辑抽象主要由一个名为 \texttt{Maze} 的类来封装和管理。在该类中，最为关键的属性是 \texttt{self.cells}，这是一个Python字典，它构成了迷宫的数字骨架。”}
+    \item \operation{(切换到代码编辑器，高亮显示 \texttt{Maze} 类的定义以及 \texttt{self.cells} 属性的初始化部分。)}
+    \item \oral{“\texttt{self.cells} 字典的键（key）是代表每个迷宫单元格的唯一标识符（ID）——例如，对于矩形迷宫，这是一个形如 \texttt{(行索引, 列索引)} 的元组。而对应的值（value）是另一个嵌套字典，详细记录了该单元格的各项属性，主要包括：”}
+        \begin{itemize}
+            \item \oral{“\texttt{'walls'}：一个字典，记录当前单元格与其所有潜在邻居之间的墙壁状态。键是邻居单元格的ID，值若为 \texttt{True} 则表示存在墙壁，\texttt{False} 则表示通路。”}
+            \item \oral{“\texttt{'visited\_gen'} 和 \texttt{'visited\_solve'}：布尔型标志位，分别用于在迷宫生成算法和路径求解算法执行过程中，标记该单元格是否已被访问。”}
+            \item \oral{“\texttt{'parent'}：在寻路算法（如BFS或DFS）执行后，存储构成路径时当前单元格的前驱单元格的ID，这对于从终点回溯以重建完整路径至关重要。”}
+            \item \oral{“此外，根据迷宫类型的不同，单元格数据还会包含特定几何信息，例如三角形迷宫单元格的顶点坐标 \texttt{'vertices'} 和中心点坐标 \texttt{'center\_coords'}，这些主要用于在Canvas上精确绘制迷宫；以及 \texttt{'is\_up'} 属性，用于区分三角形是指向还是向下。”}
+        \end{itemize}
+    \item \operation{(可以快速展示代码中 \texttt{\_initialize\_rectangular\_grid} 或 \texttt{\_initialize\_triangular\_grid} 方法内 \texttt{self.cells} 被赋值的片段，或者一个具体单元格字典结构的注释示例。)}
+\end{itemize}
+
+\section*{步骤3：关键算法设计解析 (预计用时: 1:05 - 1:50)}
+\begin{itemize}[leftmargin=*]
+    \item \oral{“接下来，我们解析程序中关键的算法设计。迷宫的生成主要采用的是‘随机深度优先搜索’（Randomized Depth-First Search）算法。”}
+    \item \operation{(切换到代码，高亮显示 \texttt{generate\_maze\_randomly} 方法的核心逻辑。)}
+    \item \oral{“该算法从一个指定的起始单元格开始，将其标记为已访问，并将其压入栈中。当栈不为空时，查看栈顶单元格，随机选择一个尚未访问的邻居。如果找到这样的邻居，则打通两者之间的墙壁，将该邻居标记为已访问并压入栈中。如果没有未访问的邻居，则从栈中弹出一个单元格（回溯）。这个过程持续进行，直到栈为空，从而生成一个所有单元格都连通的完美迷宫。”}
+    \item \oral{“在路径求解方面，程序实现了两种广为人知的图搜索算法：”}
+        \begin{itemize}
+            \item \oral{“\textbf{广度优先搜索 (BFS)}：”} \operation{[高亮 \texttt{solve\_bfs} 方法]} \oral{“BFS从起点开始，逐层向外探索所有可达的邻居单元格。它使用一个队列（在Python中常用 \texttt{collections.deque} 实现）来管理待访问的单元格。由于其逐层搜索的特性，BFS能够保证找到从起点到终点的最短路径（在无权图中，即边数最少的路径）。”}
+            \item \oral{“\textbf{深度优先搜索 (DFS)}：”} \operation{[高亮 \texttt{solve\_dfs} 方法]} \oral{“DFS则沿着一条路径尽可能深地探索，直到达到终点或遇到无法前进的‘死胡同’时才回溯，尝试其他分支。它通常使用栈（同样可由 \texttt{collections.deque} 实现）来管理待访问的单元格。DFS找到的路径不一定是最短的，但它能有效地找到一条连通起点和终点的路径。”}
+        \end{itemize}
+    \item \oral{“这两种求解算法都会依据单元格数据中的 \texttt{'walls'} 信息来判断单元格间的可通行性，利用 \texttt{'visited\_solve'} 状态避免重复搜索和无限循环，并借助 \texttt{'parent'} 指针在找到终点后反向构造出完整路径。”}
+\end{itemize}
+
+\section*{步骤4：程序功能实操演示 (预计用时: 1:50 - 2:45)}
+\noindent \operation{操作与口述（同步进行）：}
+\begin{enumerate}[label=\arabic*., leftmargin=*]
+    \item \textbf{矩形迷宫演示：}
+        \begin{itemize}
+            \item \oral{“现在，我们来实际操作演示。首先选择‘Rectangular’（矩形）迷宫类型。”} \operation{[点击界面上的 "Rectangular" 单选按钮]}
+            \item \oral{“我们设定行数为12，列数为18。”} \operation{[在对应的输入框中分别输入12和18]}
+            \item \oral{“点击‘Generate Maze’按钮。”} \operation{[点击 "Generate Maze" 按钮]} \oral{“大家可以看到，一个新的矩形迷宫已经生成。界面上，起点通常以浅绿色高亮，终点以浅红色高亮。”}
+            \item \oral{“接下来，我们使用BFS算法来求解路径。点击‘Solve (BFS - Shortest)’。”} \operation{[点击 "Solve (BFS - Shortest)" 按钮]} \oral{“路径已找到！蓝色的线条清晰地标示出了从起点到终点的最短路径。同时，下方的状态栏也会更新，显示路径的相关信息，如找到路径的算法和步数。”}
+            \item \oral{“我们可以点击‘Clear Path’按钮来清除当前显示的路径。”} \operation{[点击 "Clear Path" 按钮]}
+            \item \oral{“现在，我们尝试使用DFS算法求解同一迷宫。点击‘Solve (DFS)’。”} \operation{[点击 "Solve (DFS)" 按钮]} \oral{“DFS也成功找到了路径。请注意，DFS找到的路径可能与BFS找到的最短路径不同，它呈现的是算法探索过程中的一条可行解。”}
+            \item \oral{“再次清除路径，为下一次演示做准备。”} \operation{[点击 "Clear Path" 按钮]}
+        \end{itemize}
+    \item \textbf{三角形迷宫演示：}
+        \begin{itemize}
+            \item \oral{“下面，我们切换到‘Triangular’（三角形）迷宫类型。”} \operation{[点击界面上的 "Triangular" 单选按钮]}
+            \item \oral{“设定三角形迷宫的行数为7行。”} \operation{[在 "Triangle Rows" 输入框中输入7]}
+            \item \oral{“点击‘Generate Maze’。”} \operation{[点击 "Generate Maze" 按钮]} \oral{“一个具有独特蜂窝状结构的三角形迷宫便生成了。同样，起点和终点有颜色标记。”}
+            \item \oral{“我们依然可以使用BFS来求解这个三角形迷宫的路径。”} \operation{[点击 "Solve (BFS - Shortest)" 按钮]} \oral{“路径已成功找到并显示。”}
+            \item \oral{“本程序还内置了参数校验机制。例如，如果我们输入一个无效的参数，如非数字或超出预设范围的数值，程序会弹出错误提示框，引导用户输入正确的值。”} \operation{[快速尝试在行数或列数输入框中输入一个字母或一个非常大的数字，然后点击 "Generate Maze"，展示弹出的 \texttt{messagebox} 错误提示，然后关闭提示框。]}
+        \end{itemize}
+\end{enumerate}
+
+\section*{步骤5：总结与展望 (预计用时: 2:45 - 3:00)}
+\begin{itemize}[leftmargin=*]
+    \item \oral{“综上所述，本程序通过面向对象的编程思想，清晰地构建了迷宫的数据模型和核心操作。它不仅实现了基于随机深度优先搜索的迷宫动态生成逻辑，还集成了广度优先搜索和深度优先搜索两种经典的路径求解算法。所有这些功能都通过Tkinter图形用户界面进行了直观的可视化展示和便捷的人机交互。未来还可以考虑扩展更多迷宫类型，或引入更高级的寻路算法。我的演示到此结束，感谢大家的观看！”}
+\end{itemize}
+
+\end{document}
