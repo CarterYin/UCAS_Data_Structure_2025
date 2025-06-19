@@ -1,0 +1,963 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{STKaiti} % 设置加粗字体为 STKaiti 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{题目}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{数据结构与算法期末复习,\ 尹超,\ 2023K8009926003}
+    \lhead{Homework}
+
+
+%文档信息设置
+\title{数据结构与算法期末复习\\ Homework}
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2024.8 -- 2025.1}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的期末复习笔记。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+\chapter{1-20}
+
+\section*{1}
+
+\begin{graybox}
+\textbf{Hailstone问题（又名3n+1问题）}：
+
+Hailstone(n)的计算程序是：
+\begin{circledenum}
+\item 对于所有的n都是无穷的
+\item 对于部分n是无穷的
+\item 不能确定是否存在n，使程序无法终止
+\item 对于所有的n都是有穷的
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+Hailstone问题(又称3n+1问题或Collatz猜想)的计算规则如下：
+\begin{itemize}
+\item 从一个正整数n开始
+\item 如果n是偶数，则将n除以2
+\item 如果n是奇数，则将n乘以3再加1
+\item 重复上述过程直到n=1
+\end{itemize}
+
+例如，从n=3开始：3→10→5→16→8→4→2→1
+
+目前，数学家已经验证了非常大范围内的正整数都最终会到达1，但尚未能给出完整的数学证明来确定对于任意正整数该过程都会终止。这是一个著名的未解决的数学问题。
+
+根据当前数学研究现状：
+\begin{itemize}
+\item 选项A错误：已经验证很多数字的序列最终都会终止
+\item 选项B错误：虽然可能存在使程序无限循环的n，但尚未找到这样的例子
+\item 选项C正确：这是目前数学界的共识，尚无法确定是否存在使程序无法终止的n值
+\item 选项D错误：尚未被证明对所有n都是有穷的
+\end{itemize}
+
+因此，正确答案是选项C。
+\end{solution}
+
+\section*{2}
+
+\begin{graybox}
+\textbf{判断一个算法是否是一个“好算法”，最重要的一条性质是}：
+\begin{circledenum}
+    \item 正确
+    \item 健壮
+    \item 可读
+    \item 效率
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+评价一个算法的好坏，通常会考虑以下几个方面：
+\begin{itemize}
+    \item \textbf{正确性 (Correctness)}：算法能够对于每一组输入，都最终停止，并产生符合问题要求的正确输出。这是算法最基本的要求。
+    \item \textbf{可读性 (Readability)}：算法的逻辑清晰，易于理解、编码和调试。良好的可读性有助于算法的维护和推广。
+    \item \textbf{健壮性 (Robustness)}：算法能对不合法的输入做出合理的处理或反应，而不会产生异常或崩溃。
+    \item \textbf{效率 (Efficiency)}：算法执行时所消耗的时间和空间资源。效率通常用时间复杂度和空间复杂度来衡量。一个“好”的算法应该在满足正确性的前提下，尽可能地高效。
+\end{itemize}
+在这些性质中，虽然正确性是前提，但当多个算法都能正确解决问题时，\textbf{效率}往往成为衡量其优劣的最重要标准。一个低效的算法即使正确，也可能因为执行时间过长或占用资源过多而无法在实际应用中使用。
+
+因此，正确答案是选项D。
+\end{solution}
+
+\section*{3}
+
+\begin{graybox}
+\textbf{以下哪项不是图灵机的组成要件？}：
+\begin{circledenum}
+    \item 有限长的纸带
+    \item 有限的字母表
+    \item 有限种状态
+    \item 读写头
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+图灵机是一种抽象的计算模型，由以下几个核心组成部分定义：
+\begin{itemize}
+    \item \textbf{无限长的纸带 (Tape)}：纸带被划分为一个个连续的单元格，每个单元格可以存储一个来自字母表的符号。理论上，这条纸带向两个方向无限延伸。
+    \item \textbf{有限的字母表 (Alphabet)}：一个包含有限个符号的集合，其中包括一个特殊的空白符号。这些符号可以被读写到纸带的单元格上。
+    \item \textbf{有限种状态 (States)}：图灵机在任何时刻都处于其有限个内部状态中的一个。其中包括一个起始状态和可能的接受/拒绝状态。
+    \item \textbf{读写头 (Read/Write Head)}：读写头可以在纸带上左右移动，读取当前单元格的符号，并根据当前状态和读取的符号来写入新的符号、改变内部状态以及移动读写头。
+    \item \textbf{转移函数 (Transition Function)}：这是一个规则集，它规定了当图灵机处于某个状态并读取到某个符号时，应该执行什么操作（写入什么符号、转换到哪个新状态、以及读写头向左还是向右移动）。
+\end{itemize}
+根据定义，图灵机的纸带是\textbf{无限长}的，这是其能够模拟所有可计算函数的基础。选项A描述的是“有限长的纸带”，这与图灵机的标准定义不符。
+
+因此，正确答案是选项A。
+\end{solution}
+
+\section*{4}
+
+\begin{graybox}
+\textbf{判断正误：RAM模型与图灵机模型的区别在于图灵机的存储空间无限，而RAM的存储空间有限。}：
+\begin{circledenum}
+    \item 对
+    \item 错
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B (错)。
+
+该说法并不完全准确，是对两个模型特点的过度简化。
+\begin{itemize}
+    \item \textbf{图灵机 (Turing Machine, TM)}：其核心特征之一确实是拥有一条无限长的纸带作为存储空间。读写头在纸带上顺序移动进行操作。
+    \item \textbf{随机存取机 (Random Access Machine, RAM) 模型}：RAM模型假设其内存由一系列可独立寻址的存储单元（寄存器）组成。其关键特性是可以在常数时间内访问任何一个存储单元，即“随机存取”。在理论分析中，RAM模型的存储空间通常也假设是无限的，或者至少是足够大的，不会成为算法分析的瓶颈（例如，可以存储与输入规模相关的多项式大小的数据）。
+\end{itemize}
+主要区别：
+\begin{itemize}
+    \item \textbf{存储访问方式}：图灵机是顺序访问，RAM模型是随机访问。
+    \item \textbf{访问成本}：图灵机访问远距离单元格需要移动读写头，耗时与距离成正比。RAM模型访问任何单元通常假设为单位时间成本。
+\end{itemize}
+虽然物理计算机的RAM是有限的，但在理论计算机科学中，RAM模型作为一种计算模型，其存储容量通常被认为是无限的，以便与图灵机在计算能力和复杂性等级上进行比较。因此，简单地说“RAM的存储空间有限”作为与图灵机无限存储的主要区别是不准确的，尤其是在讨论理论模型时。两个模型在理论上都可以拥有无限的存储资源，其根本区别在于存储结构和访问机制。
+
+因此，原命题错误。
+\end{solution}
+
+\section*{5}
+
+\begin{graybox}
+\textbf{在大O记号的意义下，以下哪一项与O($n^3$)相等？(m不是常数)}：
+\begin{circledenum}
+    \item O(3n)
+    \item O($n^3+2000n^2+1000n$)
+    \item O($n^3+m$)
+    \item O($2000n^3+n^4$)
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+大O记号用于描述函数渐近行为的上界。当评估一个函数的复杂度O(f(n))时，我们关注的是当输入规模n趋向于无穷大时，函数的增长率。其主要规则包括：
+\begin{itemize}
+    \item \textbf{忽略低阶项}：对于多项式，只保留最高阶的项。例如，$n^3+n^2$ 中的 $n^2$ 是低阶项。
+    \item \textbf{忽略常数系数}：最高阶项的常数系数被忽略。例如，$5n^3$ 中的 5。
+    \item \textbf{加法规则}：O(f(n) + g(n)) = O(max(f(n), g(n)))。
+\end{itemize}
+让我们分析各个选项：
+\begin{itemize}
+    \item \textbf{选项A: O(3n)} \\
+    根据规则，O(3n) = O(n)。这与O($n^3$)不相等。
+    \item \textbf{选项B: O($n^3+2000n^2+1000n$)} \\
+    在此表达式中，$n^3$是最高阶项。$2000n^2$和$1000n$是低阶项。根据加法规则和忽略低阶项及常数系数的规则，O($n^3+2000n^2+1000n$) = O($n^3$)。这与题目要求相符。
+    \item \textbf{选项C: O($n^3+m$)} \\
+    题目说明m不是常数。根据加法规则，O($n^3+m$) = O(max($n^3, m$))。
+    如果 $m$ 的增长阶数低于或等于 $n^3$ (即 $m = O(n^3)$)，例如 $m=n^2$ 或 $m=n^3$，那么 O($n^3+m$) = O($n^3$)。
+    但是，如果 $m$ 的增长阶数高于 $n^3$ (例如，$m = n^4$)，那么 O($n^3+m$) = O(m) (此时为O($n^4$))，这就不等于 O($n^3$)。
+    由于题目仅说明 $m$ 不是常数，但没有给出 $m$ 相对于 $n$ 的具体增长信息，我们不能保证 O($n^3+m$) 总是等于 O($n^3$)。
+    \item \textbf{选项D: O($2000n^3+n^4$)} \\
+    在此表达式中，$n^4$是最高阶项。根据加法规则和忽略低阶项及常数系数的规则，O($2000n^3+n^4$) = O($n^4$)。这与O($n^3$)不相等。
+\end{itemize}
+因此，唯一明确与O($n^3$)相等的是选项B。
+\end{solution}
+
+\section*{6}
+
+\begin{graybox}
+\textbf{下列对应关系中错误的是}：
+\begin{circledenum}
+    \item $1^2+2^2+3^2+\dots+n^2 = O(n^3)$
+    \item $1+2+4+\dots+2^n = O(2^n)$
+    \item $\log1+\log2+\log3+\dots+\log n = O(n\log n)$
+    \item $1+1/2+1/3+\dots+1/n = O(n\log n)$
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+我们分析各个选项的紧确界 ($\Theta$ 记号)：
+\begin{itemize}
+    \item \textbf{选项A: $1^2+2^2+3^2+\dots+n^2 = O(n^3)$} \\
+    平方和公式为 $\sum_{k=1}^{n} k^2 = \frac{n(n+1)(2n+1)}{6}$. 这是一个关于 $n$ 的三次多项式，所以其数量级为 $\Theta(n^3)$。因此，$O(n^3)$ 是一个正确的紧确上界。
+    \item \textbf{选项B: $1+2+4+\dots+2^n = O(2^n)$} \\
+    这是一个等比数列求和 $\sum_{k=0}^{n} 2^k = \frac{2^{n+1}-1}{2-1} = 2^{n+1}-1$. 其数量级为 $\Theta(2^{n+1}) = \Theta(2 \cdot 2^n) = \Theta(2^n)$。因此，$O(2^n)$ 是一个正确的紧确上界。
+    \item \textbf{选项C: $\log1+\log2+\log3+\dots+\log n = O(n\log n)$} \\
+    该和式等于 $\log(n!)$。根据斯特林近似公式 ($\ln(n!) \approx n\ln n - n$)，我们知道 $\log(n!) = \Theta(n\log n)$。因此，$O(n\log n)$ 是一个正确的紧确上界。
+    \item \textbf{选项D: $1+1/2+1/3+\dots+1/n = O(n\log n)$} \\
+    该和式是调和级数 $H_n$。我们知道 $H_n = \Theta(\log n)$。
+    题目中给出的对应关系是 $H_n = O(n\log n)$。从严格的数学定义来看，这个表述是正确的，因为 $\log n \le c \cdot n\log n$ 对于足够大的 $n$ 和某个常数 $c>0$ (例如 $c=1, n \ge 1$) 是成立的。
+    然而，在算法分析和复杂度比较的上下文中，通常期望找到最紧确的界。$H_n$ 的紧确界是 $O(\log n)$ (或 $\Theta(\log n)$)。与 $O(\log n)$ 相比，$O(n\log n)$ 是一个非常宽松的上界。
+    选项A、B、C都给出了相应序列的紧确大O表示 (即它们也是$\Theta$界)。如果题目旨在找出哪个对应关系没有给出最紧确或最贴切的复杂度描述，那么选项D符合这种情况。
+\end{itemize}
+因此，在评估算法复杂度时，选项D的表述 $O(n\log n)$ 虽然数学上是一个上界，但因为它不是紧确界 $\Theta(\log n)$，所以在这个意义下被认为是“错误”的对应关系。
+\end{solution}
+
+\section*{7}
+
+\begin{graybox}
+\textbf{判断：减而治之的思想是：将问题划分为两个平凡的子问题，分别求解子问题，来得到原问题的解。}：
+\begin{circledenum}
+    \item 对
+    \item 错
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B (错)。
+
+“减而治之”（Decrease and Conquer）和“分而治之”（Divide and Conquer）是两种不同的算法设计策略。
+\begin{itemize}
+    \item \textbf{减而治之 (Decrease and Conquer)}：这种策略通过将原问题转化为一个或多个规模更小的子问题（通常是单个子问题），然后递归地解决这些子问题，最终将子问题的解组合起来得到原问题的解。关键在于“减”——问题规模的缩减。例如，二分查找（问题规模减半）、插入排序（待排序部分减1）、计算 $a^n$ (通过 $a \cdot a^{n-1}$，问题规模减1) 等。
+    \item \textbf{分而治之 (Divide and Conquer)}：这种策略将原问题划分为若干个（通常是两个或更多）规模大致相当的、相互独立的子问题，递归地解决这些子问题，然后将子问题的解合并起来得到原问题的解。例如，归并排序、快速排序、大整数乘法等。
+\end{itemize}
+题目描述的“将问题划分为两个平凡的子问题，分别求解子问题，来得到原问题的解”更符合“分而治之”的思想，特别是当这两个子问题是相互独立且规模减小的时候。
+
+减而治之的核心在于将问题规模减小，通常是减小到一个子问题。例如，计算阶乘 $n!$ 可以通过计算 $(n-1)!$ 然后乘以 $n$ 来得到，这里就是将问题 $P(n)$ 简化为 $P(n-1)$。
+
+因此，原命题错误。
+\end{solution}
+
+\section*{8}
+
+\begin{graybox}
+\textbf{用分而治之的思想来解决长度为n的数组的求和问题（n足够大），递归实例的数目会比用减而治之的方法少。}：
+\begin{circledenum}
+    \item 对
+    \item 错
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B (错)。
+
+我们来分析两种方法解决数组求和问题时产生的递归实例数目（即递归函数的调用次数）。
+
+\begin{itemize}
+    \item \textbf{分而治之 (Divide and Conquer) 求解数组求和}：
+    该策略将数组分成两半，分别递归求这两半的和，然后将两个和相加。
+    设 $S(A, low, high)$ 为求解数组 $A$ 从索引 $low$ 到 $high$ 的和的函数。
+    \begin{verbatim}
+    S(A, low, high):
+        if low == high:
+            return A[low]
+        mid = (low + high) / 2
+        sum_left = S(A, low, mid)
+        sum_right = S(A, mid + 1, high)
+        return sum_left + sum_right
+    \end{verbatim}
+    对于长度为 $n$ 的数组，如果 $n$ 是2的幂，递归调用次数（即递归树中的节点数）为 $2n-1$。例如，对于 $n=4$，调用树有 $2*4-1=7$ 个节点。
+
+    \item \textbf{减而治之 (Decrease and Conquer) 求解数组求和}：
+    最常见的减而治之方法是“减一治之”（decrease-by-one）。
+    设 $S(A, k)$ 为求解数组 $A$ 前 $k$ 个元素的和的函数。
+    \begin{verbatim}
+    S(A, k):
+        if k == 0:
+            return 0
+        if k == 1:
+            return A[0]
+        return A[k-1] + S(A, k-1)
+    \end{verbatim}
+    对于长度为 $n$ 的数组，调用 $S(A,n)$ 会依次调用 $S(A,n-1), S(A,n-2), \dots, S(A,1), S(A,0)$。总的调用次数为 $n+1$。
+\end{itemize}
+
+\textbf{比较递归实例数目}：
+\begin{itemize}
+    \item 分而治之：大约 $2n-1$ 次调用。
+    \item 减而治之（减一法）：$n+1$ 次调用。
+\end{itemize}
+题目陈述“分而治之的递归实例数目会比减而治之的方法少”。
+即判断 $2n-1 < n+1$ 是否成立。
+$2n-1 < n+1 \implies n < 2$。
+这个结论对于“n足够大”的情况是不成立的。当 $n \ge 2$ 时，$2n-1 \ge n+1$。
+例如：
+\begin{itemize}
+    \item 若 $n=1$: 分而治之1次，减而治之2次 (S(1) -> S(0))。此时分而治之较少。
+    \item 若 $n=2$: 分而治之3次 (S(0,1) -> S(0,0), S(1,1))，减而治之3次 (S(2) -> S(1) -> S(0))。此时相等。
+    \item 若 $n=3$: 分而治之5次 (近似 $2n-1$)，减而治之4次 ($n+1$)。此时分而治之较多。
+    \item 若 $n=4$: 分而治之7次 ($2 \cdot 4 - 1 = 7$)，减而治之5次 ($4+1=5$)。此时分而治之较多。
+\end{itemize}
+对于足够大的 $n$ (例如 $n \ge 3$)，分而治之的递归实例数目 ($2n-1$) \textbf{不会少于} 减而治之的递归实例数目 ($n+1$)，实际上是更多。
+
+因此，原命题错误。
+\end{solution}
+
+\section*{9}
+
+\begin{graybox}
+\textbf{直接用定义以递归的方式计算fib(n)的时间复杂度是：}：
+\begin{circledenum}
+    \item $\Theta(n^2)$
+    \item $O(2^n)$
+    \item $\Theta(2^n)$
+    \item $O(n)$
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+斐波那契数列的递归定义如下：
+\begin{itemize}
+    \item $fib(0) = 0$
+    \item $fib(1) = 1$
+    \item $fib(n) = fib(n-1) + fib(n-2)$ for $n \ge 2$
+\end{itemize}
+直接使用这个定义以递归方式计算 $fib(n)$ 的伪代码如下：
+\begin{verbatim}
+function fib(n):
+    if n <= 1:
+        return n
+    else:
+        return fib(n-1) + fib(n-2)
+\end{verbatim}
+设 $T(n)$ 为计算 $fib(n)$ 所需的时间。
+\begin{itemize}
+    \item $T(0) = \Theta(1)$
+    \item $T(1) = \Theta(1)$
+    \item $T(n) = T(n-1) + T(n-2) + \Theta(1)$ for $n \ge 2$ (因为有两次递归调用和一次加法操作)
+\end{itemize}
+这个递归关系式解为 $T(n) = \Theta(\phi^n)$，其中 $\phi = \frac{1+\sqrt{5}}{2} \approx 1.61803...$ (黄金分割比例)。
+
+现在我们分析各个选项：
+\begin{itemize}
+    \item \textbf{选项A: $\Theta(n^2)$} \\
+    指数函数 $\phi^n$ 的增长速度远快于多项式函数 $n^2$。因此，此选项错误。
+    \item \textbf{选项B: $O(2^n)$} \\
+    大O记号表示上界。我们需要判断是否存在常数 $c > 0$ 和 $n_0$，使得对于所有 $n \ge n_0$，$T(n) \le c \cdot 2^n$。
+    由于 $T(n) = \Theta(\phi^n)$，这意味着 $T(n)$ 的增长率与 $\phi^n$ 同阶。
+    因为 $\phi \approx 1.618 < 2$，所以 $\phi^n$ 的增长速度慢于 $2^n$。
+    更准确地说，$\lim_{n\to\infty} \frac{\phi^n}{2^n} = \lim_{n\to\infty} (\frac{\phi}{2})^n = 0$，因为 $\frac{\phi}{2} < 1$。
+    这意味着 $\phi^n = o(2^n)$ (小o记号)，同时也意味着 $\phi^n = O(2^n)$。因此，此选项正确。
+    \item \textbf{选项C: $\Theta(2^n)$} \\
+    大$\Theta$记号表示紧确界，即 $T(n) = O(2^n)$ 且 $T(n) = \Omega(2^n)$。
+    我们已经知道 $T(n) = O(2^n)$。
+    现在判断 $T(n) = \Omega(2^n)$ 是否成立。这要求存在常数 $c' > 0$ 和 $n_0'$，使得对于所有 $n \ge n_0'$，$T(n) \ge c' \cdot 2^n$。
+    由于 $T(n) = \Theta(\phi^n)$ 且 $\phi < 2$，$\phi^n$ 的增长速度实际上严格慢于 $2^n$。因此，$T(n)$ 不是 $\Omega(2^n)$。
+    所以，$T(n)$ 不是 $\Theta(2^n)$。此选项错误。
+    \item \textbf{选项D: $O(n)$} \\
+    指数函数 $\phi^n$ 的增长速度远快于线性函数 $n$。因此，此选项错误。
+\end{itemize}
+综上所述，最合适的答案是B，因为 $O(2^n)$ 是 $T(n) = \Theta(\phi^n)$ 的一个正确的（尽管不是最紧的，如果 $\phi^n$ 是选项的话）上界。
+\end{solution}
+
+\section*{10}
+
+\begin{graybox}
+\textbf{以现在普通计算机的速度，直接用定义以递归的方式计算fib(100)需要多少时间（不考虑溢出）:}：
+\begin{circledenum}
+    \item 一小时之内
+    \item 大约一天
+    \item 十年
+    \item 这辈子看不到啦
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+正如在问题9中讨论的，直接用递归定义计算 $fib(n)$ 的时间复杂度是 $T(n) = \Theta(\phi^n)$，其中 $\phi = \frac{1+\sqrt{5}}{2} \approx 1.61803$ 是黄金分割比例。这意味着计算 $fib(n)$ 所需的操作次数（例如，函数调用或加法次数）大致与 $\phi^n$ 成正比。
+
+对于 $fib(100)$，我们需要估算 $\phi^{100}$ 的大小：
+$\phi^{10} = (\frac{1+\sqrt{5}}{2})^{10} \approx (1.61803)^{10} \approx 122.88$
+$\phi^{100} = (\phi^{10})^{10} \approx (122.88)^{10}$
+
+我们可以用对数来更精确地估算：
+$\log_{10}(\phi) \approx \log_{10}(1.61803) \approx 0.208987$
+$\log_{10}(\phi^{100}) = 100 \times \log_{10}(\phi) \approx 100 \times 0.208987 = 20.8987$
+所以，$\phi^{100} \approx 10^{20.8987} = 10^{0.8987} \times 10^{20}$.
+$10^{0.8987} \approx 7.919$.
+因此，$\phi^{100} \approx 7.919 \times 10^{20}$.
+
+这意味着计算 $fib(100)$ 大约需要 $k \cdot (7.919 \times 10^{20})$ 次基本操作，其中 $k$ 是一个小的常数。即使我们假设 $k=1$，这也是一个巨大的数字。
+
+假设一台“普通计算机”每秒可以执行 $10^9$ 次操作 (1 Giga-operations per second, or 1 GHz CPU where each cycle performs one relevant operation, which is optimistic).
+所需时间 (秒) $\approx \frac{7.919 \times 10^{20} \text{ operations}}{10^9 \text{ operations/second}} = 7.919 \times 10^{11}$ 秒。
+
+现在将这个时间转换为更易于理解的单位：
+\begin{itemize}
+    \item 1 分钟 = 60 秒
+    \item 1 小时 = $60 \times 60 = 3600$ 秒
+    \item 1 天 = $24 \times 3600 = 86400$ 秒
+    \item 1 年 $\approx 365.25 \times 86400 \approx 3.15576 \times 10^7$ 秒
+\end{itemize}
+所需时间 (年) $\approx \frac{7.919 \times 10^{11} \text{ 秒}}{3.15576 \times 10^7 \text{ 秒/年}} \approx 2.509 \times 10^4$ 年。
+
+$2.509 \times 10^4$ 年等于 25,090 年。
+
+这个时间远远超过了一个人的一生，甚至人类有记载的历史。
+\begin{itemize}
+    \item 选项A (一小时之内)：$3600$ 秒。$7.919 \times 10^{11} \gg 3600$. 错误。
+    \item 选项B (大约一天)：$86400$ 秒。$7.919 \times 10^{11} \gg 86400$. 错误。
+    \item 选项C (十年)：$10 \times 3.15576 \times 10^7 \approx 3.15 \times 10^8$ 秒。$7.919 \times 10^{11} \gg 3.15 \times 10^8$. 错误。
+    \item 选项D (这辈子看不到啦)：25,090 年显然是“这辈子看不到啦”。正确。
+\end{itemize}
+因此，由于递归计算斐波那契数的指数级时间复杂度，计算 $fib(100)$ 所需的时间是天文数字。
+\end{solution}
+
+\section*{11}
+
+\begin{graybox}
+\textbf{用动态规划计算fib(n)的时间、空间复杂度分别为：}：
+\begin{circledenum}
+    \item $\Theta(n^2), \Theta(n^2)$
+    \item $\Theta(n^2), \Theta(n)$
+    \item $\Theta(n), \Theta(n)$
+    \item $\Theta(n), \Theta(1)$
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+动态规划 (Dynamic Programming, DP) 的核心思想是存储已解决的子问题的结果，以避免重复计算。对于斐波那契数列 $fib(n) = fib(n-1) + fib(n-2)$ (其中 $fib(0)=0, fib(1)=1$)，有两种主要的动态规划实现方式：
+
+\textbf{1. 自底向上 (Bottom-Up) 使用数组存储：}
+这种方法创建一个数组（例如 `dp`）来存储从 $fib(0)$ 到 $fib(n)$ 的所有斐波那契数。
+\begin{itemize}
+    \item `dp[0] = 0`
+    \item `dp[1] = 1`
+    \item `for i from 2 to n:`
+    \item `    dp[i] = dp[i-1] + dp[i-2]`
+    \item `return dp[n]`
+\end{itemize}
+\begin{itemize}
+    \item \textbf{时间复杂度}：循环从2到n执行，共 $n-1$ 次。每次循环内部的操作（两次数组读取和一次加法）都是常数时间 $\Theta(1)$。因此，总时间复杂度为 $\Theta(n)$。
+    \item \textbf{空间复杂度}：需要一个大小为 $n+1$ 的数组来存储所有斐波那契数。因此，空间复杂度为 $\Theta(n)$。
+\end{itemize}
+这种方法对应选项C：$\Theta(n), \Theta(n)$。
+
+\textbf{2. 自底向上 (Bottom-Up) 空间优化：}
+观察到计算 $fib(i)$ 只需要前两个斐波那契数 $fib(i-1)$ 和 $fib(i-2)$。因此，我们不需要存储整个数组，只需要保留最近的两个值。
+\begin{itemize}
+    \item \texttt{if n == 0: return 0}
+    \item \texttt{if n == 1: return 1}
+    \item \texttt{a = 0}  ($fib(0)$)
+    \item \texttt{b = 1}  ($fib(1)$)
+    \item \texttt{for i from 2 to n:}
+    \item \texttt{    current\_fib = a + b}
+    \item \texttt{    a = b}
+    \item \texttt{    b = current\_fib}
+    \item \texttt{return b}
+\end{itemize}
+\begin{itemize}
+    \item \textbf{时间复杂度}：循环从2到n执行，共 $n-1$ 次。每次循环内部的操作都是常数时间 $\Theta(1)$。因此，总时间复杂度为 $\Theta(n)$。
+        \item \textbf{空间复杂度}：只需要固定数量的变量（例如 \texttt{a}, \texttt{b}, \texttt{current\_fib}, \texttt{i}）来存储中间结果，与 $n$ 的大小无关。因此，空间复杂度为 $\Theta(1)$。
+\end{itemize}
+这种方法对应选项D：$\Theta(n), \Theta(1)$。
+
+\textbf{结论：}
+两种方法都是动态规划的有效实现。空间优化的方法在时间复杂度相同的情况下，空间效率更高。题目问的是“用动态规划计算”，通常会考虑其最优或常见的实现。
+\begin{itemize}
+    \item 选项A和B的时间复杂度为 $\Theta(n^2)$，这对于DP解斐波那契数列是不正确的。
+    \item 选项C ($\Theta(n), \Theta(n)$) 描述了使用数组的DP方法。
+    \item 选项D ($\Theta(n), \Theta(1)$) 描述了空间优化的DP方法。
+\end{itemize}
+由于空间优化的DP方法是计算斐波那契数列的标准高效DP解法，并且选项D给出了这种方法的复杂度，因此选项D是最佳答案。
+\end{solution}
+
+\end{document}
+
+% VScode 常用快捷键：
+
+% Ctrl + R:                 打开最近的文件夹
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键
+
+% Ctrl + Alt + J:           由代码定位到PDF
+% 
+
+
+% Git提交规范：
+% update: Linear Algebra 2 notes
+% add: Linear Algebra 2 notes
+% import: Linear Algebra 2 notes
+% delete: Linear Algebra 2 notes

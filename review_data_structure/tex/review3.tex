@@ -1,0 +1,1732 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{STKaiti} % 设置加粗字体为 STKaiti 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{题目}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{数据结构与算法期末复习,\ 尹超,\ 2023K8009926003}
+    \lhead{Homework}
+
+
+%文档信息设置
+\title{数据结构与算法期末复习\\ Homework}
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2024.8 -- 2025.1}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的期末复习笔记。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+\chapter{第三章 列表}
+
+\section*{41}
+
+\begin{graybox}
+\textbf{下列关于列表的秩的说法中不正确的是}：
+\begin{circledenum}
+    \item 列表节点的秩与物理地址有明确的对应关系
+    \item 列表的秩具有很高的维护成本
+    \item 在列表中循秩访问的成本较高
+    \item 在列表中循位置访问会比循秩访问更快
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+“列表”可以指多种数据结构，主要包括基于数组的列表（如向量）和基于指针的列表（如链表）。“秩”是指元素在列表中的逻辑位置或序号。
+
+\begin{itemize}
+    \item \textbf{A. 列表节点的秩与物理地址有明确的对应关系}:
+    \begin{itemize}
+        \item 对于\textbf{基于数组的列表}，元素的秩（即索引）与其物理地址之间存在明确的线性关系：`地址(秩r) = 基地址 + r * 元素大小`。所以对于数组列表，此说法正确。
+        \item 对于\textbf{链表}，节点在内存中可以任意分布，节点的秩与其物理地址之间没有直接的、简单的算术对应关系。要访问特定秩的节点，必须从头节点开始遍历。所以对于链表，此说法\textbf{不正确}。
+        \item 由于该说法并非对所有类型的列表都成立（特别是对链表不成立），因此作为关于“列表”的一般性陈述，它是\textbf{不正确的}。
+    \end{itemize}
+
+    \item \textbf{B. 列表的秩具有很高的维护成本}:
+    \begin{itemize}
+        \item 秩本身是逻辑概念。如果指的是在插入或删除操作后，需要更新显式存储在每个节点中的秩信息，那么对于链表和数组列表，这都可能导致 $\Theta(n)$ 的成本。
+        \item 对于数组列表，在特定秩插入或删除元素通常需要移动 $\Theta(n)$ 个元素，这也是一种高成本。
+        \item 因此，此说法可以被认为是\textbf{正确的}，因为维护有序性和元素位置（从而影响秩）的操作可能成本很高。
+    \end{itemize}
+
+    \item \textbf{C. 在列表中循秩访问的成本较高}:
+    \begin{itemize}
+        \item 对于\textbf{链表}，访问秩为 $r$ 的元素需要从头遍历 $r$ 个节点，时间复杂度为 $\Theta(r)$（最坏为 $\Theta(n)$），成本较高。
+        \item 对于\textbf{基于数组的列表}，通过秩（索引）访问元素的时间复杂度为 $\Theta(1)$，成本较低。
+        \item 由于此说法对链表成立（成本较高），而题目通常会考虑各种列表实现，链表的这种特性使得该说法在某些情况下是\textbf{正确的}（即存在成本较高的情况）。如果题目问的是普遍性，那么它对数组列表不正确。但通常这类表述会关注到链表的特性。
+    \end{itemize}
+
+    \item \textbf{D. 在列表中循位置访问会比循秩访问更快}:
+    \begin{itemize}
+        \item “循位置访问”通常指已知节点的直接引用（如指针或迭代器）。通过指针/迭代器访问节点数据的成本是 $\Theta(1)$。
+        \item 对于\textbf{链表}，循秩访问是 $\Theta(n)$，循位置访问是 $\Theta(1)$。因此循位置访问更快。
+        \item 对于\textbf{基于数组的列表}，循秩（索引）访问是 $\Theta(1)$。“循位置访问”如果也指通过索引访问，则两者速度相同。如果“位置”特指一个已经获取到的指针或引用，那么也是 $\Theta(1)$。
+        \item 考虑到链表的情况，其中差异显著，此说法通常被认为是\textbf{正确的}。
+    \end{itemize}
+\end{itemize}
+结论：
+语句A声称秩与物理地址有明确对应关系，这仅对数组型列表成立，对链式列表则完全不成立。因此，作为对“列表”的通用描述，语句A是不正确的。其他选项描述了列表（尤其是链表或在某些操作下）可能具有的特性或与其他访问方式的比较，这些在特定场景下是成立的。因此，最不正确的说法是A。
+\end{solution}
+
+
+\section*{42}
+
+\begin{graybox}
+\textbf{下列关于我们定义的接口的描述中，哪一条是错误的？}：
+\begin{circledenum}
+    \item 对于列表中的节点，我们可以通过调用 pred() 和 succ() 接口分别取其前驱和后继。
+    \item 对于列表接口中的 find(e) 与 search(e)，其中一个重要区别在于 find 普适于所有列表，而 search 适用于有序列表。
+    \item 如果一个列表的 visible list 部分长度为 n，则头、首、末、尾节点的秩分别为 -1, 0, n, n + 1
+    \item 在构造列表时，我们需要首先构造哨兵节点。
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+让我们逐条分析：
+
+\begin{itemize}
+    \item \textbf{A. 对于列表中的节点，我们可以通过调用 pred() 和 succ() 接口分别取其前驱和后继。}
+    \begin{itemize}
+        \item 这是列表节点（尤其是链表节点）非常标准的接口。`pred()` 返回前驱节点的引用/指针，`succ()` 返回后继节点的引用/指针。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{B. 对于列表接口中的 find(e) 与 search(e)，其中一个重要区别在于 find 普适于所有列表，而 search 适用于有序列表。}
+    \begin{itemize}
+        \item `find(e)` 通常指在列表中查找元素 `e`，不依赖列表的有序性，一般从头到尾顺序查找。因此它普适于所有列表（有序或无序）。
+        \item `search(e)` 通常指更高效的查找算法，如二分查找。这类算法要求列表是有序的。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{C. 如果一个列表的 visible list 部分长度为 n，则头、首、末、尾节点的秩分别为 -1, 0, n, n + 1}
+    \begin{itemize}
+        \item “Visible list 部分长度为 n” 指的是列表中有 $n$ 个实际的数据元素。
+        \item 秩通常是0-indexed。所以 $n$ 个元素的秩范围是 $0, 1, \ldots, n-1$.
+        \item “头” (header sentinel): 通常约定其秩为 -1。
+        \item “首” (first data node): 其秩为 0。
+        \item “末” (last data node): 其秩为 $n-1$。
+        \item “尾” (trailer sentinel): 逻辑上位于最后一个数据元素之后，其秩应为 $n$。
+        \item 语句中给出的秩：
+        \begin{itemize}
+            \item 头 (header): -1 (符合约定)
+            \item 首 (first data node): 0 (符合约定)
+            \item 末 (last data node): $n$ (不符合约定，应为 $n-1$)
+            \item 尾 (trailer): $n+1$ (不符合约定，应为 $n$)
+        \end{itemize}
+        \item 因此，此说法是\textbf{错误的}。
+    \end{itemize}
+
+    \item \textbf{D. 在构造列表时，我们需要首先构造哨兵节点。}
+    \begin{itemize}
+        \item 对于使用哨兵节点（如头哨兵 header 和尾哨兵 trailer）的列表实现，在列表初始化时创建这些哨兵节点是标准做法。哨兵节点的存在可以简化插入、删除等操作的边界条件处理。
+        \item 此说法是\textbf{正确的}（对于采用哨兵节点设计的列表而言）。
+    \end{itemize}
+\end{itemize}
+综上所述，说法C是错误的，因为它与常见约定不符：在一个有 $n$ 个元素的列表中，最后一个数据节点的秩应为 $n-1$，而尾哨兵的秩应为 $n$。
+\end{solution}
+
+
+\section*{43}
+
+\begin{graybox}
+\textbf{若将insertAsPred()改为以下函数，}
+\begin{lstlisting}[language=C++, basicstyle=\ttfamily\small, columns=flexible]
+template <typename T>
+ListNodeosi(T) ListNode<T>::insertAsPred(T const & e){
+    ListNodeosi(T)  x=new ListNode(e,pred,this);
+    pred = x; 
+    pred->succ = x;
+    return x;
+}
+\end{lstlisting}
+\textbf{其结果是：}
+\begin{circledenum}
+    \item 能正常插入节点
+    \item 不能插入节点，原列表仍然保持不变
+    \item 不能插入节点，原列表的结构被破坏
+    \item 能否插入节点与当时列表的结构有关
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+让我们分析这段代码的执行过程。假设 `ListNodeosi(T)` 是 `ListNode<T>*` 的别名，代表指向列表节点的指针。
+`this` 是调用 `insertAsPred` 方法的节点，我们称之为 `N`。
+\texttt{this->pred} 是 `N` 的前驱节点，我们称之为 \texttt{P\_orig} (在函数开始时)。
+
+\begin{enumerate}
+    \item `ListNodeosi(T) x = new ListNode(e, pred, this);`
+    \begin{itemize}
+        \item 创建一个新节点 `x`。
+        \item `x->data` 被设置为 `e`。
+        \item \texttt{x->pred} 被设置为 \texttt{this->pred} (即 \texttt{P\_orig})。
+        \item `x->succ` 被设置为 `this` (即 `N`)。
+        \item 至此，新节点 `x` 初始化时，其前驱指向 `N` 的原前驱 \texttt{P\_orig}，其后继指向 `N`。
+        \item 此时的链接关系（部分）：\texttt{P\_orig} $\leftarrow$ \texttt{x} $\rightarrow$ \texttt{N}。节点 \texttt{P\_orig} 和 \texttt{N} 之间的原始链接仍然存在。
+    \end{itemize}
+
+    \item `pred = x;`
+    \begin{itemize}
+        \item 这一行将 `this->pred` (即 `N->pred`) 修改为指向新节点 `x`。
+        \item 现在 `N` 的前驱是 `x`。
+        \item 此时的链接关系（部分）：\texttt{P\_orig} \quad $x \leftarrow N$。`x->pred` 仍然是 \texttt{P\_orig}，`x->succ` 仍然是 `N`。
+    \end{itemize}
+
+    \item `pred->succ = x;`
+    \begin{itemize}
+        \item 这里的 `pred` 是 `this->pred`，它在上一行已经被修改为指向 `x`。
+        \item 所以，这一行实际上是执行 `x->succ = x;`。
+        \item 这使得新节点 `x` 的后继指针指向它自身，形成一个自循环。
+        \item 原本在步骤1中设置的 `x->succ = N` 被覆盖了。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{最终的链接状态分析：}
+假设原始列表片段为 $\ldots \leftrightarrow P_{\text{orig}} \leftrightarrow N \leftrightarrow \ldots$
+\begin{itemize}
+    \item $P_{\text{orig}} \rightarrow \text{succ}$ 仍然指向 $N$。它没有被修改为指向 $x$。
+    \item \texttt{x->pred} 指向 \texttt{P\_orig} (正确，来自初始化)。
+    \item \texttt{x->succ} 指向 \texttt{x} (错误，自循环)。
+    \item \texttt{N->pred} 指向 \texttt{x} (正确，来自第二步)。
+\end{itemize}
+
+\textbf{结果：}
+\begin{itemize}
+    \item 新节点 \texttt{x} 被创建了。
+    \item \texttt{N} 的前驱指针被正确地更新为 \texttt{x}。
+    \item 但是，\texttt{N} 的原始前驱 $P_{\text{orig}}$ 的后继指针没有被更新为 \texttt{x} (它仍然指向 \texttt{N})。
+    \item 更严重的是，新节点 \texttt{x} 的后继指针错误地指向了它自己 (\texttt{x->succ = x})，而不是指向 \texttt{N}。
+\end{itemize}
+这意味着：
+\begin{itemize}
+    \item 从 `$P_{\text{orig}}$` 向前遍历会跳过 `x` 直接到达 `N`。
+    \item 从 `x` 向前遍历会陷入死循环。
+    \item 从 `N` 向后遍历会到达 `x`，再从 `x` 向后遍历会到达 `$P_{\text{orig}}$`。这部分反向链接看起来是部分正确的（$N \leftarrow x \leftarrow P_{\text{orig}}$）。
+\end{itemize}
+节点 `x` 没有被正确地插入到链表中，并且链表的原有结构（至少是 `x` 周围的链接）被破坏了。例如，`x` 形成了一个孤立的循环，并且 `$P_{\text{orig}}$` 和 `N` 之间的前向链接没有正确地包含 `x`。
+
+因此：
+\begin{itemize}
+    \item \textbf{A. 能正常插入节点}：错误，链接不正确。
+    \item \textbf{B. 不能插入节点，原列表仍然保持不变}：错误，`N->pred` 被修改，新节点 `x` 被创建，列表结构已改变。
+    \item \textbf{C. 不能插入节点，原列表的结构被破坏}：正确。术语“不能插入节点”可以理解为“未能成功地、正确地插入节点”。由于错误的指针操作，列表的完整性和正确性被破坏了。
+    \item \textbf{D. 能否插入节点与当时列表的结构有关}：错误，这个逻辑缺陷是普遍的，不取决于列表的特定初始结构（如列表为空或只有一个节点等，只要 `this` 和 `this->pred` 是有效操作对象）。
+\end{itemize}
+\end{solution}
+
+
+\section*{44}
+
+\begin{graybox}
+\textbf{我们可以考虑通过如下方式加快循秩访问的速度：如果r>n/2，则我们可以从尾部哨兵开始不断访问pred()，最终从后向前地找到秩为r的节点。关于这种优化，哪种说法是错误的？}：
+\begin{circledenum}
+    \item 从期望的角度看，r在[0,n)中是等概率分布的话，那么在循秩访问的过程中，对列表元素的访问次数可以节约一半。
+    \item 原有方法访问最慢的情形大致出现在r≈n时，而改进后的方法访问最慢的情形大致出现在r≈n/2时。
+    \item 当对于列表的访问集中在列表尾部时，这种优化策略的效果最明显。
+    \item 通过这样的优化，我们可以使循秩访问时间复杂度优于O(n)。
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+假设列表有 $n$ 个元素，秩从 $0$ 到 $n-1$。
+“循秩访问”指的是找到秩为 $r$ 的节点。
+优化策略：
+\begin{itemize}
+    \item 如果 $r \le n/2$ (或 $r < n/2$), 从头哨兵开始向前访问 $r+1$ 次 `succ()` (或者 $r$ 次，取决于如何计数和实现)。
+    \item 如果 $r > n/2$, 从尾哨兵开始向后访问 $n-1-r+1$ 次 `pred()` (即 $n-r$ 次)。
+\end{itemize}
+
+让我们分析各个选项：
+
+\begin{itemize}
+    \item \textbf{A. 从期望的角度看，r在[0,n)中是等概率分布的话，那么在循秩访问的过程中，对列表元素的访问次数可以节约一半。}
+    \begin{itemize}
+        \item \textbf{原有方法} (只从头访问): 访问秩为 $r$ 的节点需要大约 $r+1$ 次操作。如果 $r$ 在 $[0, n-1]$ 中等概率分布，平均访问次数约为 $\sum_{i=0}^{n-1} (i+1)/n \approx n/2$。
+        \item \textbf{改进方法}:
+        \begin{itemize}
+            \item 如果 $0 \le r < n/2$，访问次数约为 $r+1$。
+            \item 如果 $n/2 \le r < n$，访问次数约为 $(n-1-r)+1 = n-r$。
+        \end{itemize}
+        在两种情况下，最大访问次数都约为 $n/2$。
+        期望访问次数为 $\left( \sum_{i=0}^{\lfloor n/2 \rfloor -1} (i+1) + \sum_{i=\lfloor n/2 \rfloor}^{n-1} (n-i) \right) / n$.
+        这大约是 $n/4$。
+        例如，如果 $n=100$:
+        原有平均: $\approx 50$
+        改进后平均: $\approx 25$
+        \item 此说法是\textbf{正确的}。平均访问次数确实可以减半。
+    \end{itemize}
+
+    \item \textbf{B. 原有方法访问最慢的情形大致出现在r≈n时，而改进后的方法访问最慢的情形大致出现在r≈n/2时。}
+    \begin{itemize}
+        \item \textbf{原有方法}: 最慢的情况是访问最后一个元素 (秩 $n-1$)，需要约 $n$ 次操作。
+        \item \textbf{改进方法}:
+        \begin{itemize}
+            \item 如果从头访问，最慢是 $r \approx n/2 - 1$, 需要约 $n/2$ 次操作。
+            \item 如果从尾访问，最慢是 $r \approx n/2$, 需要约 $n - n/2 = n/2$ 次操作。
+        \end{itemize}
+        所以，改进后最慢的情况是访问中间附近的元素，需要约 $n/2$ 次操作。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{C. 当对于列表的访问集中在列表尾部时，这种优化策略的效果最明显。}
+    \begin{itemize}
+        \item 如果访问集中在列表尾部 (e.g., $r \approx n-1$):
+        \begin{itemize}
+            \item 原有方法: $\approx n$ 次操作。
+            \item 改进方法: 从尾部访问，$\approx 1$ 或几次操作。
+        \end{itemize}
+        节约了近 $n$ 次操作，效果非常明显。
+        \item 如果访问集中在列表头部 (e.g., $r \approx 0$):
+        \begin{itemize}
+            \item 原有方法: $\approx 1$ 或几次操作。
+            \item 改进方法: 从头部访问，$\approx 1$ 或几次操作。
+        \end{itemize}
+        效果不明显。
+        \item 如果访问集中在列表中部 (e.g., $r \approx n/2$):
+        \begin{itemize}
+            \item 原有方法: $\approx n/2$ 次操作。
+            \item 改进方法: $\approx n/2$ 次操作。
+        \end{itemize}
+        效果不明显。
+        \item 因此，当访问集中在尾部时，改进最大。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{D. 通过这样的优化，我们可以使循秩访问时间复杂度优于O(n)。}
+    \begin{itemize}
+        \item 原有方法的循秩访问时间复杂度是 $O(n)$ (最坏情况)。
+        \item 改进后的方法，最坏情况的访问次数是 $n/2$ (当 $r \approx n/2$ 时)。
+        \item 时间复杂度 $O(n/2)$ 仍然是 $O(n)$。大O表示法忽略常数因子。
+        \item 虽然实际操作次数减少了，但渐进时间复杂度并未改变其类别。它没有变成 $O(\log n)$ 或 $O(1)$ 等优于 $O(n)$ 的复杂度。
+        \item 此说法是\textbf{错误的}。
+    \end{itemize}
+\end{itemize}
+因此，说法D是错误的。
+\end{solution}
+
+
+\section*{45}
+
+\begin{graybox}
+\textbf{有序列表唯一化算法的过程是：}：
+\begin{circledenum}
+    \item 只保留每个相等元素区间的第一个元素
+    \item 每遇到一个元素，向后查找并删除与之雷同者
+    \item 每遇到一个元素，向前查找并删除与之雷同者
+    \item 检查(n C 2)个不同的元素对，对于每一对元素，若雷同则任意删除其一
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+有序列表唯一化（uniquify）算法的目的是移除重复的元素，使得每个值只出现一次，同时保持元素的相对顺序。由于列表是\textbf{有序的}，所有相等的元素必然是连续排列的，形成“相等元素区间”。
+
+\begin{itemize}
+    \item \textbf{A. 只保留每个相等元素区间的第一个元素}
+    \begin{itemize}
+        \item 这是对标准高效唯一化算法过程的准确描述。算法遍历列表，当遇到一个新的“相等元素区间”时，它会保留这个区间的第一个元素，并跳过或逻辑上移除该区间内所有后续的相同元素。
+        \item 例如，对于有序列表 `L = {1, 2, 2, 2, 3, 3, 4}`:
+        \begin{itemize}
+            \item 区间 `{1}`: 保留 1.
+            \item 区间 `{2, 2, 2}`: 保留第一个 2，跳过其余两个 2.
+            \item 区间 `{3, 3}`: 保留第一个 3，跳过其余一个 3.
+            \item 区间 `{4}`: 保留 4.
+        \end{itemize}
+        \item 结果为 `{1, 2, 3, 4}`.
+        \item 常见的实现方式（如数组的双指针法，或链表的逐个检查后继法）都遵循这一核心逻辑。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{B. 每遇到一个元素，向后查找并删除与之雷同者}
+    \begin{itemize}
+        \item 这个描述可以实现唯一化。对于有序列表， “向后查找”可以简化为检查紧随其后的元素。例如，在链表中，可以检查 `current->data == current->next->data`，如果相同则删除 `current->next`。
+        \item 虽然这是一个可行的过程，但选项A更准确地描述了处理“相等元素区间”的整体策略，这是有序性带来的关键结构。选项A描述了算法的目标和对这些区间的操作，而选项B描述了一种可能的、较低层次的迭代步骤。
+        \item 对于数组，如果“向后查找并删除”意味着对每个元素都进行一次独立的扫描和删除操作，可能会导致效率低下。
+    \end{itemize}
+
+    \item \textbf{C. 每遇到一个元素，向前查找并删除与之雷同者}
+    \begin{itemize}
+        \item 这个过程不太直观。如果算法从头到尾处理列表，并且目标是保留每组重复元素中的第一个，那么当遇到一个元素时，应该将其与“前一个被保留的唯一元素”进行比较。如果相同，则当前元素是重复的。向前查找并删除“与之雷同者”（即前一个元素）会违反“保留第一个”的常规。
+        \item 此说法描述的不是标准唯一化过程。
+    \end{itemize}
+
+    \item \textbf{D. 检查(n C 2)个不同的元素对，对于每一对元素，若雷同则任意删除其一}
+    \begin{itemize}
+        \item 这是非常低效的暴力方法，时间复杂度至少为 $O(n^2)$。它没有利用列表已排序的特性。
+        \item 标准的唯一化算法利用有序性，可以在 $O(n)$ 时间内完成。
+        \item 此说法是\textbf{错误的}。
+    \end{itemize}
+\end{itemize}
+综上，选项A最准确地描述了有序列表唯一化算法的核心过程和逻辑。
+\end{solution}
+
+
+\section*{46}
+
+\begin{graybox}
+\textbf{能否在有序列表中用二分查找使得时间复杂度降为O($\log_{2}n$)？}：
+\begin{circledenum}
+    \item 能
+    \item 不能，因为列表扩容的分摊复杂度不是O(1)
+    \item 不能，因为列表不能高效地循秩访问
+    \item 能，因为列表删除节点的时间复杂度为O(1)
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+二分查找算法的核心思想是不断将搜索区间减半。为了有效地做到这一点，算法需要在每一步都能快速访问到当前搜索区间的中间元素。理想情况下，访问任意指定秩（索引）的元素的成本应为 $O(1)$。
+
+\begin{itemize}
+    \item \textbf{对于基于数组的有序列表（如向量 Vector）}：
+    \begin{itemize}
+        \item 元素在内存中是连续存储的。
+        \item 访问任意秩 $r$ 的元素 (e.g., `array[r]`) 的时间复杂度是 $O(1)$。
+        \item 因此，在有序的基于数组的列表上，二分查找可以达到 $O(\log_2 n)$ 的时间复杂度。在这种情况下，选项A“能”是成立的。
+    \end{itemize}
+
+    \item \textbf{对于基于指针的有序列表（如链表 LinkedList）}：
+    \begin{itemize}
+        \item 元素在内存中的位置可能不连续，通过指针链接。
+        \item 访问秩为 $r$ 的元素需要从列表头部（或尾部）开始，沿着指针逐个遍历，直到到达第 $r$ 个元素。这个操作的时间复杂度是 $O(r)$，最坏情况下是 $O(n)$。
+        \item 如果在链表上尝试实现二分查找，每次确定“中间”元素的秩后，定位到该元素本身就需要 $O(n)$（或 $O(\text{current interval size})$）的时间。这使得总时间复杂度远高于 $O(\log_2 n)$（例如，可能是 $O(n)$ 或 $O(n \log n)$，取决于实现方式）。
+        \item 因此，对于链表，“列表不能高效地循秩访问”是正确的，这导致二分查找无法达到 $O(\log_2 n)$ 的复杂度。
+    \end{itemize}
+\end{itemize}
+
+\textbf{分析选项：}
+\begin{itemize}
+    \item \textbf{A. 能}：此说法仅对特定类型的列表（如基于数组的列表）成立，但对所有类型的“列表”（如链表）不成立。
+    \item \textbf{B. 不能，因为列表扩容的分摊复杂度不是O(1)}：列表扩容问题主要与动态数组（向量）相关，并且即使扩容分摊复杂度不是 $O(1)$（例如，如果是 $O(n)$ 的线性增长策略），这本身并不直接阻止在数据稳定后进行 $O(\log_2 n)$ 的二分查找（只要随机访问是 $O(1)$）。这不是二分查找可行性的核心原因。
+    \item \textbf{C. 不能，因为列表不能高效地循秩访问}：这是关键。如果“列表”泛指包括链表在内的数据结构，那么链表确实不能高效地（即 $O(1)$ 时间）循秩访问。这是导致标准二分查找在链表上效率低下的根本原因。因此，如果考虑到链表，那么二分查找不能保证 $O(\log_2 n)$ 的复杂度。
+    \item \textbf{D. 能，因为列表删除节点的时间复杂度为O(1)}：删除节点的复杂度与查找算法的复杂度是两回事。而且，虽然在已知节点位置的情况下，链表删除是 $O(1)$，但数组列表的删除通常是 $O(n)$。
+\end{itemize}
+
+\textbf{结论}：
+题目问“能否...”，如果存在一种常见的列表类型使得二分查找无法达到 $O(\log_2 n)$，并且有一个选项能正确解释原因，那么这个选项就是答案。链表是列表的一种重要形式，它不支持高效的循秩访问。因此，由于列表（特指链表或不保证 $O(1)$ 循秩访问的列表）不能高效地循秩访问，二分查找的时间复杂度不能保证为 $O(\log_2 n)$。选项C准确地指出了这个核心障碍。
+\end{solution}
+
+
+\section*{47}
+
+\begin{graybox}
+\textbf{V=\{11, 5, 7, 13, 2, 3\}，对V进行选择排序，被选为未排序子向量中最大的元素依次为：}：
+\begin{circledenum}
+    \item 11, 5, 7, 2, 3
+    \item 13, 7, 11, 2, 5
+    \item 13, 11, 7, 5, 3
+    \item 2, 11, 13, 5, 7
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+选择排序（Selection Sort）的过程是：在每一轮中，从当前未排序的部分中选出最大（或最小）的元素，然后将其放置到已排序部分的末尾（或开头）。题目要求“被选为未排序子向量中最大的元素依次为”，这意味着我们每一轮都从未排序的部分找出最大的元素。
+
+初始向量 V = \{11, 5, 7, 13, 2, 3\}。设 $n$ 为向量的长度，即 $n=6$.
+我们将从未排序的子向量 V[0...i] 中选择最大元素，并将其与 V[i] 交换，然后缩小子向量的范围 i 从 $n-1$ 减到 1。
+
+\begin{itemize}
+    \item \textbf{第1轮} (未排序子向量 V[0...5] = \{11, 5, 7, 13, 2, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{11, 5, 7, 13, 2, 3\}。
+        \item 最大的元素是 \textbf{13} (位于索引3)。
+        \item 将 13 与当前未排序部分的最后一个元素 V[5] (即3) 交换。
+        \item V 变为 \{11, 5, 7, 3, 2, \textbf{13}\}。
+        \item 被选出的最大元素：13。
+    \end{itemize}
+
+    \item \textbf{第2轮} (未排序子向量 V[0...4] = \{11, 5, 7, 3, 2\}):
+    \begin{itemize}
+        \item 未排序部分为 \{11, 5, 7, 3, 2\}。
+        \item 最大的元素是 \textbf{11} (位于索引0)。
+        \item 将 11 与当前未排序部分的最后一个元素 V[4] (即2) 交换。
+        \item V 变为 \{2, 5, 7, 3, \textbf{11}, 13\}。
+        \item 被选出的最大元素：11。
+    \end{itemize}
+
+    \item \textbf{第3轮} (未排序子向量 V[0...3] = \{2, 5, 7, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{2, 5, 7, 3\}。
+        \item 最大的元素是 \textbf{7} (位于索引2)。
+        \item 将 7 与当前未排序部分的最后一个元素 V[3] (即3) 交换。
+        \item V 变为 \{2, 5, 3, \textbf{7}, 11, 13\}。
+        \item 被选出的最大元素：7。
+    \end{itemize}
+
+    \item \textbf{第4轮} (未排序子向量 V[0...2] = \{2, 5, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{2, 5, 3\}。
+        \item 最大的元素是 \textbf{5} (位于索引1)。
+        \item 将 5 与当前未排序部分的最后一个元素 V[2] (即3) 交换。
+        \item V 变为 \{2, 3, \textbf{5}, 7, 11, 13\}。
+        \item 被选出的最大元素：5。
+    \end{itemize}
+
+    \item \textbf{第5轮} (未排序子向量 V[0...1] = \{2, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{2, 3\}。
+        \item 最大的元素是 \textbf{3} (位于索引1)。
+        \item 将 3 与当前未排序部分的最后一个元素 V[1] (即3) 交换。 (元素已在正确位置，无需实际移动)
+        \item V 变为 \{2, \textbf{3}, 5, 7, 11, 13\}。
+        \item 被选出的最大元素：3。
+    \end{itemize}
+\end{itemize}
+经过 $n-1 = 5$ 轮后，向量排序完毕。
+被选为未排序子向量中最大的元素依次为：13, 11, 7, 5, 3。
+
+这与选项C相符。
+\end{solution}
+
+
+
+
+\section*{48}
+
+\begin{graybox}
+\textbf{为了保证selectSort()算法的稳定性，我们采取的措施是：}：
+\begin{circledenum}
+    \item selectMax()中对于多个相等的最大元素，选取其中位置最靠后者
+    \item selectMax()中对于多个相等的最大元素，选取其中位置最靠前者
+    \item 先调用deduplicate()删除所有重复元素
+    \item 无论实现细节如何，该算法本来就是稳定的
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+选择排序（Selection Sort）本身通常被认为是不稳定的排序算法。稳定性是指如果排序前有两个相等的元素，并且元素A在元素B之前，那么排序后元素A仍然在元素B之前。选择排序在交换元素时可能会破坏这种相对顺序。
+
+题目中提到了 `selectMax()`，这暗示了选择排序的一种实现方式：在每一轮中，从未排序的部分选择最大的元素，并将其放置到未排序部分的末尾（或者说，已排序部分的开始，如果已排序部分从数组末尾开始增长）。
+具体来说，假设我们从未排序的子向量 `V[0...i]` 中选择最大元素，并将其与 `V[i]` 交换，其中 `i` 从 `n-1` 递减到 `1`。
+
+\begin{itemize}
+    \item \textbf{D. 无论实现细节如何，该算法本来就是稳定的}：这是错误的。标准的选择排序是不稳定的。例如，如果数组是 `{(3,a), (2,b), (3,c)}` (值, 原始标识)，目标是升序排序。
+    如果采用“从未排序部分选最小，放到最前面”：
+    \begin{itemize}
+        \item 第1轮：最小的是 `(2,b)`。与 `(3,a)` 交换。数组变为 `{(2,b), (3,a), (3,c)}`。
+        \item 第2轮：从未排序的 `{(3,a), (3,c)}` 中选最小。如果选 `(3,a)` (第一个遇到的)，与自身交换。数组 `{(2,b), (3,a), (3,c)}`。稳定。
+        \item 但如果 `selectMin` 的实现导致它可能选到 `(3,c)`（例如，如果它从后向前扫描找最小值），然后与 `(3,a)` 交换，就会变成 `{(2,b), (3,c), (3,a)}`，不稳定。
+    \end{itemize}
+    所以，实现细节很重要。
+
+    \item \textbf{C. 先调用deduplicate()删除所有重复元素}：这会改变原问题。虽然消除了重复元素后稳定性的概念对于这些特定值不再适用，但这并不是保证原 `selectSort()` 算法稳定性的措施。
+
+    \item 现在考虑 `selectMax()` 的版本，将最大元素放到当前未排序部分的末尾 `V[i]`。
+    设想数组 `V = {(X, item1), (Y, item2), (X, item3)}`，其中 `item1` 在 `item3` 之前，且 `X` 是最大值。
+    我们要将最大的元素放到 `V[i]`。
+    \begin{itemize}
+        \item \textbf{A. selectMax()中对于多个相等的最大元素，选取其中位置最靠后者}：
+        “位置最靠后者”意味着在扫描范围 `V[0...i]` 中，如果多个元素都是最大值，选择索引最大的那个。
+        例如，`V = {(X,1), (X,2)}`。`i=1`。未排序部分 `V[0...1] = {(X,1), (X,2)}`。
+        `selectMax` 扫描 `V[0...1]`。最大元素有 `(X,1)` (索引0) 和 `(X,2)` (索引1)。
+        选取“位置最靠后者”，即 `(X,2)` (索引1)。
+        将其与 `V[i]=V[1]` (即 `(X,2)` 自身) 交换。数组仍为 `{(X,1), (X,2)}`。
+        下一轮 `i=0`。未排序 `V[0...0] = {(X,1)}`。选 `(X,1)` 与 `V[0]` 交换。
+        最终数组 `{(X,1), (X,2)}`。稳定。
+
+        \item \textbf{B. selectMax()中对于多个相等的最大元素，选取其中位置最靠前者}：
+        例如，`V = {(X,1), (X,2)}`。`i=1`。未排序部分 `V[0...1] = {(X,1), (X,2)}`。
+        `selectMax` 扫描 `V[0...1]`。最大元素有 `(X,1)` (索引0) 和 `(X,2)` (索引1)。
+        选取“位置最靠前者”，即 `(X,1)` (索引0)。
+        将其与 `V[i]=V[1]` (即 `(X,2)`) 交换。数组变为 `{(X,2), (X,1)}`。
+        最终数组 `{(X,2), (X,1)}`。不稳定。
+    \end{itemize}
+    因此，为了在这种“选最大放到末尾”的选择排序中保证稳定性，当 `selectMax()` 从 `V[0...i]` 中找到最大元素时，如果存在多个相等的最大元素，必须选择它们中索引最大的那个（即“位置最靠后者”）。这样，当它与 `V[i]` 交换时，它不会越过其他与它相等的、且原本在它之后但在 `V[i]` 之前的元素。
+\end{itemize}
+所以，措施A可以保证这种特定实现的 `selectSort()` 算法的稳定性。
+\end{solution}
+
+\section*{49}
+
+\begin{graybox}
+\textbf{对于规模为n的向量或列表，选择排序和冒泡排序的最坏时间复杂度为：}：
+\begin{circledenum}
+    \item $\Theta(n\log_{2}n)$, $\Theta(n^2)$
+    \item $\Theta(n\log_{2}n)$, $\Theta(n\log_{2}n)$
+    \item $\Theta(n^2)$, $\Theta(n^2)$
+    \item $\Theta(n^2)$, $\Theta(n\log_{2}n)$
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+\begin{itemize}
+    \item \textbf{选择排序 (Selection Sort)}:
+    \begin{itemize}
+        \item 无论输入数据的初始顺序如何，选择排序都需要进行 $n-1$ 轮。
+        \item 在第 $k$ 轮中，它需要从未排序的 $n-k+1$ 个元素中找到最小（或最大）的元素。这需要 $n-k$ 次比较。
+        \item 总的比较次数大约是 $(n-1) + (n-2) + \ldots + 1 = n(n-1)/2$。
+        \item 因此，选择排序的最好、平均和最坏时间复杂度都是 $\Theta(n^2)$。
+    \end{itemize}
+
+    \item \textbf{冒泡排序 (Bubble Sort)}:
+    \begin{itemize}
+        \item 在最坏情况下（例如，列表完全逆序），冒泡排序需要进行 $n-1$ 趟。
+        \item 在第 $k$ 趟中，它会进行 $n-k$ 次相邻元素的比较和可能的交换。
+        \item 总的比较次数在最坏情况下是 $(n-1) + (n-2) + \ldots + 1 = n(n-1)/2$。
+        \item 因此，冒泡排序的最坏时间复杂度是 $\Theta(n^2)$。
+        \item (注：冒泡排序的最好情况时间复杂度，如果使用标志位优化，可以达到 $\Theta(n)$，但题目问的是最坏情况。)
+    \end{itemize}
+\end{itemize}
+所以，对于规模为n的向量或列表，选择排序和冒泡排序的最坏时间复杂度均为 $\Theta(n^2)$。
+\end{solution}
+
+\section*{50}
+
+\begin{graybox}
+\textbf{n个元素的序列所含逆序对的个数最大是：}：
+\begin{circledenum}
+    \item n!
+    \item n!/2
+    \item (n(n-1))/2
+    \item n
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+一个逆序对是指在序列中，一对元素 $(a_i, a_j)$ 满足 $i < j$ 但 $a_i > a_j$。
+逆序对的个数在序列完全逆序（即从大到小排列）时达到最大。
+
+考虑一个包含 $n$ 个不同元素的序列。当它完全逆序排列时，例如 $\{e_n, e_{n-1}, \ldots, e_2, e_1\}$ 其中 $e_n > e_{n-1} > \ldots > e_1$。
+\begin{itemize}
+    \item 第一个元素 $e_n$ 与后面所有 $n-1$ 个元素都构成逆序对。
+    \item 第二个元素 $e_{n-1}$ (在原序列中) 与后面所有 $n-2$ 个元素都构成逆序对。
+    \item ...
+    \item 第 $n-1$ 个元素 $e_2$ 与最后一个元素 $e_1$ 构成1个逆序对。
+    \item 最后一个元素 $e_1$ 不与任何后续元素构成逆序对。
+\end{itemize}
+所以，最大逆序对的个数是 $(n-1) + (n-2) + \ldots + 1 + 0$.
+这是一个等差数列的和，其值为 $\frac{(n-1) \times ((n-1) + 1)}{2} = \frac{(n-1)n}{2} = \frac{n(n-1)}{2}$。
+
+这也可以理解为从 $n$ 个元素中选取任意两个元素组成一对，这样的组合有 $C(n, 2)$ 种。在完全逆序的序列中，每一对这样的组合都构成一个逆序对。
+$C(n, 2) = \binom{n}{2} = \frac{n!}{2!(n-2)!} = \frac{n(n-1)}{2}$。
+
+因此，n个元素的序列所含逆序对的个数最大是 $\frac{n(n-1)}{2}$。
+\end{solution}
+
+
+\section*{51}
+
+\begin{graybox}
+\textbf{insertionSort()的平均、最坏时间复杂度分别为：}：
+\begin{circledenum}
+    \item $\Theta(n)$, $\Theta(n^2)$
+    \item $\Theta(n^2)$, $\Theta(n^2)$
+    \item $\Theta(n\log_{2}n)$, $\Theta(n^2)$
+    \item $\Theta(n\log_{2}n)$, $\Theta(n\log_{2}n)$
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+\textbf{插入排序 (Insertion Sort)}:
+插入排序通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+
+\begin{itemize}
+    \item \textbf{最坏时间复杂度}:
+    \begin{itemize}
+        \item 当输入数组完全逆序时，发生最坏情况。
+        \item 对于第 $i$ 个元素（从第二个元素开始，即 $i=1$ 到 $n-1$），它需要与前面所有 $i$ 个已排序的元素进行比较，并可能需要将这 $i$ 个元素都向后移动一位。
+        \item 总的比较和移动次数大约是 $1 + 2 + \ldots + (n-1) = \frac{n(n-1)}{2}$。
+        \item 因此，最坏时间复杂度是 $\Theta(n^2)$。
+    \end{itemize}
+
+    \item \textbf{平均时间复杂度}:
+    \begin{itemize}
+        \item 在平均情况下（例如，输入数组是随机排列的），对于第 $i$ 个元素，我们期望它平均需要与前面 $i/2$ 个元素进行比较和移动。
+        \item 总的比较和移动次数仍然是 $O(n^2)$。具体来说，是 $\sum_{i=1}^{n-1} \frac{i}{2} \approx \frac{n^2}{4}$。
+        \item 因此，平均时间复杂度是 $\Theta(n^2)$。
+    \end{itemize}
+
+    \item \textbf{最好时间复杂度}:
+    \begin{itemize}
+        \item 当输入数组已经排序时，发生最好情况。
+        \item 对于第 $i$ 个元素，只需要与前一个元素比较一次即可确定其位置（不需要移动）。
+        \item 总的比较次数是 $n-1$。
+        \item 因此，最好时间复杂度是 $\Theta(n)$。
+    \end{itemize}
+\end{itemize}
+题目要求平均和最坏时间复杂度，它们分别为 $\Theta(n^2)$ 和 $\Theta(n^2)$。
+\end{solution}
+
+
+\section*{52}
+
+\begin{graybox}
+\textbf{对于插入过程排序中的已排序子序列（设其长度为k）：}：
+\begin{circledenum}
+    \item 其中的元素是整个序列中最小的k个元素
+    \item 其中的元素是整个序列中最大的k个元素
+    \item 其中的元素是原序列中位于前方的k个元素
+    \item 其中的元素是原序列中位于后方的k个元素
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+插入排序（Insertion Sort）的工作原理是逐步构建一个已排序的子序列。在算法的第 $k$ 步（或者说，当已排序子序列的长度为 $k$ 时），这个已排序的子序列是由原序列中最初的前 $k$ 个元素组成的，只是它们现在已经被排好序了。
+
+例如，考虑序列 V = \{5, 2, 4, 1, 3\}：
+\begin{itemize}
+    \item \textbf{初始}: 已排序子序列为空。
+    \item \textbf{处理第一个元素 (5)}: 已排序子序列为 \{5\}。长度 $k=1$。它由原序列的第一个元素组成。
+    \item \textbf{处理第二个元素 (2)}: 将 2 插入到 \{5\} 中。已排序子序列为 \{2, 5\}。长度 $k=2$。它由原序列的前两个元素 \{5, 2\} 排序后得到。
+    \item \textbf{处理第三个元素 (4)}: 将 4 插入到 \{2, 5\} 中。已排序子序列为 \{2, 4, 5\}。长度 $k=3$。它由原序列的前三个元素 \{5, 2, 4\} 排序后得到。
+    \item \textbf{处理第四个元素 (1)}: 将 1 插入到 \{2, 4, 5\} 中。已排序子序列为 \{1, 2, 4, 5\}。长度 $k=4$。它由原序列的前四个元素 \{5, 2, 4, 1\} 排序后得到。
+    \item \textbf{处理第五个元素 (3)}: 将 3 插入到 \{1, 2, 4, 5\} 中。已排序子序列为 \{1, 2, 3, 4, 5\}。长度 $k=5$。它由原序列的前五个元素 \{5, 2, 4, 1, 3\} 排序后得到。
+\end{itemize}
+
+分析选项：
+\begin{itemize}
+    \item \textbf{A. 其中的元素是整个序列中最小的k个元素}：错误。例如，当 $k=1$ 时，已排序子序列是\{5\}，但 5 不是整个序列中最小的元素。
+    \item \textbf{B. 其中的元素是整个序列中最大的k个元素}：错误。
+    \item \textbf{C. 其中的元素是原序列中位于前方的k个元素}：正确。已排序子序列总是由原序列中从第0个到第 $k-1$ 个元素（即前 $k$ 个元素）经过排序后组成的。
+    \item \textbf{D. 其中的元素是原序列中位于后方的k个元素}：错误。
+\end{itemize}
+\end{solution}
+
+
+\section*{53}
+
+\begin{graybox}
+\textbf{在插入排序的某一步后得到如下子序列V=\{2, 7, 13, 5, 3\}，此时已排序部分有3个元素。经过又一轮迭代后的结果是：}：
+\begin{circledenum}
+    \item \{2, 3, 7, 13, 5\}
+    \item \{2, 7, 13, 3, 5\}
+    \item \{2, 5, 7, 13, 3\}
+    \item \{3, 2, 7, 13, 5\}
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+当前序列 V = \{2, 7, 13, 5, 3\}。
+已排序部分有3个元素，这意味着 V[0...2] = \{2, 7, 13\} 是已排序的。
+未排序部分的第一个元素是 V[3] = 5。
+
+下一轮迭代的任务是将元素 5 插入到已排序部分 \{2, 7, 13\} 中的正确位置。
+\begin{enumerate}
+    \item 取出元素 `e = 5`。
+    \item 将 `e` 与已排序部分的最后一个元素 `V[2] = 13` 比较。
+    \begin{itemize}
+        \item `5 < 13`，所以 `13` 需要向右移动。
+        \item V 变为 \{2, 7, \_, 13, 3\} (逻辑上，5被暂存，V[2]的位置空出，V[3]的值变为13)。
+    \end{itemize}
+    \item 将 `e` 与已排序部分的前一个元素 `V[1] = 7` 比较。
+    \begin{itemize}
+        \item `5 < 7`，所以 `7` 需要向右移动。
+        \item V 变为 \{2, \_, 7, 13, 3\} (逻辑上，V[1]的位置空出，V[2]的值变为7)。
+    \end{itemize}
+    \item 将 `e` 与已排序部分的前一个元素 `V[0] = 2` 比较。
+    \begin{itemize}
+        \item `5 > 2`，所以 `5` 应该插入到 `2` 的后面，即当前空出的位置 V[1]。
+    \end{itemize}
+    \item 将 `e=5` 放入 V[1]。
+\end{enumerate}
+经过这一轮迭代后，序列 V 变为 \{2, 5, 7, 13, 3\}。
+已排序部分现在是 \{2, 5, 7, 13\}，未排序部分是 \{3\}。
+
+这与选项C相符。
+\end{solution}
+
+
+\section*{54}
+
+\begin{graybox}
+\textbf{下列关于向量和列表的说法错误的是：}：
+\begin{circledenum}
+    \item 向量通常在内存中占据连续的空间，列表则通常不是如此
+    \item 在有序向量中查找渐进地比在有序列表中查找快
+    \item 向量归并排序的时间复杂度是 O(n$\log_{2}$n)，而列表为$\Omega(n^2)$
+    \item 列表删除单个节点渐进地比向量删除单个元素快
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+\begin{itemize}
+    \item \textbf{A. 向量通常在内存中占据连续的空间，列表则通常不是如此}
+    \begin{itemize}
+        \item \textbf{向量 (Vector)}，如C++中的 `std::vector` 或动态数组，其元素在内存中是连续存储的。这允许通过索引进行快速的随机访问。
+        \item \textbf{列表 (List)}，特指链表 (Linked List)，其节点在内存中的位置通常是不连续的，节点之间通过指针链接。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{B. 在有序向量中查找渐进地比在有序列表中查找快}
+    \begin{itemize}
+        \item \textbf{有序向量}：由于支持 $O(1)$ 的随机访问（循秩访问），可以使用二分查找，时间复杂度为 $O(\log n)$。
+        \item \textbf{有序列表 (链表)}：即使列表有序，要访问中间元素也需要从头或尾开始遍历，循秩访问的时间复杂度是 $O(n)$。因此，在链表上直接应用标准的二分查找效率不高。通常在有序链表上的查找是线性查找，时间复杂度为 $O(n)$。
+        \item $O(\log n)$ 渐进地快于 $O(n)$。
+        \item 此说法是\textbf{正确的}。
+    \end{itemize}
+
+    \item \textbf{C. 向量归并排序的时间复杂度是 O(n$\log_{2}$n)，而列表为$\Omega(n^2)$}
+    \begin{itemize}
+        \item \textbf{向量归并排序}：归并排序对数组（向量）的时间复杂度是 $O(n \log n)$。
+        \item \textbf{列表归并排序}：归并排序对链表同样可以实现 $O(n \log n)$ 的时间复杂度。链表的合并操作（merge）可以通过修改指针完成，效率很高。将链表分成两半也可以在 $O(n)$ 时间内完成（或通过更巧妙的方式在递归中自然实现）。
+        \item 因此，声称列表归并排序的时间复杂度为 $\Omega(n^2)$ (意味着其最少也是 $n^2$ 级别) 是错误的。列表的归并排序也是高效的。
+        \item 此说法是\textbf{错误的}。
+    \end{itemize}
+
+    \item \textbf{D. 列表删除单个节点渐进地比向量删除单个元素快}
+    \begin{itemize}
+        \item \textbf{列表 (链表) 删除}：如果已知要删除的节点（或其前驱节点，对于单向链表），删除操作仅涉及修改指针，时间复杂度为 $O(1)$。
+        \item \textbf{向量删除}：从向量中删除一个元素（除非是末尾元素），需要将后续所有元素向前移动以填补空位，这个操作的时间复杂度是 $O(n)$（其中 $n$ 是被移动元素的数量，最坏情况下是整个向量的长度）。
+        \item 即使考虑到查找元素的时间，如果题目暗示的是“一旦定位到元素/节点后”的删除操作，那么列表的 $O(1)$ 确实比向量的 $O(n)$ 快。如果题目泛指整个删除过程（查找+删除），对于无序结构查找都是 $O(n)$，但删除操作本身列表更快。
+        \item 此说法通常被认为是\textbf{正确的}，强调的是删除操作本身的效率。
+    \end{itemize}
+\end{itemize}
+因此，说法C是错误的。
+\end{solution}
+
+
+\section*{55}
+
+\begin{graybox}
+\textbf{为了在列表中插入一个新节点node作为p的直接前驱，有四个相关的语句
+1.p->pred->succ = node
+2.node->pred = p->pred
+3.node->succ = p
+4.p->pred = node
+上述语句执行顺序正确的是：}：
+\begin{circledenum}
+    \item[A] 3241
+    \item[B] 3214
+    \item[C] 1432
+    \item[D] 4231
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+假设原始列表片段为 `... <- A <-> p -> ...`，其中 `A` 是 `p` 的原始直接前驱，即 `A = p->pred`。
+我们的目标是插入 `node` 使得列表变为 `... <- A <-> node <-> p -> ...`。
+
+这需要进行以下链接调整：
+\begin{enumerate}
+    \item `node` 的后继应指向 `p` (`node->succ = p`)。
+    \item `node` 的前驱应指向 `A` (`node->pred = A`)。
+    \item `A` 的后继应指向 `node` (`A->succ = node`)。
+    \item `p` 的前驱应指向 `node` (`p->pred = node`)。
+\end{enumerate}
+
+让我们分析给出的语句：
+\begin{itemize}
+    \item `1 p->pred->succ = node`: 这相当于 `A->succ = node`，前提是 `p->pred` 此时仍然指向 `A`。
+    \item `2 node->pred = p->pred`: 这相当于 `node->pred = A`，前提是 `p->pred` 此时仍然指向 `A`。
+    \item `3 node->succ = p`: 设置 `node` 的后继。
+    \item `4 p->pred = node`: 设置 `p` 的前驱为新节点 `node`。
+\end{itemize}
+
+关键在于，语句 1 和 2 读取 `p->pred` 的值（即 `A`）。因此，它们必须在语句 4（即 `p->pred = node`，它会修改 `p->pred` 的值）执行之前执行。
+
+让我们分析选项B: 3214
+\begin{enumerate}
+    \item \textbf{3 `node->succ = p`}
+    \begin{itemize}
+        \item `node` 的 `succ` 指针指向 `p`.
+        \item `node: [pred=?, data=?, succ=p]`
+    \end{itemize}
+    \item \textbf{2 `node->pred = p->pred`}
+    \begin{itemize}
+        \item 此时 `p->pred` 仍然是原始的 `A`.
+        \item `node` 的 `pred` 指针指向 `A`.
+        \item `node: [pred=A, data=?, succ=p]`
+        \item 此时 `node` 正确地链接了它的前驱和后继： `A <- node -> p`.
+        \item 但是 `A` 的 `succ` 仍然指向 `p`，`p` 的 `pred` 仍然指向 `A`.
+    \end{itemize}
+    \item \textbf{1 `p->pred->succ = node`}
+    \begin{itemize}
+        \item 此时 `p->pred` 仍然是原始的 `A`.
+        \item 所以这条语句是 `A->succ = node`.
+        \item `A` 的 `succ` 指针现在指向 `node`.
+        \item 链接变为: `A <-> node -> p`. ( `p` 的 `pred` 仍然指向 `A`)
+    \end{itemize}
+    \item \textbf{4 `p->pred = node`}
+    \begin{itemize}
+        \item `p` 的 `pred` 指针现在指向 `node`.
+        \item 链接最终变为: `A <-> node <-> p`.
+    \end{itemize}
+\end{enumerate}
+这个顺序是正确的。
+
+\textbf{为什么其他选项是错误的：}
+\begin{itemize}
+    \item \textbf{A. 3241}: 在执行 4 (`p->pred = node`) 之后，`p->pred` 变成了 `node`。那么接下来的 ① (`p->pred->succ = node`) 就会变成 `node->succ = node`，这是错误的，它会使 `node` 指向自身，并覆盖在步骤③中设置的 `node->succ = p`。
+    \item \textbf{C. 1432}: 在执行 4 (`p->pred = node`) 之后，`p->pred` 变成了 `node`。那么接下来的 ② (`node->pred = p->pred`) 就会变成 `node->pred = node`，这是错误的。
+    \item \textbf{D. 4231}: 在执行 4 (`p->pred = node`) 之后，`p->pred` 变成了 `node`。那么接下来的 ② (`node->pred = p->pred`) 就会变成 `node->pred = node`，这是错误的。
+\end{itemize}
+\end{solution}
+
+
+
+\section*{56}
+
+\begin{graybox}
+\textbf{在有序列表中查找一个元素的时间复杂度是：}：
+\begin{circledenum}
+    \item $\Omega(n\log_{2}n)$
+    \item $\Omega(n)$
+    \item O($\log_{2}n$)
+    \item O(1)
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+这个问题的答案取决于“列表”的具体实现（例如，是基于数组的列表还是基于链表的列表）。
+
+\begin{itemize}
+    \item \textbf{如果“有序列表”是基于数组的 (如有序向量)}:
+    \begin{itemize}
+        \item 由于数组支持高效的随机访问（循秩访问时间复杂度为 O(1)），我们可以使用二分查找。
+        \item 二分查找的时间复杂度是 O($\log_2 n$)。
+        \item 在这种情况下，选项 C (O($\log_2 n$)) 将是正确的。
+    \end{itemize}
+
+    \item \textbf{如果“有序列表”是基于链表的}:
+    \begin{itemize}
+        \item 链表不支持高效的随机访问。要访问链表中的第 $k$ 个元素，通常需要从头节点开始遍历 $k$ 步，时间复杂度为 O(k)。
+        \item 因此，在链表上直接应用标准的二分查找无法达到 O($\log_2 n$) 的效率。
+        \item 在有序链表中查找元素通常需要进行线性扫描，从头到尾（或直到找到元素或确定元素不存在）。
+        \item 线性扫描的时间复杂度在最坏情况下（例如，元素在末尾或不存在）是 O(n)，平均情况下也是 O(n)。因此，其时间复杂度为 $\Theta(n)$。
+        \item 如果时间复杂度是 $\Theta(n)$，那么它既是 O(n) 也是 $\Omega(n)$。
+    \end{itemize}
+\end{itemize}
+
+考虑到在类似题目（如题目46和题目54的上下文）中，“列表”通常被用来指代不支持高效随机访问的数据结构（如链表），与“向量”（通常指数组）形成对比。题目46明确指出列表因不能高效循秩访问而不适用于O($\log_2 n$)的二分查找。题目54也指出向量查找比列表查找快。
+
+基于此上下文，我们假设这里的“有序列表”指的是有序链表或类似的不能进行O(1)循秩访问的结构。
+在这种情况下：
+\begin{itemize}
+    \item 查找操作的时间复杂度是 $\Theta(n)$。
+    \item 这意味着算法的运行时间 $T(n)$ 满足 $c_1 n \le T(n) \le c_2 n$ 对于足够大的 $n$。
+    \item 因此，$T(n)$ 是 $O(n)$ 并且 $T(n)$ 是 $\Omega(n)$。
+\end{itemize}
+
+现在看选项：
+\begin{itemize}
+    \item A. $\Omega(n\log_2 n)$: 对于线性扫描来说太高了。
+    \item B. $\Omega(n)$: 如果复杂度是 $\Theta(n)$，那么 $\Omega(n)$ 是正确的。它表示在最坏情况下，算法至少需要线性时间。
+    \item C. O($\log_2 n$): 这对于链表来说通常是不正确的。
+    \item D. O(1): 除非在非常特殊的情况下（例如，查找的元素总是在列表的开头），否则不正确。
+\end{itemize}
+
+由于对于有序链表的查找，其时间复杂度是 $\Theta(n)$，因此它必然是 $\Omega(n)$。选项B表明，在（链式）有序列表中查找元素，其时间复杂度的下界是线性的。这是因为在最坏情况下，可能需要检查所有 $n$ 个元素。
+
+因此，在将“列表”理解为链表（基于上下文）的前提下，$\Omega(n)$ 是对查找时间复杂度的正确描述（作为其下界）。
+\end{solution}
+
+\section*{57}
+
+\begin{graybox}
+\textbf{对列表\{11, 5, 7, 13, 2, 3\}进行选择排序，每一次selectMax()被选为未排序子列表中最大者的元素依次为：}：
+\begin{circledenum}
+    \item 11, 5, 7, 2, 3
+    \item 13, 7, 11, 2, 5
+    \item 13, 11, 7, 5, 3
+    \item 2, 11, 13, 5, 7
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+这道题目与第47题完全相同。
+选择排序（Selection Sort）的过程是：在每一轮中，从当前未排序的部分中选出最大（或最小）的元素，然后将其放置到已排序部分的末尾（或开头）。题目要求“每一次selectMax()被选为未排序子列表中最大者的元素依次为”。
+
+初始列表 V = \{11, 5, 7, 13, 2, 3\}。设 $n$ 为列表的长度，即 $n=6$.
+我们将从未排序的子列表 V[0...i] 中选择最大元素，并将其与 V[i] 交换，然后缩小子列表的范围 i 从 $n-1$ 减到 1。
+
+\begin{itemize}
+    \item \textbf{第1轮} (未排序子列表 V[0...5] = \{11, 5, 7, 13, 2, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{11, 5, 7, 13, 2, 3\}。
+        \item 最大的元素是 \textbf{13}。
+        \item 将 13 与当前未排序部分的最后一个元素 V[5] (即3) 交换。
+        \item V 变为 \{11, 5, 7, 3, 2, \textbf{13}\}。
+        \item 被选出的最大元素：13。
+    \end{itemize}
+
+    \item \textbf{第2轮} (未排序子列表 V[0...4] = \{11, 5, 7, 3, 2\}):
+    \begin{itemize}
+        \item 未排序部分为 \{11, 5, 7, 3, 2\}。
+        \item 最大的元素是 \textbf{11}。
+        \item 将 11 与当前未排序部分的最后一个元素 V[4] (即2) 交换。
+        \item V 变为 \{2, 5, 7, 3, \textbf{11}, 13\}。
+        \item 被选出的最大元素：11。
+    \end{itemize}
+
+    \item \textbf{第3轮} (未排序子列表 V[0...3] = \{2, 5, 7, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{2, 5, 7, 3\}。
+        \item 最大的元素是 \textbf{7}。
+        \item 将 7 与当前未排序部分的最后一个元素 V[3] (即3) 交换。
+        \item V 变为 \{2, 5, 3, \textbf{7}, 11, 13\}。
+        \item 被选出的最大元素：7。
+    \end{itemize}
+
+    \item \textbf{第4轮} (未排序子列表 V[0...2] = \{2, 5, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{2, 5, 3\}。
+        \item 最大的元素是 \textbf{5}。
+        \item 将 5 与当前未排序部分的最后一个元素 V[2] (即3) 交换。
+        \item V 变为 \{2, 3, \textbf{5}, 7, 11, 13\}。
+        \item 被选出的最大元素：5。
+    \end{itemize}
+
+    \item \textbf{第5轮} (未排序子列表 V[0...1] = \{2, 3\}):
+    \begin{itemize}
+        \item 未排序部分为 \{2, 3\}。
+        \item 最大的元素是 \textbf{3}。
+        \item 将 3 与当前未排序部分的最后一个元素 V[1] (即3) 交换。 (元素已在正确位置，无需实际移动)
+        \item V 变为 \{2, \textbf{3}, 5, 7, 11, 13\}。
+        \item 被选出的最大元素：3。
+    \end{itemize}
+\end{itemize}
+经过 $n-1 = 5$ 轮后，列表排序完毕。
+被选为未排序子列表中最大者的元素依次为：13, 11, 7, 5, 3。
+
+这与选项C相符。
+\end{solution}
+
+
+\section*{58}
+
+\begin{graybox}
+\textbf{selectionSort()算法的哪种实现是稳定的：}：
+\begin{circledenum}
+    \item 每一趟将最小元素移到前方，对于多个相等的最小元素，选取其中位置最靠前者。
+    \item 每一趟将最大元素移到后方，对于多个相等的最大元素，选取其中位置最靠前者。
+    \item 每一趟将最小元素移到前方，对于多个相等的最小元素，选取其中位置最靠后者。
+    \item 以上实现皆稳定。
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+稳定性是指在排序过程中，具有相同键值的元素的相对顺序在排序后保持不变。
+
+\begin{itemize}
+    \item \textbf{A. 每一趟将最小元素移到前方，对于多个相等的最小元素，选取其中位置最靠前者。}
+    \begin{itemize}
+        \item 考虑序列 \texttt{S = \{\ldots, (X, $item_i$), \ldots, (Y, $item_j$), \ldots (X, $item_k$), \ldots\}} where $item_i$ is before $item_k$ in the original sequence.
+        \item 当我们将最小元素放到已排序部分的末尾（即当前处理位置的前方）时，如果遇到多个相等的最小元素，选择它们中在当前未排序子序列里最靠前的那个（即原始索引最小的那个）。
+        \item 假设我们正在填充位置 $p$。我们在 $S[p \ldots n-1]$ 中寻找最小元素。
+        \item 如果 $(X, item_i)$ 和 $(X, item_k)$ 都是最小元素，且 $item_i$ 在 $item_k$ 之前。如果我们选择 $(X, item_i)$ (最靠前者) 并将其与 $S[p]$ 交换，那么 $(X, item_i)$ 就被放到了正确的位置。之后处理 $(X, item_k)$ 时，它不会被错误地移动到 $(X, item_i)$ 之前。
+        \item 这种方法是\textbf{稳定的}。例如，对于 `{(3,a), (2,b), (3,c)}`:
+        \begin{enumerate}
+            \item 找到最小 `(2,b)`。交换 `(3,a)` 和 `(2,b)` $\rightarrow$ `{(2,b), (3,a), (3,c)}`.
+            \item 在 `{(3,a), (3,c)}` 中找最小。两者相等。选最靠前者 `(3,a)`。与自身交换 (无变化)。$\rightarrow$ `{(2,b), (3,a), (3,c)}`.
+        \end{enumerate}
+        \item 结果 `{(2,b), (3,a), (3,c)}` 是稳定的。
+    \end{itemize}
+
+    \item \textbf{B. 每一趟将最大元素移到后方，对于多个相等的最大元素，选取其中位置最靠前者。}
+    \begin{itemize}
+        \item 考虑序列 `S = {(3,a), (3,b)}` (目标是升序，所以 `(3,a)` 应该在 `(3,b)` 之前)。
+        \item 我们将最大元素放到未排序部分的末尾。
+        \item 第1趟 (处理 `S[0...n-1]`，将最大者放到 `S[n-1]`):
+        未排序部分 `{(3,a), (3,b)}`。最大元素是 `3`。有两个：`(3,a)` 和 `(3,b)`。
+        选取“位置最靠前者”，即 `(3,a)`。
+        将 `(3,a)` 与 `S[n-1]` (即 `(3,b)`) 交换。
+        序列变为 `{(3,b), (3,a)}`。
+        \item 此时，`(3,b)` 在 `(3,a)` 之前，原始顺序被破坏。
+        \item 这种方法是\textbf{不稳定的}。
+    \end{itemize}
+
+    \item \textbf{C. 每一趟将最小元素移到前方，对于多个相等的最小元素，选取其中位置最靠后者。}
+    \begin{itemize}
+        \item 考虑序列 `S = {(3,a), (3,b)}`。
+        \item 我们将最小元素放到未排序部分的前方。
+        \item 第1趟 (处理 `S[0...n-1]`，将最小者放到 `S[0]`):
+        未排序部分 `{(3,a), (3,b)}`。最小元素是 `3`。有两个：`(3,a)` 和 `(3,b)`。
+        选取“位置最靠后者”，即 `(3,b)`。
+        将 `(3,b)` 与 `S[0]` (即 `(3,a)`) 交换。
+        序列变为 `{(3,b), (3,a)}`。
+        \item 此时，`(3,b)` 在 `(3,a)` 之前，原始顺序被破坏。
+        \item 这种方法是\textbf{不稳定的}。
+    \end{itemize}
+
+    \item \textbf{D. 以上实现皆稳定。}
+    \begin{itemize}
+        \item 由于B和C不稳定，此选项错误。
+    \end{itemize}
+\end{itemize}
+因此，只有选项A描述的实现是稳定的。
+\end{solution}
+
+
+\section*{59}
+
+\begin{graybox}
+\textbf{对于插入排序过程中的已排序子序列（设其长度为k）：}：
+\begin{circledenum}
+    \item 其中的元素是整个序列中最小的k个元素
+    \item 其中的元素是整个序列中最大的k个元素
+    \item 其中的元素是原序列中位于前方的k个元素
+    \item 其中的元素是原序列中位于后方的k个元素
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+这道题目与第52题完全相同。
+插入排序（Insertion Sort）的工作原理是逐步构建一个已排序的子序列。在算法的第 $k$ 步（或者说，当已排序子序列的长度为 $k$ 时），这个已排序的子序列是由原序列中最初的前 $k$ 个元素组成的，只是它们现在已经被排好序了。
+
+例如，考虑序列 V = \{5, 2, 4, 1, 3\}：
+\begin{itemize}
+    \item \textbf{初始}: 已排序子序列为空。
+    \item \textbf{处理第一个元素 (5)}: 已排序子序列为 \{5\}。长度 $k=1$。它由原序列的第一个元素组成。
+    \item \textbf{处理第二个元素 (2)}: 将 2 插入到 \{5\} 中。已排序子序列为 \{2, 5\}。长度 $k=2$。它由原序列的前两个元素 \{5, 2\} 排序后得到。
+    \item \textbf{处理第三个元素 (4)}: 将 4 插入到 \{2, 5\} 中。已排序子序列为 \{2, 4, 5\}。长度 $k=3$。它由原序列的前三个元素 \{5, 2, 4\} 排序后得到。
+    \item \textbf{处理第四个元素 (1)}: 将 1 插入到 \{2, 4, 5\} 中。已排序子序列为 \{1, 2, 4, 5\}。长度 $k=4$。它由原序列的前四个元素 \{5, 2, 4, 1\} 排序后得到。
+    \item \textbf{处理第五个元素 (3)}: 将 3 插入到 \{1, 2, 4, 5\} 中。已排序子序列为 \{1, 2, 3, 4, 5\}。长度 $k=5$。它由原序列的前五个元素 \{5, 2, 4, 1, 3\} 排序后得到。
+\end{itemize}
+
+分析选项：
+\begin{itemize}
+    \item \textbf{A. 其中的元素是整个序列中最小的k个元素}：错误。例如，当 $k=1$ 时，已排序子序列是\{5\}，但 5 不是整个序列中最小的元素。
+    \item \textbf{B. 其中的元素是整个序列中最大的k个元素}：错误。
+    \item \textbf{C. 其中的元素是原序列中位于前方的k个元素}：正确。已排序子序列总是由原序列中从第0个到第 $k-1$ 个元素（即前 $k$ 个元素）经过排序后组成的。
+    \item \textbf{D. 其中的元素是原序列中位于后方的k个元素}：错误。
+\end{itemize}
+\end{solution}
+
+
+\section*{60}
+
+\begin{graybox}
+\textbf{插入排序中的某一次插入后得到序列\{2, 7, 13, 5, 3, 19, 17\}，此时已排序部分有3个元素。又经过2趟迭代后的结果是：}：
+\begin{circledenum}
+    \item \{2, 3, 5, 7, 13, 17, 19\}
+    \item \{2, 3, 5, 7, 13, 19, 17\}
+    \item \{2, 5, 7, 3, 13, 19, 17\}
+    \item \{2, 3, 5, 13, 7, 17, 19\}
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+当前序列 V = \{2, 7, 13, 5, 3, 19, 17\}。
+已排序部分有3个元素，即 V[0...2] = \{2, 7, 13\}。
+未排序部分的第一个元素是 V[3] = 5。
+
+\textbf{第1趟迭代 (插入元素 5):}
+\begin{itemize}
+    \item 取出元素 `e = 5`。
+    \item 将 `e` 与已排序部分的 `V[2]=13` 比较: `5 < 13`。`13` 右移。V 变为 \{2, 7, \_, 13, 3, 19, 17\} (概念上)。
+    \item 将 `e` 与 `V[1]=7` 比较: `5 < 7`。`7` 右移。V 变为 \{2, \_, 7, 13, 3, 19, 17\}。
+    \item 将 `e` 与 `V[0]=2` 比较: `5 > 2`。`5` 插入到 `2` 之后。
+    \item 序列变为 V = \{2, 5, 7, 13, 3, 19, 17\}。
+    \item 已排序部分: \{2, 5, 7, 13\}。未排序部分: \{3, 19, 17\}。
+\end{itemize}
+
+\textbf{第2趟迭代 (插入元素 3):}
+\begin{itemize}
+    \item 当前序列 V = \{2, 5, 7, 13, 3, 19, 17\}。
+    \item 已排序部分 V[0...3] = \{2, 5, 7, 13\}。
+    \item 未排序部分的第一个元素是 V[4] = 3。
+    \item 取出元素 `e = 3`。
+    \item 将 `e` 与 `V[3]=13` 比较: `3 < 13`。`13` 右移。V 变为 \{2, 5, 7, \_, 13, 19, 17\}。
+    \item 将 `e` 与 `V[2]=7` 比较: `3 < 7`。`7` 右移。V 变为 \{2, 5, \_, 7, 13, 19, 17\}。
+    \item 将 `e` 与 `V[1]=5` 比较: `3 < 5`。`5` 右移。V 变为 \{2, \_, 5, 7, 13, 19, 17\}。
+    \item 将 `e` 与 `V[0]=2` 比较: `3 > 2`。`3` 插入到 `2` 之后。
+    \item 序列变为 V = \{2, 3, 5, 7, 13, 19, 17\}。
+    \item 已排序部分: \{2, 3, 5, 7, 13\}。未排序部分: \{19, 17\}。
+\end{itemize}
+经过2趟迭代后的结果是 \{2, 3, 5, 7, 13, 19, 17\}。
+
+这与选项B相符。
+\end{solution}
+
+\section*{61}
+
+\begin{graybox}
+\textbf{一个序列的逆序数T定义为该序列中的逆序对总数，规模为n的列表中插入排序进行的元素比较总次数为：}：
+\begin{circledenum}
+    \item O(n+ T$\log_2$(T))
+    \item O(n+T)
+    \item O($n^2$ + $\log_2$(T))
+    \item O(T)
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+插入排序在将元素 `A[j]` 插入到已排序的子序列 `A[0...j-1]` 时，会将其与 `A[j-1]`, `A[j-2]`, ... 逐个比较，直到找到一个不大于 `A[j]` 的元素或者到达子序列的开头。
+每当 `A[j]` 小于它正在比较的元素 `A[i]` (其中 `i < j`) 时，这意味着 `(A[i], A[j])` 形成了一个逆序对（在原始位置上，`A[i]` 在 `A[j]` 之前，但 `A[i] > A[j]`）。这个比较会导致 `A[i]` 向右移动，`A[j]` 继续向前比较。
+
+\begin{itemize}
+    \item 对于每一个逆序对 $(A[k], A[j])$ 其中 $k < j$ 且 $A[k] > A[j]$，当元素 $A[j]$ 被插入时，它必然会与 $A[k]$ 进行一次比较（并越过它）。因此，至少有 $T$ 次比较是由于逆序对的存在而发生的。
+    \item 此外，对于每个被插入的元素 $A[j]$ (从 $j=1$ 到 $n-1$) ，即使它大于所有在它之前的已排序元素（即没有与它形成逆序对的元素在它前面），它仍然需要进行一次比较来确定它的最终位置（即与它前面的那个元素比较，发现自己更大，然后停止）。这部分比较有 $n-1$ 次。
+\end{itemize}
+
+更准确地说，当第 $j$ 个元素（从索引1到$n-1$）被插入时，它会进行 $k_j + 1$ 次比较，其中 $k_j$ 是在已排序部分中比它大的元素的数量（这些元素会被右移）。$k_j$ 也正好是这个元素与前面元素形成的逆序对的数量。
+总比较次数 = $\sum_{j=1}^{n-1} (k_j + 1) = (\sum_{j=1}^{n-1} k_j) + \sum_{j=1}^{n-1} 1$.
+$\sum_{j=1}^{n-1} k_j$ 正是总的逆序对数量 $T$。
+$\sum_{j=1}^{n-1} 1 = n-1$.
+所以，总比较次数是 $T + (n-1)$。
+
+因此，时间复杂度是 $O(T + n-1) = O(n+T)$。
+\end{solution}
+
+
+\section*{62}
+\begin{graybox}
+长度为n的列表，被等分为n/k段，每段
+长度为k，不同段之间的元素不存在逆序。对
+该列表进行插入排序的最坏时间复杂度为：
+A. O(n$^2$)
+B. O(nk)
+C. O(n$^2$/k)
+D. O(n$^2$k)
+\end{graybox}
+
+\begin{solution}
+正确答案是B。
+
+\textbf{详细解答：}
+
+设列表为 $L$，长度为 $n$。列表被等分为 $m = n/k$ 段，记为 $S_1, S_2, \ldots, S_m$。每段 $S_i$ 的长度为 $k$。
+条件“不同段之间的元素不存在逆序”意味着：对于任意 $i < j$，以及任意元素 $x \in S_i$ 和任意元素 $y \in S_j$，都有 $x \le y$。
+
+我们来分析插入排序的过程：
+插入排序从列表的第二个元素开始，逐个将其插入到前面已经排好序的部分中。
+
+考虑插入列表中的第 $p$ 个元素 $L[p]$（从0开始计数或从1开始计数，分析过程类似，这里假设从1开始计数，则 $L[1 \ldots p-1]$ 是已排序部分）。
+假设元素 $L[p]$ 属于段 $S_j$。
+
+当我们将 $L[p]$ 向左移动以插入到正确位置时，它会与 $L[p-1], L[p-2], \ldots$ 等元素进行比较。
+\begin{enumerate}
+    \item \textbf{与前面段的元素比较}：
+    如果 $L[p]$ 与一个属于前面某个段 $S_i$ (其中 $i < j$) 的元素 $L[q]$ ($q < p$) 进行比较，根据题目条件，$L[q] \le L[p]$。这意味着 $L[p]$ 不需要移动到 $L[q]$ 的左边。因此，$L[p]$ 的插入过程不会跨越到它所在段 $S_j$ 之前任何段的元素的左侧。
+
+    \item \textbf{与本段内的元素比较}：
+    $L[p]$ 的比较和移动操作实际上只局限于其自身所在的段 $S_j$ 内部，即与 $S_j$ 中那些已经在 $L[p]$ 左边并且已经（相对）排序的元素进行比较。
+
+    \item \textbf{单个元素插入的代价}：
+    对于段 $S_j$ 中的任何一个元素，当它被插入时，它最多需要与该段内已经处理过的其它元素（最多 $k-1$ 个）进行比较和移动。在最坏情况下（例如，当前元素是其段内已处理元素中最小的），插入这个元素需要 $O(k)$ 次比较和 $O(k)$ 次移动。所以，插入一个元素到其所在段的正确位置，最坏时间复杂度为 $O(k)$。
+
+    \item \textbf{总时间复杂度}：
+    列表中总共有 $n$ 个元素。由于每个元素的插入操作，其比较和移动的范围被限制在其自身长度为 $k$ 的段内，所以每个元素插入的最坏时间复杂度为 $O(k)$。
+    因此，对整个列表进行插入排序的总的最坏时间复杂度为 $n \times O(k) = O(nk)$。
+\end{enumerate}
+
+所以，最坏时间复杂度为 $O(nk)$。
+
+\end{solution}
+
+
+
+
+\end{document}
+
+% VScode 常用快捷键：
+
+% Ctrl + R:                 打开最近的文件夹
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键
+
+% Ctrl + Alt + J:           由代码定位到PDF
+% 
+
+
+% Git提交规范：
+% update: Linear Algebra 2 notes
+% add: Linear Algebra 2 notes
+% import: Linear Algebra 2 notes
+% delete: Linear Algebra 2 notes

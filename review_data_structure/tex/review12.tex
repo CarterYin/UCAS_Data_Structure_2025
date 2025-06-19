@@ -1,0 +1,1012 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{STKaiti} % 设置加粗字体为 STKaiti 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{题目}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        \usetikzlibrary{graphs} % <-- Added for \graph syntax
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{数据结构与算法期末复习,\ 尹超,\ 2023K8009926003}
+    \lhead{Homework}
+
+
+%文档信息设置
+\title{数据结构与算法期末复习\\ Homework}
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2024.8 -- 2025.1}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+% 定义 tikz 样式 splaynode 和 highlight
+\tikzset{
+  splaynode/.style={draw, circle, minimum size=7mm, inner sep=0pt},
+  highlight/.style={draw, circle, minimum size=7mm, inner sep=0pt, fill=yellow!30}
+}
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的期末复习笔记。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+\chapter{第十二章 串}
+
+\section*{200}
+\begin{graybox}
+文本串的长度为n，模式串的长度为m，蛮力
+匹配的时间复杂度为
+A. O(m)
+B. O(n)
+C. O(mn)
+D. O(mlogn)
+\end{graybox}
+
+\begin{solution}
+正确答案是 C。
+
+\textbf{详细分析：}
+
+蛮力匹配算法（Brute-Force Algorithm）是最直观、最简单的字符串匹配算法。其工作原理如下：
+
+\begin{enumerate}
+    \item 将模式串 `P` (长度为 `m`) 与文本串 `T` (长度为 `n`) 的开头对齐。
+    \item 从左到右逐个比较 `P` 和 `T` 中对应位置的字符。
+    \item 如果所有 `m` 个字符都匹配成功，则找到了一个匹配。
+    \item 如果在比较过程中遇到不匹配的字符，则将模式串 `P` 向右移动一个位置，然后回到第2步，从 `P` 的开头重新开始与 `T` 的新位置进行比较。
+    \item 重复此过程，直到 `P` 的末尾超出了 `T` 的末尾。
+\end{enumerate}
+
+\textbf{时间复杂度分析：}
+\begin{itemize}
+    \item \textbf{外层循环（对齐次数）：} 模式串 `P` 需要在文本串 `T` 中尝试所有可能的起始对齐位置。第一个对齐位置是 `T[0]`，最后一个可能的对齐位置是 `T[n-m]`。因此，总共有 `n - m + 1` 个可能的对齐位置。这个循环的次数是 $O(n)$。
+    \item \textbf{内层循环（比较次数）：} 对于每一个对齐位置，在最坏的情况下，都需要将模式串 `P` 的所有 `m` 个字符与文本串 `T` 的对应部分进行比较。例如，当文本串是 "aaaaaaaaab" 而模式串是 "aaab" 时，每次对齐都需要比较多次才能发现不匹配。这个循环的次数是 $O(m)$。
+\end{itemize}
+
+\textbf{总时间复杂度：}
+由于是嵌套循环，总的时间复杂度是外层循环次数乘以内层循环次数。
+$T(n, m) = O((n - m + 1) \times m) = O(n \times m) = O(mn)$。
+\end{solution}
+
+\section*{201}
+\begin{graybox}
+下面哪位不是KMP算法的发明者:
+A. Knuth
+B. Morris
+C. Pratt
+D. Prim
+\end{graybox}
+
+\begin{solution}
+正确答案是 D。
+
+\textbf{详细分析：}
+
+\begin{itemize}
+    \item \textbf{KMP算法：} 这是一种高效的字符串匹配算法，其名称 "KMP" 是三位发明者姓氏的首字母缩写。
+    \item \textbf{发明者：}
+    \begin{itemize}
+        \item \textbf{K}nuth (Donald Knuth)
+        \item \textbf{M}orris (James H. Morris)
+        \item \textbf{P}ratt (Vaughan Pratt)
+    \end{itemize}
+    因此，选项A、B、C都是KMP算法的发明者。
+
+    \item \textbf{Prim (Robert C. Prim)：}
+    Prim是一位著名的计算机科学家，但他以发明用于寻找图的\textbf{最小生成树（Minimum Spanning Tree）}的\textbf{Prim算法}而闻名，与字符串匹配无关。
+\end{itemize}
+\end{solution}
+
+
+\section*{202}
+\begin{graybox}
+KMP算法的过程中，若某次比对在模式串P的
+第j个位置P[j]处失败，则将对齐位置换为：
+A. prev[j]
+B. next[j]
+C. prev[j] + 1
+D. next[j] + 1
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+KMP算法的核心在于利用一个预先计算好的`next`数组（也称为“失效函数”或“部分匹配表”）来避免不必要的回溯。
+
+\begin{enumerate}
+    \item \textbf{`next`数组的含义：}
+    `next[j]` 的值代表了模式串 `P` 的子串 `P[0...j-1]` 中，最长的相等的前缀和后缀的长度。例如，如果 `P = "ababa"`，那么 `next[5]` 的值为3，因为 `P[0...4]`（即"ababa"）的最长相等前后缀是 "aba"，长度为3。
+
+    \item \textbf{匹配失败时的操作：}
+    \begin{itemize}
+        \item 假设在匹配过程中，文本串指针为 `i`，模式串指针为 `j`。
+        \item 当 `P[j]` 与文本串中的对应字符不匹配时，说明 `P` 的前 `j` 个字符 `P[0...j-1]` 已经与文本串中的某一部分成功匹配。
+        \item 此时，我们不需要像蛮力算法那样将模式串仅仅右移一位。相反，我们查询 `next[j]`。
+        \item `next[j]` 的值告诉我们，在已经匹配的 `P[0...j-1]` 中，其长度为 `next[j]` 的前缀 `P[0...next[j]-1]` 与其后缀是相同的。
+        \item 因为这个后缀已经与文本串的对应部分匹配了，所以我们无需再次比较。我们可以直接将模式串滑动到这个前缀之后的位置，继续进行比较。
+        \item 这个新的比较位置就是 `next[j]`。因此，我们将模式串的指针 `j` 更新为 `next[j]`，而文本串的指针 `i` 保持不变，然后继续比较 `P[next[j]]` 和文本串的当前字符。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+当在 `P[j]` 处发生不匹配时，KMP算法通过 `j = next[j]` 来更新模式串的对齐位置，实现高效的“滑动”，从而避免了文本串指针的回溯。
+\end{solution}
+
+
+\section*{203}
+\begin{graybox}
+对于长度为n的文本串和长度为m的模式
+串，KMP算法的时间复杂度为：
+A. O(n\textsuperscript{2})
+B. O(mn)
+C. O(mlogn)
+D. O(m+n)
+\end{graybox}
+
+\begin{solution}
+正确答案是 D。
+
+\textbf{详细分析：}
+
+KMP算法的执行过程可以分为两个独立的部分，其总时间复杂度是这两部分之和。
+
+\begin{enumerate}
+    \item \textbf{预处理阶段：构建`next`数组}
+    \begin{itemize}
+        \item 这个阶段只对长度为 `m` 的模式串进行操作，以计算出`next`数组（或称部分匹配表）。
+        \item 构建`next`数组的过程只需要对模式串进行一次扫描。
+        \item 因此，这个阶段的时间复杂度与模式串的长度 `m` 成正比，即 $O(m)$。
+    \end{itemize}
+
+    \item \textbf{匹配阶段：在文本串中搜索}
+    \begin{itemize}
+        \item 在这个阶段，算法使用构建好的`next`数组在长度为 `n` 的文本串中进行匹配。
+        \item KMP算法最关键的特性是，文本串的指针 `i` \textbf{永远不会回溯}（即 `i` 只会增加，不会减少）。
+        \item 虽然模式串的指针 `j` 可能会因为不匹配而通过 `j = next[j]` 回溯，但 `j` 的回溯次数总和不会超过 `i` 的前进次数。
+        \item 因此，在整个匹配过程中，对文本串的扫描也是线性的。
+        \item 这个阶段的时间复杂度与文本串的长度 `n` 成正比，即 $O(n)$。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{总时间复杂度：}
+将两个阶段的复杂度相加：
+$T(n, m) = T(\text{预处理}) + T(\text{匹配}) = O(m) + O(n) = O(m+n)$。
+
+这使得KMP算法比蛮力匹配的 $O(mn)$ 复杂度要高效得多。
+\end{solution}
+
+\section*{204}
+\begin{graybox}
+给定一个进行串匹配的算法，如何衡量它的效
+率？\\
+A. 随机生成大量的文本串T和模式串P作为输入，
+通过实验的方法进行测量\\
+B. 认为所有不同文本串T和模式串P出现的概率是
+相等的，依此计算时间复杂度的期望\\
+C. 对于成功匹配和失败匹配两种情况分别讨论其
+时间复杂度\\
+D. 选取固定的文本串T，随机选取模式串P，计算
+时间复杂度的期望
+\end{graybox}
+
+\begin{solution}
+正确答案是 C。
+
+\textbf{详细分析：}
+
+衡量一个算法的效率，尤其是像字符串匹配这样的算法，通常需要进行全面的理论分析，而不仅仅是实验测试或基于特定假设的期望计算。
+
+\begin{itemize}
+    \item \textbf{A. 实验测量：} 实验方法可以提供算法在特定数据集和机器上的实际性能数据，但结果可能不具有普适性，并且很难覆盖所有情况，特别是难以触发“最坏情况”。它是一种验证手段，但不是主要的理论衡量方法。
+
+    \item \textbf{B. 概率均等假设：} 假设所有串出现的概率相等，这在现实世界中通常是不成立的（例如，在英文文本中，字母'e'的出现频率远高于'z'）。这种平均情况分析有其价值，但它基于一个很强的、可能不切实际的假设。
+
+    \item \textbf{C. 分情况讨论：} 这是进行算法分析最严谨和标准的方法。通过分别讨论成功匹配和失败匹配（以及匹配/失败发生的位置），我们可以分析出算法的：
+    \begin{itemize}
+        \item \textbf{最坏情况时间复杂度（Worst-case）：} 算法在任何输入下运行时间的一个上界。这是衡量算法效率最重要的指标。
+        \item \textbf{最好情况时间复杂度（Best-case）：} 算法运行时间的一个下界。
+        \item \textbf{平均情况时间复杂度（Average-case）：} 在所有可能输入下的期望运行时间。
+    \end{itemize}
+    例如，蛮力算法在文本串为"aaaa...a"、模式串为"a...ab"时达到最坏情况（一种失败匹配）。而在文本串和模式串第一个字符就不匹配时达到最好情况。分别讨论这些情况是得出完整效率评价的基础。
+
+    \item \textbf{D. 固定文本串：} 这种方法过于片面，得到的结果严重依赖于所选的固定文本串，无法推广到一般情况。
+\end{itemize}
+
+\textbf{结论：}
+最全面和理论上最可靠的衡量方法是分别讨论各种情况（特别是成功和失败），从而确定算法的最坏、最好和平均时间复杂度。
+\end{solution}
+
+
+\section*{205}
+\begin{graybox}
+以下是蛮力串匹配的代码：
+\begin{verbatim}
+int match(const char * P, const char * T)
+{
+    int n =strlen(T);
+    int m = strlen(P);
+    int i = 0;
+    int j = 0;
+    while (j < m && i < n) // Note: Corrected from the likely typo 'j < n'
+    {
+        if (T[i] == P[j])
+        {
+            i++;
+            j++;
+        }else
+        {
+            i = i - j + 1; // Note: Corrected from the typo 'i -= |j - 1|'
+            j = 0;
+        }
+    }
+    return i-j;
+}
+\end{verbatim}
+当匹配成功/失败时的返回值分别为：\\
+A. P在T中首次出现的位置 / -1\\
+B. P在T中首次出现的位置 / 一个大于n-m的数\\
+C. P在T中最后一次出现的位置 / 一个大于n-m的数\\
+D. P在T中最后一次出现的位置 / -1
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+该代码是一个有明显错误的蛮力串匹配算法实现。为了分析其意图，我们必须将其修正为标准的蛮力算法逻辑来分析其返回值。
+
+\begin{enumerate}
+    \item \textbf{匹配成功时：}
+    \begin{itemize}
+        \item 算法从左到右扫描文本串T，因此它找到的任何匹配都是\textbf{首次出现}的匹配。
+        \item 当匹配成功时，循环会因为 `j` 达到 `m` 而终止。
+        \item 此时，`i` 的值是 `s + m`，其中 `s` 是匹配开始的位置。`j` 的值是 `m`。
+        \item 返回值 `i - j` 就等于 `(s + m) - m = s`。
+        \item 因此，成功时返回的是P在T中首次出现的位置（起始索引）。
+    \end{itemize}
+
+    \item \textbf{匹配失败时：}
+    \begin{itemize}
+        \item 当匹配失败时，循环会因为 `i` 遍历完所有可能的起始位置而终止。
+        \item 最后一个可能的起始位置是 `n - m`。当从这个位置开始的匹配也失败后，`i` 会继续增加，直到 `i` 的值达到 `n`，导致循环条件 `i < n` 不满足而终止。
+        \item 此时，`i` 的值近似为 `n`，而 `j` 的值是某个小于 `m` 的数（因为匹配未完成）。
+        \item 返回值 `i - j` 将会是 `n - j`。
+        \item 因为 `j < m`，所以 `-j > -m`，因此 `n - j > n - m`。
+        \item 所以，在大多数失败情况下，返回值是一个大于 `n - m` 的数。这个值超出了所有可能的合法起始索引（`0` 到 `n-m`），因此可以作为匹配失败的标志。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+\begin{itemize}
+    \item 成功时返回首次出现的位置。
+    \item 失败时返回一个大于 `n-m` 的数。
+\end{itemize}
+选项B最符合这个分析。
+\end{solution}
+
+\section*{206}
+\begin{graybox}
+在文本串
+YHNMQWERTYFLNYCQWERTYFGIOERNSJTYAFFA中用
+KMP算法查找模式串QWERTYFLNYCQWERTYO
+已经对齐了第一个QWERTYFLNYC
+下一步的对齐位置是
+\end{graybox}
+
+\begin{solution}
+下一步的对齐位置是将模式串的开头 `Q` 与文本串中第15个位置的 `Q` 对齐。
+
+\textbf{详细分析：}
+
+KMP算法的核心是利用 `next` 数组在发生不匹配时，计算出模式串应该“滑动”多远，从而避免文本串指针的回溯。
+
+\begin{enumerate}
+    \item \textbf{确定不匹配的位置：}
+    \begin{itemize}
+        \item 文本串 T: `...Q W E R T Y F L N Y C Q W E R T Y F G...`
+        \item 模式串 P: `  Q W E R T Y F L N Y C Q W E R T Y O`
+        \item 初始对齐在 T 的第4个位置（索引从0开始）。
+        \item 我们逐一比较，发现 `T[4...20]` 与 `P[0...16]` 完全匹配，均为 `QWERTYFLNYCQWERTY`。
+        \item 不匹配发生在下一个位置：文本串 `T[21]` 是 `F`，而模式串 `P[17]` 是 `O`。
+        \item 因此，不匹配发生在模式串的第 `j=17` 个位置。
+    \end{itemize}
+
+    \item \textbf{计算 `next` 数组的值：}
+    \begin{itemize}
+        \item 当在 `P[j]` 处不匹配时，我们需要查找 `next[j]` 的值。这里 `j=17`。
+        \item `next[j]` 的值是模式串子串 `P[0...j-1]` 中，最长的相等的“前缀”和“后缀”的长度。
+        \item 我们需要分析的子串是 `P[0...16]`，即 `QWERTYFLNYCQWERTY`。
+        \item 观察这个子串：
+        \begin{itemize}
+            \item 它的前缀包括 `Q`, `QW`, `QWE`, `QWER`, `QWERT`, \textbf{`QWERTY`}, ...
+            \item 它的后缀包括 `Y`, `TY`, `RTY`, `ERTY`, `WERTY`, \textbf{`QWERTY`}, ...
+        \end{itemize}
+        \item 最长的相等的“前缀”和“后缀”是 `QWERTY`，其长度为6。
+        \item 因此，`next[17] = 6`。
+    \end{itemize}
+
+    \item \textbf{确定下一步对齐位置：}
+    \begin{itemize}
+        \item KMP算法的规则是，当在 `j` 处不匹配时，将模式串的指针移动到 `next[j]`。
+        \item 所以，模式串的指针 `j` 从17变为6。
+        \item 这相当于将模式串向右滑动，使得模式串中长度为 `next[j]` 的前缀 `P[0...5]`（即`QWERTY`）与刚刚匹配上的文本串部分的后缀对齐。
+        \item 刚刚匹配上的文本串部分是 `T[4...20]`，其长度为6的后缀是 `T[15...20]`（即`QWERTY`）。
+        \item 因此，新的对齐位置是将模式串的 `P[0]` 对齐到文本串的 `T[15]`。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+下一步是将模式串的开头 `Q` 与文本串中的第二个 `Q`（位于索引15）对齐，然后从 `P[6]` 和 `T[21]` 开始继续比较。
+\end{solution}
+
+
+\section*{207}
+\begin{graybox}
+KMP算法的查询表为next[]，模式串为P，
+若P[0,j)与文本串匹配，而在P[j]处失配，则：\\
+A. P[0, next[j]) = P[j - next[j], j)\\
+B. P[0, next[j]+1) = P[j - next[j],j+1)\\
+C. P[0, next[j] - 1) = P[j - next[j],j)\\
+D. P[0, next[j]) = P[j - next[j] - 1,j)
+\end{graybox}
+
+\begin{solution}
+正确答案是 A。
+
+\textbf{详细分析：}
+
+这道题考查的是KMP算法中 `next` 数组（或称“失效函数”）的精确定义。
+
+\begin{enumerate}
+    \item \textbf{背景：}
+    当匹配进行到模式串 `P` 的第 `j` 个位置（索引为 `j`）时发生不匹配，这意味着 `P` 的前 `j` 个字符，即子串 `P[0...j-1]`（在题目表示法中为 `P[0, j)`），已经与文本串的某一部分成功匹配。
+
+    \item \textbf{`next[j]` 的定义：}
+    `next[j]` 的值被定义为：在已经匹配的子串 `P[0...j-1]` 中，其\textbf{最长的相等的“真前缀”和“真后缀”的长度}。
+    \begin{itemize}
+        \item “真前缀”是指不包括整个字符串本身的前缀。
+        \item “真后缀”是指不包括整个字符串本身的后缀。
+    \end{itemize}
+
+    \item \textbf{将定义转化为数组索引：}
+    \begin{itemize}
+        \item 设 `k = next[j]`。
+        \item 根据定义，`P[0...j-1]` 的一个长度为 `k` 的前缀，与它的一个长度为 `k` 的后缀是相等的。
+        \item 长度为 `k` 的前缀是 `P[0...k-1]`。用区间表示法就是 `P[0, k)`。
+        \item 长度为 `k` 的后缀是 `P[(j-1) - k + 1 ... j-1]`，即 `P[j-k ... j-1]`。用区间表示法就是 `P[j-k, j)`。
+    \end{itemize}
+
+    \item \textbf{结论：}
+    因此，`next[j]` 的定义直接导出了等式：
+    `P[0, k) = P[j-k, j)`
+    将 `k` 替换回 `next[j]`，我们得到：
+    `P[0, next[j]) = P[j - next[j], j)`
+\end{enumerate}
+
+这个等式是KMP算法能够实现高效“滑动”的数学基础。当在 `P[j]` 处失配时，算法知道文本串中刚刚匹配过的部分，其后缀等于模式串 `P` 的一个前缀（`P[0, next[j])`），因此可以直接将模式串滑动到这个位置继续比较，而无需从头开始。
+\end{solution}
+
+\section*{208}
+\begin{graybox}
+令 A = \{t | P[0, t) = P[j - t, j)\} ，
+即A是所有使得P[0,j)的前缀与后缀相等的长度t，如何计算next[j]？\\
+A. next[j] = min A\\
+B. next[j] = max A\\
+C. next[j] = |A| (A中的元素个数)\\
+D. next[j] = max A - |A|
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{理解集合 A 的定义：}
+    集合 `A` 被定义为 `{t | P[0, t) = P[j - t, j)}`。
+    \begin{itemize}
+        \item `P[0, j)` 表示模式串 `P` 从索引0开始，长度为 `j` 的子串，即 `P[0...j-1]`。
+        \item `P[0, t)` 是 `P[0...j-1]` 的一个长度为 `t` 的前缀。
+        \item `P[j - t, j)` 是 `P[0...j-1]` 的一个长度为 `t` 的后缀。
+    \end{itemize}
+    因此，集合 `A` 包含了所有使得 `P[0...j-1]` 的前缀与后缀相等的长度 `t`。
+
+    \item \textbf{回顾 `next[j]` 的定义：}
+    KMP算法中的 `next[j]` 被精确地定义为：在子串 `P[0...j-1]` 中，其\textbf{最长的}相等的“真前缀”和“真后缀”的长度。
+    （“真”表示不等于字符串本身，这个条件在集合A的定义中是隐含的，因为 `t` 必须小于 `j`）。
+
+    \item \textbf{建立联系：}
+    \begin{itemize}
+        \item 集合 `A` 包含了所有满足条件的长度。
+        \item `next[j]` 需要的是这些长度中的\textbf{最大值}。
+    \end{itemize}
+    因此，`next[j]` 就是集合 `A` 中的最大元素。
+
+    \item \textbf{结论：}
+    `next[j] = max A`。
+\end{enumerate}
+
+\textbf{示例：}
+假设 `P = "ababa"`，我们要计算 `next[5]`。
+\begin{itemize}
+    \item 此时 `j=5`，子串是 `P[0, 5)` 即 `"ababa"`。
+    \item 我们寻找其相等的前后缀：
+    \begin{itemize}
+        \item 长度 `t=1`：前缀 "a" == 后缀 "a"。所以 `1` 在集合 `A` 中。
+        \item 长度 `t=2`：前缀 "ab" != 后缀 "ba"。
+        \item 长度 `t=3`：前缀 "aba" == 后缀 "aba"。所以 `3` 在集合 `A` 中。
+        \item 长度 `t=4`：前缀 "abab" != 后缀 "baba"。
+    \end{itemize}
+    \item 集合 `A = {1, 3}`。
+    \item `next[5] = max A = max({1, 3}) = 3`。
+\end{itemize}
+\end{solution}
+
+\section*{209}
+\begin{graybox}
+在通过next[j]计算next[j+1]的递推过程中next[j+1] == next[j] + 1当且仅当：\\
+A. j = 0\\
+B. P[j] = P[next[j] - 1]\\
+C. T[j] = P[j]\\
+D. P[j] = P[next[j]]
+\end{graybox}
+
+\begin{solution}
+正确答案是 D。
+
+\textbf{详细分析：}
+
+这道题考查的是KMP算法中`next`数组的递推构造过程。
+
+\begin{enumerate}
+    \item \textbf{递推基础：}
+    假设我们已经计算出了 `next[j]`，现在要计算 `next[j+1]`。
+    \begin{itemize}
+        \item `next[j]` 的值，我们记为 `k`，代表了子串 `P[0...j-1]` 的最长相等前后缀的长度。
+        \item 这意味着 `P[0...k-1] == P[j-k...j-1]`。
+    \end{itemize}
+
+    \item \textbf{寻找 `next[j+1]`：}
+    `next[j+1]` 是子串 `P[0...j]` 的最长相等前后缀的长度。我们希望在 `next[j]` 的基础上进行扩展。
+    \begin{itemize}
+        \item 我们已经有了一个长度为 `k` 的匹配：前缀 `P[0...k-1]` 和后缀 `P[j-k...j-1]`。
+        \item 为了将这个匹配的长度扩展到 `k+1`，我们需要比较这两个匹配部分的下一个字符。
+        \item 前缀 `P[0...k-1]` 的下一个字符是 `P[k]`。
+        \item 后缀 `P[j-k...j-1]` 的下一个字符是 `P[j]`。
+    \end{itemize}
+
+    \item \textbf{得出条件：}
+    \begin{itemize}
+        \item 如果 `P[k] == P[j]`，那么我们就可以将这个匹配长度加一。
+        \item 这意味着 `P[0...k]` 等于 `P[j-k...j]`。
+        \item 此时，`P[0...j]` 的最长相等前后缀长度就是 `k+1`。
+        \item 将 `k` 替换回 `next[j]`，我们得到：如果 `P[next[j]] == P[j]`，那么 `next[j+1] = next[j] + 1`。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+`next[j+1]` 能在 `next[j]` 的基础上加1，当且仅当 `P[j]` 这个新加入的字符，恰好等于 `next[j]` 所指向的前缀的下一个字符，即 `P[next[j]]`。
+
+\textbf{其他选项分析：}
+\begin{itemize}
+    \item A. j = 0: 这是初始条件，不是递推关系。
+    \item B. P[j] = P[next[j] - 1]: 比较的是前缀的最后一个字符，而不是下一个字符，逻辑错误。
+    \item C. T[j] = P[j]: `next`数组的计算是预处理阶段，只与模式串P有关，与文本串T无关。
+\end{itemize}
+\end{solution}
+
+\section*{210}
+\begin{graybox}
+对于模式串CHINCHILLA，计算其next[]\\
+A. -1 0 0 0 0 1 2 3 0 0\\
+B. -1 2 5 4 5 6 2 3 9 1\\
+C. 1 0 0 2 6 7 2 5 7 1\\
+D. 0 0 1 -1 0 0 0 3 2 0
+\end{graybox}
+
+\begin{solution}
+正确答案是 A。
+
+\textbf{详细分析：}
+
+`next[j]` 的值是模式串 `P` 的子串 `P[0...j-1]` 中，最长的相等的“真前缀”和“真后缀”的长度。我们按照这个定义逐个计算。
+（约定 `next[0] = -1`）
+
+\begin{itemize}
+    \item \textbf{j=0:} `next[0] = -1` (按约定)
+    \item \textbf{j=1:} P[0] = "C"。没有真前缀/后缀。`next[1] = 0`。
+    \item \textbf{j=2:} P[0...1] = "CH"。前缀{"C"}，后缀{"H"}。不相等。`next[2] = 0`。
+    \item \textbf{j=3:} P[0...2] = "CHI"。前缀{"C", "CH"}，后缀{"I", "HI"}。不相等。`next[3] = 0`。
+    \item \textbf{j=4:} P[0...3] = "CHIN"。前缀{"C", "CH", "CHI"}，后缀{"N", "IN", "HIN"}。不相等。`next[4] = 0`。
+    \item \textbf{j=5:} P[0...4] = "CHINC"。前缀{"C", ...}，后缀{"C", ...}。最长相等的是 "C"，长度为1。`next[5] = 1`。
+    \item \textbf{j=6:} P[0...5] = "CHINCH"。前缀{"C", "CH", ...}，后缀{"H", "CH", ...}。最长相等的是 "CH"，长度为2。`next[6] = 2`。
+    \item \textbf{j=7:} P[0...6] = "CHINCHI"。前缀{"C", "CH", "CHI", ...}，后缀{"I", "HI", "CHI", ...}。最长相等的是 "CHI"，长度为3。`next[7] = 3`。
+    \item \textbf{j=8:} P[0...7] = "CHINCHIL"。没有相等的前后缀。`next[8] = 0`。
+    \item \textbf{j=9:} P[0...8] = "CHINCHILL"。没有相等的前后缀。`next[9] = 0`。
+\end{itemize}
+
+将结果组合起来，得到 `next` 数组为：`{-1, 0, 0, 0, 0, 1, 2, 3, 0, 0}`。
+\end{solution}
+
+\end{document}
+
+% VScode 常用快捷键：
+
+% Ctrl + R:                 打开最近的文件夹
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键
+
+% Ctrl + Alt + J:           由代码定位到PDF
+% 
+
+
+% Git提交规范：
+% update: Linear Algebra 2 notes
+% add: Linear Algebra 2 notes
+% import: Linear Algebra 2 notes
+% delete: Linear Algebra 2 notes

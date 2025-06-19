@@ -1,0 +1,747 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{STKaiti} % 设置加粗字体为 STKaiti 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{题目}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        \usetikzlibrary{graphs} % <-- Added for \graph syntax
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{数据结构与算法期末复习,\ 尹超,\ 2023K8009926003}
+    \lhead{Homework}
+
+
+%文档信息设置
+\title{数据结构与算法期末复习\\ Homework}
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2024.8 -- 2025.1}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+% 定义 tikz 样式 splaynode 和 highlight
+\tikzset{
+  splaynode/.style={draw, circle, minimum size=7mm, inner sep=0pt},
+  highlight/.style={draw, circle, minimum size=7mm, inner sep=0pt, fill=yellow!30}
+}
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的期末复习笔记。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+\chapter{第十三章 排序}
+
+\section*{211}
+\begin{graybox}
+迄今为止，我们已经学过许多种排序算法了，
+请根据描述选择对应的算法(请填入选项大写字母）
+A, 快速排序 B, 堆排序 C, 归并排序 D, 插入
+排序 E, 冒泡排序
+\end{graybox}
+
+\begin{solution}
+反复比较相邻元素，若为逆序则交换，直至有序： \textbf{E}
+\begin{itemize}
+    \item \textbf{分析：} 这是冒泡排序的经典定义。它通过重复地遍历待排序的数列，一次比较两个元素，如果他们的顺序错误就把他们交换过来。
+\end{itemize}
+
+将原序列以轴点为界分为两部分，递归地对它们分别排序： \textbf{A}
+\begin{itemize}
+    \item \textbf{分析：} 这是快速排序的核心思想（“分治法”）。它选取一个“轴点”（pivot），将序列分割成小于轴点和大于轴点的两部分，然后对这两部分递归地进行快速排序。
+\end{itemize}
+
+将原序列前半部分和后半部分，分别排序，再将这两部分合并： \textbf{C}
+\begin{itemize}
+    \item \textbf{分析：} 这是归并排序的核心思想（也是“分治法”）。它将序列递归地对半分割，直到每个子序列只有一个元素，然后再将这些有序的子序列逐层合并，最终得到完全有序的序列。
+\end{itemize}
+
+不断从原序列中取出最小元素： \textbf{B}
+\begin{itemize}
+    \item \textbf{分析：} 这可以看作是选择排序的宏观思想，而堆排序是该思想的一种高效实现。通过构建一个最小堆（Min-Heap），根节点总是当前序列中的最小元素。不断地取出根节点（delMin），就可以得到一个有序序列。
+\end{itemize}
+
+抓扑克牌时人们常用的排序方法： \textbf{D}
+\begin{itemize}
+    \item \textbf{分析：} 这是对插入排序最形象的比喻。当我们整理手中的扑克牌时，通常会拿起一张新牌，然后将它插入到手中已有序的牌的正确位置。
+\end{itemize}
+\end{solution}
+
+
+\section*{212}
+\begin{graybox}
+对于规模为n的向量，快速排序在平均
+情况下得时间复杂度为
+A. O(n\textsuperscript{2})
+B. O(nlogn)
+C. O(n)
+D. O(n+logn)
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{快速排序的核心思想：}
+    快速排序是一种采用“分治法”（Divide and Conquer）策略的排序算法。它通过一个“划分”（Partition）操作，将一个数组分成两个子数组，然后对这两个子数组进行递归排序。
+
+    \item \textbf{时间复杂度分析：}
+    \begin{itemize}
+        \item \textbf{划分操作：} 每一次划分操作都需要遍历当前子数组，其时间复杂度与子数组的规模成正比，为 $O(k)$，其中 `k` 是子数组的长度。
+        \item \textbf{平均情况：} 在平均情况下，我们可以期望每次选择的“轴点”（pivot）能够将数组划分成大致相等（或比例固定）的两个部分。例如，每次都划分为 `n/2` 和 `n/2`。这会导致递归的深度为 $O(\log n)$。由于每一层递归的所有划分操作加起来的总时间是 $O(n)$，所以总的平均时间复杂度是 $O(n \log n)$。
+        \item \textbf{最坏情况：} 当每次选择的轴点都是当前子数组的最大或最小元素时（例如，在一个已经有序的数组中总是选择第一个元素作为轴点），划分会极度不均衡（划分为0和 `k-1`）。这会导致递归深度达到 $O(n)$，总时间复杂度退化为 $O(n^2)$。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+尽管快速排序的最坏情况时间复杂度是 $O(n^2)$，但通过良好的轴点选择策略（如随机选择、三数取中等），这种情况在实际应用中极少发生。其平均情况下的性能非常出色，时间复杂度为 $O(n \log n)$。
+\end{solution}
+
+\section*{213}
+\begin{graybox}
+对序列A[0, n)用快速排序算法进行排序，u和v是该序列中的两个元素。\\
+在排序过程中，u和v发生过比较，当且仅当（假定所有元素互异）：\\
+A. u < v\\
+B. u在某次被选取为轴点\\
+C. 对于所有介于u和v之间的元素（包括u和v本身），它们之中第一个被选为轴点的是u或者v\\
+D. 所有比u和v都小的元素都始终没有被选为轴点
+\end{graybox}
+
+\begin{solution}
+正确答案是 C。
+
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{快速排序的比较机制：}
+    在快速排序的任何一步中，元素之间的比较都只发生在\textbf{当前子数组的元素与该次划分选出的轴点（pivot）之间}。一旦划分完成，位于轴点左侧子数组的元素将永远不会与右侧子数组的元素进行比较。
+
+    \item \textbf{u和v被比较的条件：}
+    两个元素 `u` 和 `v` 要想发生比较，它们必须在某一次划分操作中，一个作为轴点，另一个作为普通元素。这意味着，在它们两个被选为轴点之前，它们必须始终位于同一个待排序的子数组中。
+
+    \item \textbf{u和v被分离的条件：}
+    考虑所有值在 `u` 和 `v` 之间的元素的集合（包括 `u` 和 `v`）。假设 `u < v`，这个集合就是 `S = {x | u <= x <= v}`。
+    \begin{itemize}
+        \item 如果从集合 `S` 中被选为轴点的第一个元素是 `u` 或 `v`，那么另一个元素必然还在同一个子数组中，因此它们会发生比较。
+        \item 但是，如果从集合 `S` 中被选为轴点的第一个元素是某个 `p`，其中 `u < p < v`，那么在围绕 `p` 进行划分时：
+        \begin{itemize}
+            \item `u` 会被分到 `p` 的左边。
+            \item `v` 会被分到 `p` 的右边。
+        \end{itemize}
+        在此之后，`u` 和 `v` 就被分到了不同的子数组中，它们再也没有机会进行比较了。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+因此，`u` 和 `v` 能够发生比较的充要条件是：在所有值介于 `u` 和 `v` 之间的元素中，第一个被选为轴点的必须是 `u` 或 `v` 本身。这正是选项C的描述。
+
+\textbf{其他选项分析：}
+\begin{itemize}
+    \item A. u < v: 这只是一个大小关系，与是否比较无关。
+    \item B. u在某次被选取为轴点: 这不充分。如果 `v` 在 `u` 被选为轴点之前，已经被另一个轴点 `p` (u < p < v) 分离出去了，它们就不会比较。
+    \item D. 所有比u和v都小的元素都始终没有被选为轴点: 这不正确。一个比 `u` 和 `v` 都小的元素 `p` 可以被选为轴点，此时 `u` 和 `v` 会一起被分到右侧子数组，它们仍然有机会在后续的划分中进行比较。
+\end{itemize}
+\end{solution}
+
+
+\section*{214}
+\begin{graybox}
+快速排序算法选取轴点时可以采取不同的
+策略，本题试图用实例说明“三者取中”的策
+略比随机选取的策略倾向于得到更平衡的轴点
+设待排序序列的长度n很大，若轴点的选取使
+得分割后长/短子序列的长度比大于9:1，则称
+为不平衡
+针对不同的轴点选取策略，估计其发生不平衡
+的概率(请填十进制小数)：
+\end{graybox}
+
+\begin{solution}
+\textbf{分析：}
+\begin{enumerate}
+    \item \textbf{定义不平衡：}
+    设分割后短序列长度为 `s`，长序列长度为 `l`。`s + l = n - 1`。
+    不平衡条件为 `l/s > 9`，即 `l > 9s`。
+    代入 `l = n - 1 - s`，得到 `n - 1 - s > 9s`，即 `n - 1 > 10s`，或 `s < (n-1)/10`。
+    由于 `n` 很大，可以近似为 `s < n/10`。
+    这意味着，当分割后较短的子序列长度小于总长度的10\%时，我们称之为不平衡。
+
+    \item \textbf{不平衡的轴点范围：}
+    为了使短子序列长度小于 `n/10`，被选为轴点的元素必须是整个序列中最小的10\%或最大的10\%。
+    例如，如果轴点是第 `k` 小的元素，分割后的子序列大小为 `k-1` 和 `n-k`。
+    如果 `k < n/10`，则短序列长度为 `k-1`，小于 `n/10`。
+    如果 `k > 9n/10`，则短序列长度为 `n-k`，也小于 `n/10`。
+    因此，轴点落在排序后序列的前10\%或后10\%区间内，会导致不平衡。这个“不平衡区间”的总大小为 `0.1n + 0.1n = 0.2n`。
+\end{enumerate}
+
+\textbf{从n个元素中等概率随机选取一个作为轴点：} \textbf{0.2}
+\begin{itemize}
+    \item \textbf{计算：} 随机选取的轴点落入“不平衡区间”的概率，就是该区间的相对大小。
+    \item 概率 = (不平衡区间的长度) / (总长度) = `0.2n / n = 0.2`。
+\end{itemize}
+
+\textbf{从n个元素中等概率选取三个元素，以它们的中间元素作为轴点：} \textbf{0.056}
+\begin{itemize}
+    \item \textbf{计算：} 设 `S` 表示元素落在前10\%的“小”区间，`M` 表示落在中间80\%的“中”区间，`L` 表示落在后10\%的“大”区间。
+    \item `P(S) = 0.1`, `P(M) = 0.8`, `P(L) = 0.1`。
+    \item 三个元素的中间值（中位数）要落入“不平衡区间”（S或L），必须满足以下条件之一：
+    \begin{enumerate}
+        \item 至少有两个元素落在S区 (中位数在S区)。
+        \item 至少有两个元素落在L区 (中位数在L区)。
+    \end{enumerate}
+    \item \textbf{P(中位数在S区)} = P(两个S, 一个非S) + P(三个S)
+    \begin{itemize}
+        \item P(两个S, 一个非S) = $\binom{3}{2} \times P(S)^2 \times (1-P(S))^1 = 3 \times 0.1^2 \times 0.9 = 0.027$
+        \item P(三个S) = $P(S)^3 = 0.1^3 = 0.001$
+        \item P(中位数在S区) = $0.027 + 0.001 = 0.028$
+    \end{itemize}
+    \item \textbf{P(中位数在L区)} 与S区对称，同样为 `0.028`。
+    \item \textbf{总不平衡概率} = P(中位数在S区) + P(中位数在L区) = $0.028 + 0.028 = 0.056$。
+\end{itemize}
+\end{solution}
+
+\section*{215}
+\begin{graybox}
+快速排序基于的思想是：
+A. 减而治之
+B. 分而治之
+C. 动态规划
+D. 递归跟踪
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+\begin{itemize}
+    \item \textbf{A. 减而治之 (Decrease and Conquer):} 这种思想是将问题归约为一个规模更小的子问题。例如，二分查找每次将搜索范围减半，但只处理其中一半。快速排序则是将问题分解为\textbf{两个}子问题。
+
+    \item \textbf{B. 分而治之 (Divide and Conquer):} 这是快速排序所采用的核心策略。该策略包含三个步骤：
+    \begin{enumerate}
+        \item \textbf{分解 (Divide):} 选取一个轴点（pivot），将原序列划分为两个子序列，使得一个子序列中的所有元素都小于或等于轴点，另一个子序列中的所有元素都大于或等于轴点。
+        \item \textbf{解决 (Conquer):} 通过递归调用快速排序算法，分别对这两个子序列进行排序。
+        \item \textbf{合并 (Combine):} 因为子序列是原地排序的，所以当递归返回时，整个序列就已经有序，不需要额外的合并步骤。
+    \end{enumerate}
+    这完美地描述了快速排序的工作流程。归并排序也是分而治之的典型例子。
+
+    \item \textbf{C. 动态规划 (Dynamic Programming):} 这种思想通常用于解决具有重叠子问题和最优子结构性质的问题，通过存储子问题的解来避免重复计算。这与快速排序的机制不同。
+
+    \item \textbf{D. 递归跟踪 (Recursive Tracing):} 这不是一个标准的算法设计思想或范式。虽然快速排序通常用递归实现，但“递归”是实现手段，而“分而治之”是其背后的设计思想。
+\end{itemize}
+\end{solution}
+
+
+\section*{216}
+\begin{graybox}
+对于规模为n的向量，快速排序在平均
+情况下得时间复杂度为：
+A. O(n\textsuperscript{2})
+B. O(nlogn)
+C. O(n)
+D. O(n+logn)
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{快速排序的核心思想：}
+    快速排序是一种采用“分治法”（Divide and Conquer）策略的排序算法。它通过一个“划分”（Partition）操作，将一个数组分成两个子数组，然后对这两个子数组进行递归排序。
+
+    \item \textbf{时间复杂度分析：}
+    \begin{itemize}
+        \item \textbf{划分操作：} 每一次划分操作都需要遍历当前子数组，其时间复杂度与子数组的规模成正比，为 $O(k)$，其中 `k` 是子数组的长度。
+        \item \textbf{平均情况：} 在平均情况下，我们可以期望每次选择的“轴点”（pivot）能够将数组划分成大致相等（或比例固定）的两个部分。例如，每次都划分为 `n/2` 和 `n/2`。这会导致递归的深度为 $O(\log n)$。由于每一层递归的所有划分操作加起来的总时间是 $O(n)$，所以总的平均时间复杂度是 $O(n \log n)$。
+        \item \textbf{最坏情况：} 当每次选择的轴点都是当前子数组的最大或最小元素时（例如，在一个已经有序的数组中总是选择第一个元素作为轴点），划分会极度不均衡（划分为0和 `k-1`）。这会导致递归深度达到 $O(n)$，总时间复杂度退化为 $O(n^2)$。
+    \end{itemize}
+\end{enumerate}
+
+\textbf{结论：}
+尽管快速排序的最坏情况时间复杂度是 $O(n^2)$，但通过良好的轴点选择策略（如随机选择、三数取中等），这种情况在实际应用中极少发生。其平均情况下的性能非常出色，时间复杂度为 $O(n \log n)$。
+\end{solution}
+
+
+\end{document}
+
+% VScode 常用快捷键：
+
+% Ctrl + R:                 打开最近的文件夹
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键
+
+% Ctrl + Alt + J:           由代码定位到PDF
+% 
+
+
+% Git提交规范：
+% update: Linear Algebra 2 notes
+% add: Linear Algebra 2 notes
+% import: Linear Algebra 2 notes
+% delete: Linear Algebra 2 notes

@@ -1,0 +1,853 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        \newfontfamily\codefont{Consolas} % 定义需要的 codefont 字体
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            %frame=single, % single 为包围式单线框
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            %escapeinside=``,   % 允许在代码块中使用 LaTeX 命令 (此行无用)
+            %frameround=tttt,    % tttt 表示四个角都是圆角
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+            %backgroundcolor=\color{blue!10}, % 背景颜色
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily\codefont,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            %arc=2pt,        % 圆角半径
+            % 调整代码在 listing 中的位置以和引入文件时的格式相同
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3]{STKaiti} % 设置加粗字体为 STKaiti 族，AutoFakeBold 可以调整字体粗细
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{题目}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{数据结构与算法期末复习,\ 尹超,\ 2023K8009926003}
+    \lhead{Homework}
+
+
+%文档信息设置
+\title{数据结构与算法期末复习\\ Homework}
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2024.8 -- 2025.1}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+% 定义 tikz 样式 splaynode 和 highlight
+\tikzset{
+  splaynode/.style={draw, circle, minimum size=7mm, inner sep=0pt},
+  highlight/.style={draw, circle, minimum size=7mm, inner sep=0pt, fill=yellow!30}
+}
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的期末复习笔记。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+\chapter{第八章 词典}
+
+\section*{143}
+\begin{graybox}
+散列函数是 h(x) = x \% 20，则关键码25,
+85, 15, 20中会发生冲突的是：\\
+A. 25和85\\
+B. 25和15\\
+C. 15和85\\
+D. 20和15
+\end{graybox}
+
+\begin{solution}
+正确答案是 A。
+
+\textbf{详细分析：}
+
+散列冲突（Hash Collision）是指两个或多个不同的关键码（key）通过同一个散列函数（hash function）计算后得到了相同的散列地址（hash value）。
+
+给定的散列函数是 `h(x) = x % 20`，即取一个数除以20的余数。我们来计算每个关键码的散列地址：
+
+\begin{itemize}
+    \item \textbf{h(25)} = 25 \% 20 = \textbf{5}
+    \item \textbf{h(85)} = $85 \% 20 = \textbf{5}$ \quad （因为 $85 = 4 \times 20 + 5$）
+    \item \textbf{h(15)} = 15 \% 20 = \textbf{15}
+    \item \textbf{h(20)} = 20 \% 20 = \textbf{0}
+\end{itemize}
+
+通过计算可以发现，关键码 \textbf{25} 和 \textbf{85} 都得到了相同的散列地址 \textbf{5}。因此，它们会发生冲突。
+\end{solution}
+
+\section*{144}
+\begin{graybox}
+在散列中，关键码个数超过实际使用的
+空间时，有没有可能不发生冲突：\\
+A. 可能\\
+B. 不可能
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+这个问题可以用**鸽巢原理（Pigeonhole Principle）**来解释。
+
+\begin{itemize}
+    \item \textbf{鸽巢原理：} 如果有 $n+1$ 只鸽子要飞进 $n$ 个鸽巢，那么至少有一个鸽巢里会有两只或更多的鸽子。
+\end{itemize}
+
+在散列的上下文中：
+\begin{itemize}
+    \item “关键码” 相当于 “鸽子”。
+    \item “实际使用的空间”（即散列表的槽位/桶）相当于 “鸽巢”。
+\end{itemize}
+
+当“关键码个数”（鸽子数）超过“实际使用的空间”（鸽巢数）时，根据鸽巢原理，必然会有至少两个不同的关键码被散列函数映射到同一个空间位置。
+
+这种情况就是**散列冲突**。
+
+因此，当关键码的数量超过散列表的大小时，冲突是**不可避免**的，绝对会发生。
+\end{solution}
+
+\section*{145}
+\begin{graybox}
+S为所有可能词条的空间，A为所有可用地址
+的空间（|A| < |S|），h是散列函数，则：\\
+A. 从S映射到A，一定是满射\\
+B. 从S映射到A，不可能是单射\\
+C. 从A映射到S，不可能是满射\\
+D. 从A映射到S，一定是单射
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+我们来分析一下函数映射的性质：
+\begin{itemize}
+    \item \textbf{单射 (Injection):} 如果集合S中的每一个不同的元素，通过函数h映射到集合A中的元素也都是不同的，那么这个映射就是单射。即，如果 $s_1 \neq s_2$，则 $h(s_1) \neq h(s_2)$。
+    \item \textbf{满射 (Surjection):} 如果集合A中的每一个元素，都至少有一个S中的元素与之对应，那么这个映射就是满射。
+\end{itemize}
+
+题目给出的条件是：
+\begin{itemize}
+    \item S是定义域（所有可能的词条）。
+    \item A是陪域（所有可用的地址）。
+    \item h是从S到A的映射 ($h: S \to A$)。
+    \item 关键条件是 $|A| < |S|$，即地址空间的大小小于词条空间的大小。
+\end{itemize}
+
+现在我们来评估每个选项：
+\begin{itemize}
+    \item \textbf{A. 从S映射到A，一定是满射：} 这个不一定。一个设计糟糕的散列函数可能将所有词条都映射到A中的同一个地址，这样A中其他地址就没有被用到，因此不是满射。
+    \item \textbf{B. 从S映射到A，不可能是单射：} 这个是正确的。根据鸽巢原理，当“鸽子”（S中的元素）的数量大于“鸽巢”（A中的元素）的数量时，必然至少有两个鸽子要共享同一个鸽巢。同理，当 $|S| > |A|$ 时，必然存在至少两个不同的词条 $s_1, s_2$ 被映射到同一个地址，即 $h(s_1) = h(s_2)$。这违反了单射的定义。因此，这个映射不可能是单射。
+    \item \textbf{C. 从A映射到S，不可能是满射：} 这句话本身是正确的（因为 $|A| < |S|$），但它描述的是一个从A到S的映射，而散列函数h是从S到A的映射。所以这个选项与题目描述的散列函数h无关。
+    \item \textbf{D. 从A映射到S，一定是单射：} 这句话是错误的。我们可以定义一个从A到S的非单射函数。同样，这个选项也与散列函数h无关。
+\end{itemize}
+
+因此，唯一正确描述散列函数h性质的选项是B。
+\end{solution}
+
+
+\section*{146}
+\begin{graybox}
+考虑key的集合S = \{0, 8, 16, 24, 32, 40, 48, 56, 64\}\\
+用除余法构造的散列函数\\
+h1(key) = key \% 12\\
+h2(key) = key \% 11\\
+h1将S映射到的值域有几个元素？
+\underline{\hspace{2cm}}\\
+h2将S映射到的值域有几个元素？
+\underline{\hspace{2cm}}
+\end{graybox}
+
+\begin{solution}
+\textbf{详细分析：}
+
+\subsection*{对于 h1(key) = key \% 12}
+我们对集合S中的每个元素计算其散列值：
+\begin{itemize}
+    \item h1(0) = 0 \% 12 = \textbf{0}
+    \item h1(8) = 8 \% 12 = \textbf{8}
+    \item h1(16) = 16 \% 12 = \textbf{4}
+    \item h1(24) = 24 \% 12 = \textbf{0}
+    \item h1(32) = 32 \% 12 = \textbf{8}
+    \item h1(40) = 40 \% 12 = \textbf{4}
+    \item h1(48) = 48 \% 12 = \textbf{0}
+    \item h1(56) = 56 \% 12 = \textbf{8}
+    \item h1(64) = 64 \% 12 = \textbf{4}
+\end{itemize}
+h1映射得到的值的集合（值域）为 \{0, 4, 8\}。
+该集合中有 \textbf{3} 个元素。
+
+\textbf{原因分析：} 所有的key都是8的倍数，而散列表长度为12。`gcd(8, 12) = 4`，这导致了严重的聚集，散列值只会是4的倍数（0, 4, 8）。
+
+
+\subsection*{对于 h2(key) = key \% 11}
+我们对集合S中的每个元素计算其散列值：
+\begin{itemize}
+    \item h2(0) = 0 \% 11 = \textbf{0}
+    \item h2(8) = 8 \% 11 = \textbf{8}
+    \item h2(16) = 16 \% 11 = \textbf{5}
+    \item h2(24) = 24 \% 11 = \textbf{2}
+    \item h2(32) = 32 \% 11 = \textbf{10}
+    \item h2(40) = 40 \% 11 = \textbf{7}
+    \item h2(48) = 48 \% 11 = \textbf{4}
+    \item h2(56) = 56 \% 11 = \textbf{1}
+    \item h2(64) = 64 \% 11 = \textbf{9}
+\end{itemize}
+h2映射得到的值的集合（值域）为 \{0, 1, 2, 4, 5, 7, 8, 9, 10\}。
+该集合中有 \textbf{9} 个元素。
+
+\textbf{原因分析：} 散列表长度为11，是一个素数，且与key的公因子8互质（`gcd(8, 11) = 1`）。这使得散列值分布得非常均匀，对于S中的9个不同输入，产生了9个不同的输出。
+
+\hrulefill
+
+h1将S映射到的值域有几个元素？ \textbf{3}
+
+h2将S映射到的值域有几个元素？ \textbf{9}
+\end{solution}
+
+\section*{147}
+\begin{graybox}
+关于排解冲突的方法，以下说法正确的是：
+A. 用独立链法排解冲突，所有词条的实际存放位
+置均在桶数组内部
+B. 用开放定址排解冲突，词条的实际存放位置不
+一定是对应的散列函数值
+C. 用开放定址排解冲突，词条被存放在列表中
+D. 只要散列函数设计得当，不一定需要排解冲突
+的策略
+\end{graybox}
+
+\begin{solution}
+正确答案是 B。
+
+\textbf{详细分析：}
+
+\begin{itemize}
+    \item \textbf{A. 用独立链法排解冲突，所有词条的实际存放位置均在桶数组内部}
+    这个说法是\textbf{错误}的。独立链法（Separate Chaining）是在桶数组的每个槽位上维护一个次级数据结构（通常是链表）。桶数组本身只存放指向链表头部的指针或引用。发生冲突的词条被添加到这个链表中，因此它们实际存放在桶数组\textbf{外部}的动态分配的内存中。
+
+    \item \textbf{B. 用开放定址排解冲突，词条的实际存放位置不一定是对应的散列函数值}
+    这个说法是\textbf{正确}的。开放定址（Open Addressing）的核心思想是：当一个词条的散列地址 `h(key)` 已经被占用时，就去探测（probe）散列表中的其他位置，直到找到一个空槽位来存放该词条。因此，除了第一个没有发生冲突的词条外，其他词条的实际存放位置很可能不是其初始散列函数计算出的地址。
+
+    \item \textbf{C. 用开放定址排解冲突，词条被存放在列表中}
+    这个说法是\textbf{错误}的。这是对独立链法的描述。开放定址法的所有词条都直接存放在散列表（即桶数组）的内部，不使用外部的链表。
+
+    \item \textbf{D. 只要散列函数设计得当，不一定需要排解冲突的策略}
+    这个说法是\textbf{错误}的。根据鸽巢原理，只要可能输入的关键码总数大于散列表的槽位数，冲突就是理论上不可避免的。一个好的散列函数只能尽可能地\textbf{减少}冲突的概率，使其分布均匀，但\textbf{不能完全消除}冲突。因此，任何一个通用的散列表实现都必须有排解冲突的策略。
+\end{itemize}
+\end{solution}
+
+\section*{148}
+\begin{graybox}
+规模为11的桶数组当前状态为 A = \{ *,
+*, *, *, *, 0, 15, 26, *, 5, 9\}，其中
+*表示空桶\\
+散列函数为h(key) = (3 * key + 5) \% 11\\
+用开放定址+线性试探排解冲突\\
+插入词条4, 它的实际存放位置是\\
+A. A[4]\\
+B. A[6]\\
+C. A[7]\\
+D. A[8]
+\end{graybox}
+
+\begin{solution}
+正确答案是 D。
+
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{计算初始散列地址：}
+    首先，我们用散列函数计算词条4的初始散列地址。
+    \begin{itemize}
+        \item `h(4) = (3 * 4 + 5) % 11`
+        \item `h(4) = (12 + 5) % 11`
+        \item `h(4) = 17 % 11`
+        \item `h(4) = 6`
+    \end{itemize}
+    所以，词条4的理想存放位置是 `A[6]`。
+
+    \item \textbf{检查冲突：}
+    我们查看桶数组 `A` 在索引6的位置。`A[6]` 的值为15，不是空的。因此，发生了冲突。
+
+    \item \textbf{应用线性试探：}
+    由于发生了冲突，我们需要使用线性试探（Linear Probing）来寻找下一个可用的空桶。线性试探就是依次检查下一个位置。
+    \begin{itemize}
+        \item \textbf{第一次试探：} 检查 `A[(6 + 1) % 11]`，即 `A[7]`。`A[7]` 的值为26，仍然被占用。
+        \item \textbf{第二次试探：} 检查 `A[(6 + 2) % 11]`，即 `A[8]`。`A[8]` 的值是 `*`，表示这是一个空桶。
+    \end{itemize}
+
+    \item \textbf{确定存放位置：}
+    因为 `A[8]` 是沿着试探路径找到的第一个空桶，所以词条4将被存放在 `A[8]`。
+\end{enumerate}
+\end{solution}
+
+
+
+\section*{149}
+\begin{graybox}
+规模为11的桶数组当前状态为 A = \{ *, *,
+*, *, *, 0, 15, 26, *, 5, 9\}，其中*表示空
+桶\\
+散列函数为h(key) = (3 * key + 5) \% 11\\
+用开放定址+平方试探排解冲突\\
+插入词条4, 它的实际存放位置是\\
+A. A[4]\\
+B. A[6]\\
+C. A[7]\\
+D. A[8]
+\end{graybox}
+
+\begin{solution}
+正确答案是 A。
+
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{计算初始散列地址：}
+    首先，我们用散列函数计算词条4的初始散列地址。
+    \begin{itemize}
+        \item `h(4) = (3 * 4 + 5) % 11`
+        \item `h(4) = (12 + 5) % 11`
+        \item `h(4) = 17 % 11`
+        \item `h(4) = 6`
+    \end{itemize}
+    所以，词条4的理想存放位置是 `A[6]`。
+
+    \item \textbf{检查冲突：}
+    我们查看桶数组 `A` 在索引6的位置。`A[6]` 的值为15，不是空的。因此，发生了冲突。
+
+    \item \textbf{应用平方试探：}
+    由于发生了冲突，我们需要使用平方试探（Quadratic Probing）来寻找下一个可用的空桶。平方试探的地址序列是 $H_i = (h(key) + i^2) \pmod{m}$，其中 $i=1, 2, 3, \ldots$。
+    \begin{itemize}
+        \item \textbf{第一次试探 (i=1)：}
+        检查 $A[(6 + 1^2) \% 11]$，即 $A[7]$。$A[7]$ 的值为26，仍然被占用。
+
+        \item \textbf{第二次试探 (i=2)：}
+        检查 $A[(6 + 2^2) \bmod 11]$，即 $A[(6 + 4) \bmod 11]$，即 $A[10]$。$A[10]$ 的值为9，仍然被占用。
+
+        \item \textbf{第三次试探 (i=3)：}
+        检查 $A[(6 + 3^2) \bmod 11]$，即 $A[(6 + 9) \bmod 11]$，即 $A[15 \bmod 11]$，即 $A[4]$。$A[4]$ 的值是 $*$，表示这是一个空桶。
+    \end{itemize}
+
+    \item \textbf{确定存放位置：}
+    因为 `A[4]` 是沿着试探路径找到的第一个空桶，所以词条4将被存放在 `A[4]`。
+\end{enumerate}
+\end{solution}
+
+\section*{150}
+\begin{graybox}
+散列表的规模是素数，用开放定址+平
+方试探法排解冲突，若要保证新的词条能够顺
+利插入，散列表的装填因子不能超过（请填十
+进制小数）
+\underline{\hspace{2cm}}
+\end{graybox}
+
+\begin{solution}
+\textbf{详细分析：}
+
+\begin{enumerate}
+    \item \textbf{平方试探的性质：}
+    平方试探（Quadratic Probing）的一个重要特性是，它不能保证在散列表未满时总能找到一个空槽位。它的探测序列可能会在一个子集内循环，从而错过其他可用的空槽。
+
+    \item \textbf{保证插入成功的条件：}
+    有一个重要的定理指出：
+    \begin{quote}
+        如果散列表的大小 $m$ 是一个素数，并且装填因子 $\alpha$ (即 $\alpha = \frac{\text{已存词条数}}{\text{散列表大小}}$) 不超过 0.5，那么使用平方试探法（探测序列为 $h_i = (h(key) + i^2) \pmod m$）总能为新词条找到一个空槽位。
+    \end{quote}
+
+    \item \textbf{原因简述：}
+    该定理的证明基于以下事实：当 $m$ 为素数且 $\alpha \le 0.5$ 时，前 $\lceil m/2 \rceil$ 次探测（包括初始位置）所访问的地址都是互不相同的。因为散列表至少有一半是空的，所以在这前 $\lceil m/2 \rceil$ 次探测中，必然会遇到一个空槽位。
+
+    \item \textbf{结论：}
+    如果装填因子超过0.5，就无法保证一定能找到空位。因此，为了确保新的词条总能顺利插入，装填因子不能超过0.5。
+\end{enumerate}
+
+\hrulefill
+
+散列表的规模是素数，用开放定址+平
+方试探法排解冲突，若要保证新的词条能够顺
+利插入，散列表的装填因子不能超过（请填十
+进制小数）
+\underline{\hspace{2cm}\textbf{0.5}\hspace{2cm}}
+\end{solution}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+% VScode 常用快捷键：
+
+% Ctrl + R:                 打开最近的文件夹
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键
+
+% Ctrl + Alt + J:           由代码定位到PDF
+% 
+
+
+% Git提交规范：
+% update: Linear Algebra 2 notes
+% add: Linear Algebra 2 notes
+% import: Linear Algebra 2 notes
+% delete: Linear Algebra 2 notes
