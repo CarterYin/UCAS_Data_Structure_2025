@@ -1,0 +1,1036 @@
+% 若编译失败，且生成 .synctex(busy) 辅助文件，可能有两个原因：
+% 1. 需要插入的图片不存在：Ctrl + F 搜索 'figure' 将这些代码注释/删除掉即可
+% 2. 路径/文件名含中文或空格：更改路径/文件名即可
+
+% ------------------------------------------------------------- %
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% 设定文章类型与编码格式
+\documentclass[UTF8]{report}		
+
+% 本文特殊宏包
+\usepackage{siunitx} % 埃米单位
+
+% 本 .tex 专属的宏定义
+    \def\V{\ \mathrm{V}}
+    \def\mV{\ \mathrm{mV}}
+    \def\kV{\ \mathrm{KV}}
+    \def\KV{\ \mathrm{KV}}
+    \def\MV{\ \mathrm{MV}}
+    \def\A{\ \mathrm{A}}
+    \def\mA{\ \mathrm{mA}}
+    \def\kA{\ \mathrm{KA}}
+    \def\KA{\ \mathrm{KA}}
+    \def\MA{\ \mathrm{MA}}
+    \def\O{\ \Omega}
+    \def\mO{\ \Omega}
+    \def\kO{\ \mathrm{K}\Omega}
+    \def\KO{\ \mathrm{K}\Omega}
+    \def\MO{\ \mathrm{M}\Omega}
+    \def\Hz{\ \mathrm{Hz}}
+
+% 自定义宏定义
+    \def\N{\mathbb{N}}
+    \def\F{\mathbb{F}}
+    \def\Z{\mathbb{Z}}
+    \def\Q{\mathbb{Q}}
+    \def\R{\mathbb{R}}
+    \def\C{\mathbb{C}}
+    \def\T{\mathbb{T}}
+    \def\S{\mathbb{S}}
+    \def\A{\mathbb{A}}
+    \def\I{\mathscr{I}}
+    \def\Im{\mathrm{Im\,}}
+    \def\Re{\mathrm{Re\,}}
+    \def\d{\mathrm{d}}
+    \def\p{\partial}
+
+% 导入基本宏包
+    \usepackage[UTF8]{ctex}     % 设置文档为中文语言
+    \usepackage[colorlinks, linkcolor=blue, anchorcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \usepackage{hyperref}  % 宏包：自动生成超链接 (此宏包与标题中的数学环境冲突)
+    % \hypersetup{
+    %     colorlinks=true,    % false:边框链接 ; true:彩色链接
+    %     citecolor={blue},    % 文献引用颜色
+    %     linkcolor={blue},   % 目录 (我们在目录处单独设置)，公式，图表，脚注等内部链接颜色
+    %     urlcolor={orange},    % 网页 URL 链接颜色，包括 \href 中的 text
+    %     % cyan 浅蓝色 
+    %     % magenta 洋红色
+    %     % yellow 黄色
+    %     % black 黑色
+    %     % white 白色
+    %     % red 红色
+    %     % green 绿色
+    %     % blue 蓝色
+    %     % gray 灰色
+    %     % darkgray 深灰色
+    %     % lightgray 浅灰色
+    %     % brown 棕色
+    %     % lime 石灰色
+    %     % olive 橄榄色
+    %     % orange 橙色
+    %     % pink 粉红色
+    %     % purple 紫色
+    %     % teal 蓝绿色
+    %     % violet 紫罗兰色
+    % }
+
+    % \usepackage{docmute}    % 宏包：子文件导入时自动去除导言区，用于主/子文件的写作方式，\include{./51单片机笔记}即可。注：启用此宏包会导致.tex文件capacity受限。
+    \usepackage{amsmath}    % 宏包：数学公式
+    \usepackage{mathrsfs}   % 宏包：提供更多数学符号
+    \usepackage{amssymb}    % 宏包：提供更多数学符号
+    \usepackage{pifont}     % 宏包：提供了特殊符号和字体
+    \usepackage{extarrows}  % 宏包：更多箭头符号
+    \usepackage{multicol}   % 宏包：支持多栏 
+    \usepackage{graphicx}   % 宏包：插入图片
+    \usepackage{float}      % 宏包：设置图片浮动位置
+    %\usepackage{article}    % 宏包：使文本排版更加优美
+    \usepackage{tikz}       % 宏包：绘图工具
+    %\usepackage{pgfplots}   % 宏包：绘图工具
+    \usepackage{enumerate}  % 宏包：列表环境设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+
+% 文章页面margin设置
+    \usepackage[a4paper]{geometry}
+        \geometry{top=1in}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 定义 solution 环境
+\usepackage{amsthm}
+\newtheorem{solution}{Solution}
+        \geometry{bottom=1in}
+        \geometry{left=0.75in}
+        \geometry{right=0.75in}   % 设置上下左右页边距
+        \geometry{marginparwidth=1.75cm}    % 设置边注距离（注释、标记等）
+
+% 配置数学环境
+    \usepackage{amsthm} % 宏包：数学环境配置
+    % theorem-line 环境自定义
+        \newtheoremstyle{MyLineTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyLineTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{LineTheorem}{Theorem.\,}
+    % theorem-block 环境自定义
+        \newtheoremstyle{MyBlockTheoremStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+            {：\\ \indent}% <punctuation after theorem head>
+            {.5em}% <space after theorem head>
+            {\textbf{#1}\thmnumber{#2}\ \ (\,\textbf{#3}\,)}% 设置标题内容顺序
+        \theoremstyle{MyBlockTheoremStyle} % 应用自定义的定理样式
+        \newtheorem{BlockTheorem}[LineTheorem]{Theorem.\,} % 使用 LineTheorem 的计数器
+    % definition 环境自定义
+        \newtheoremstyle{MySubsubsectionStyle}% <name>
+            {11pt}% <space above>
+            {11pt}% <space below>
+            {}% <body font> 使用默认正文字体
+            {}% <indent amount>
+            {\bfseries}% <theorem head font> 设置标题项为加粗
+           % {：\\ \indent}% <punctuation after theorem head>
+            {\\\indent}
+            {0pt}% <space after theorem head>
+            {\textbf{#3}}% 设置标题内容顺序
+        \theoremstyle{MySubsubsectionStyle} % 应用自定义的定理样式
+        \newtheorem{definition}{}
+
+%宏包：有色文本框（proof环境）及其设置
+    \usepackage[dvipsnames,svgnames]{xcolor}    %设置插入的文本框颜色
+    \usepackage[strict]{changepage}     % 提供一个 adjustwidth 环境
+    \usepackage{framed}     % 实现方框效果
+        \definecolor{graybox_color}{rgb}{0.95,0.95,0.96} % 文本框颜色。修改此行中的 rgb 数值即可改变方框纹颜色，具体颜色的rgb数值可以在网站https://colordrop.io/ 中获得。（截止目前的尝试还没有成功过，感觉单位不一样）（找到喜欢的颜色，点击下方的小眼睛，找到rgb值，复制修改即可）
+        \newenvironment{graybox}{%
+        \def\FrameCommand{%
+        \hspace{1pt}%
+        {\color{gray}\small \vrule width 2pt}%
+        {\color{graybox_color}\vrule width 4pt}%
+        \colorbox{graybox_color}%
+        }%
+        \MakeFramed{\advance\hsize-\width\FrameRestore}%
+        \noindent\hspace{-4.55pt}% disable indenting first paragraph
+        \begin{adjustwidth}{}{7pt}%
+        \vspace{2pt}\vspace{2pt}%
+        }
+        {%
+        \vspace{2pt}\end{adjustwidth}\endMakeFramed%
+        }
+
+
+
+% 外源代码插入设置
+    % matlab 代码插入设置
+    \usepackage{matlab-prettifier}
+        \lstset{style=Matlab-editor}    % 继承 matlab 代码高亮 , 此行不能删去
+    \usepackage[most]{tcolorbox} % 引入tcolorbox包 
+    \usepackage{listings} % 引入listings包
+        \tcbuselibrary{listings, skins, breakable}
+        % 设置代码字体为 Latin Modern Mono，避免Consolas字体问题
+        \lstdefinestyle{cppstyle}{
+            language=C++,
+            basicstyle=\small\ttfamily, % 使用LaTeX默认等宽字体
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            frame=shadowbox,
+            framextopmargin=0pt,
+            framexbottommargin=0pt,
+            framexleftmargin=5pt,
+            framexrightmargin=5pt,
+            rulesepcolor=\color{red!20!green!20!blue!20},
+        }
+        \lstdefinestyle{MatlabStyle_inc}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+            xleftmargin=15pt,   % 左边距
+            frame=shadowbox,    % shadowbox 为带阴影包围式单线框效果
+            framextopmargin=0pt,    % 边框上边距
+            framexbottommargin=0pt, % 边框下边距
+            framexleftmargin=5pt,   % 边框左边距
+            framexrightmargin=5pt,  % 边框右边距
+            rulesepcolor=\color{red!20!green!20!blue!20}, % 阴影框颜色设置
+        }
+        \lstdefinestyle{MatlabStyle_src}{   % 插入代码的样式
+            language=Matlab,
+            basicstyle=\small\ttfamily,    % ttfamily 确保等宽 
+            breakatwhitespace=false,
+            breaklines=true,
+            captionpos=b,
+            keepspaces=true,
+            numbers=left,
+            numbersep=15pt,
+            showspaces=false,
+            showstringspaces=false,
+            showtabs=false,
+            tabsize=2,
+        }
+        \newtcblisting{matlablisting}{
+            top=0pt,
+            bottom=0pt,
+            left=-5pt,
+            right=-5pt,
+            listing only,   % 此句不能删去
+            listing style=MatlabStyle_src,
+            breakable,
+            colback=white,   % 选一个合适的颜色
+            colframe=black!0,   % 感叹号后跟不透明度 (为 0 时完全透明)
+        }
+        \lstset{
+            style=MatlabStyle_inc,
+        }
+
+
+
+% table 支持
+    \usepackage{booktabs}   % 宏包：三线表
+    %\usepackage{tabularray} % 宏包：表格排版
+    %\usepackage{longtable}  % 宏包：长表格
+    %\usepackage[longtable]{multirow} % 宏包：multi 行列
+
+
+% figure 设置
+\usepackage{graphicx}   % 支持 jpg, png, eps, pdf 图片 
+\usepackage{float}      % 支持 H 选项
+\usepackage{svg}        % 支持 svg 图片
+\usepackage{subcaption} % 支持子图
+\svgsetup{
+        % 指向 inkscape.exe 的路径
+       inkscapeexe = C:/aa_MySame/inkscape/bin/inkscape.exe, 
+        % 一定程度上修复导入后图片文字溢出几何图形的问题
+       inkscapelatex = false                 
+   }
+
+% 图表进阶设置
+    \usepackage{caption}    % 图注、表注
+        \captionsetup[figure]{name=图}  
+        \captionsetup[table]{name=表}
+        \captionsetup{
+            labelfont=bf, % 设置标签为粗体
+            textfont=bf,  % 设置文本为粗体
+            font=small  
+        }
+    \usepackage{float}     % 图表位置浮动设置 
+        % \floatstyle{plaintop} % 设置表格标题在表格上方
+        % \restylefloat{table}  % 应用设置
+
+
+% 圆圈序号自定义
+    \newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=0.8pt, line width = 0.03em] (char) {\small \bfseries #1};}}   % TikZ solution
+
+
+% 列表设置
+    \usepackage{enumitem}   % 宏包：列表环境设置
+        \setlist[enumerate]{
+            label=\bfseries(\arabic*) ,   % 设置序号样式为加粗的 (1) (2) (3)
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em} 
+        \setlist[itemize]{itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em}
+        \newlist{circledenum}{enumerate}{1} % 创建一个新的枚举环境  
+        \setlist[circledenum,1]{  
+            label=\protect\circled{\arabic*}, % 使用 \arabic* 来获取当前枚举计数器的值，并用 \circled 包装它  
+            ref=\arabic*, % 如果需要引用列表项，这将决定引用格式（这里仍然使用数字）
+            itemsep=0pt, parsep=0pt, topsep=0pt, partopsep=0pt, leftmargin=3.5em
+        }  
+
+% 文章默认字体设置
+    \usepackage{fontspec}   % 宏包：字体设置
+        % \setmainfont{STKaiti}    % 设置中文字体为宋体字体
+        \setCJKmainfont[AutoFakeBold=3,ItalicFont=SimSun]{STKaiti} % 设置加粗字体为 STKaiti 族，斜体用宋体（SimSun）代替
+        \setmainfont{Times New Roman} % 设置英文字体为Times New Roman
+
+
+% 其它设置
+    % 脚注设置
+    \renewcommand\thefootnote{\ding{\numexpr171+\value{footnote}}}
+    % 参考文献引用设置
+        \bibliographystyle{unsrt}   % 设置参考文献引用格式为unsrt
+        \newcommand{\upcite}[1]{\textsuperscript{\cite{#1}}}     % 自定义上角标式引用
+    % 文章序言设置
+        \newcommand{\cnabstractname}{序言}
+        \newenvironment{cnabstract}{%
+            \par\Large
+            \noindent\mbox{}\hfill{\bfseries \cnabstractname}\hfill\mbox{}\par
+            \vskip 2.5ex
+            }{\par\vskip 2.5ex}
+
+
+% 各级标题自定义设置
+    \usepackage{titlesec}   
+    % chapter
+        \titleformat{\chapter}[hang]{\normalfont\Large\bfseries\centering}{题目}{10pt}{}
+        \titlespacing*{\chapter}{0pt}{-30pt}{10pt} % 控制上方空白的大小
+    % section
+        \titleformat{\section}[hang]{\normalfont\large\bfseries}{\thesection}{8pt}{}
+    % subsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+    % subsubsection
+        %\titleformat{\subsubsection}[hang]{\normalfont\bfseries}{}{8pt}{}
+
+% 见到的一个有意思的对于公式中符号的彩色解释的环境
+        \usepackage[dvipsnames]{xcolor}
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        
+        \usepackage{amsmath}
+        \usepackage{amsthm}
+        \usepackage{amssymb}
+        \usepackage{mathtools, nccmath}
+        \usepackage{wrapfig}
+        \usepackage{comment}
+        
+        % To generate dummy text
+        \usepackage{blindtext}
+        
+        
+        %color
+        %\usepackage[dvipsnames]{xcolor}
+        % \usepackage{xcolor}
+        
+        
+        %\usepackage[pdftex]{graphicx}
+        \usepackage{graphicx}
+        % declare the path(s) for graphic files
+        %\graphicspath{{../Figures/}}
+        
+        % extensions so you won't have to specify these with
+        % every instance of \includegraphics
+        % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+        
+        % for custom commands
+        \usepackage{xspace}
+        
+        % table alignment
+        \usepackage{array}
+        \usepackage{ragged2e}
+        \newcolumntype{P}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+        \newcolumntype{X}[1]{>{\RaggedRight\hspace*{0pt}}p{#1}}
+        
+        % color box
+        \usepackage{tcolorbox}
+        
+        
+        % for tikz
+        \usepackage{tikz}
+        %\usetikzlibrary{trees}
+        \usetikzlibrary{arrows,shapes,positioning,shadows,trees,mindmap}
+        % \usepackage{forest}
+        \usepackage[edges]{forest}
+        \usetikzlibrary{arrows.meta}
+        \colorlet{linecol}{black!75}
+        \usepackage{xkcdcolors} % xkcd colors
+        
+        
+        % for colorful equation
+        \usepackage{tikz}
+        \usetikzlibrary{backgrounds}
+        \usetikzlibrary{arrows,shapes}
+        \usetikzlibrary{tikzmark}
+        \usetikzlibrary{calc}
+        % Commands for Highlighting text -- non tikz method
+        \newcommand{\highlight}[2]{\colorbox{#1!17}{$\displaystyle #2$}}
+        %\newcommand{\highlight}[2]{\colorbox{#1!17}{$#2$}}
+        \newcommand{\highlightdark}[2]{\colorbox{#1!47}{$\displaystyle #2$}}
+        
+        % my custom colors for shading
+        \colorlet{mhpurple}{Plum!80}
+        
+        
+        % Commands for Highlighting text -- non tikz method
+        \renewcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+        \renewcommand{\highlightdark}[2]{\colorbox{#1!47}{#2}}
+        
+        % Some math definitions
+        \newcommand{\lap}{\mathrm{Lap}}
+        \newcommand{\pr}{\mathrm{Pr}}
+        
+        \newcommand{\Tset}{\mathcal{T}}
+        \newcommand{\Dset}{\mathcal{D}}
+        \newcommand{\Rbound}{\widetilde{\mathcal{R}}}
+
+% >> ------------------ 文章宏包及相关设置 ------------------ << %
+% ------------------------------------------------------------- %
+
+
+
+% ----------------------------------------------------------- %
+% >> --------------------- 文章信息区 --------------------- << %
+% 页眉页脚设置
+
+\usepackage{fancyhdr}   %宏包：页眉页脚设置
+    \pagestyle{fancy}
+    \fancyhf{}
+    \cfoot{\thepage}
+    \renewcommand\headrulewidth{1pt}
+    \renewcommand\footrulewidth{0pt}
+    \rhead{数据结构与算法期末复习,\ 尹超,\ 2023K8009926003}
+    \lhead{Homework}
+
+
+%文档信息设置
+\title{数据结构与算法期末复习样卷解析\\ Final}
+\author{尹超\\ \footnotesize 中国科学院大学，北京 100049\\ Carter Yin \\ \footnotesize University of Chinese Academy of Sciences, Beijing 100049, China}
+\date{\footnotesize 2025.6}
+% >> --------------------- 文章信息区 --------------------- << %
+% ----------------------------------------------------------- %     
+
+
+% 开始编辑文章
+
+\begin{document}
+\zihao{5}           % 设置全文字号大小
+
+% --------------------------------------------------------------- %
+% >> --------------------- 封面序言与目录 --------------------- << %
+% 封面
+    \maketitle\newpage  
+    \pagenumbering{Roman} % 页码为大写罗马数字
+    \thispagestyle{fancy}   % 显示页码、页眉等
+
+% 序言
+    \begin{cnabstract}\normalsize 
+        本文为笔者数据结构与算法的期末样卷解析。\par
+        望老师批评指正。
+    \end{cnabstract}
+    \addcontentsline{toc}{chapter}{序言} % 手动添加为目录
+
+% % 不换页目录
+%     \setcounter{tocdepth}{0}
+%     \noindent\rule{\textwidth}{0.1em}   % 分割线
+%     \noindent\begin{minipage}{\textwidth}\centering 
+%         \vspace{1cm}
+%         \tableofcontents\thispagestyle{fancy}   % 显示页码、页眉等   
+%     \end{minipage}  
+%     \addcontentsline{toc}{chapter}{目录} % 手动添加为目录
+
+% 目录
+\setcounter{tocdepth}{4}                % 目录深度（为1时显示到section）
+\tableofcontents                        % 目录页
+\addcontentsline{toc}{chapter}{目录}    % 手动添加此页为目录
+\thispagestyle{fancy}                   % 显示页码、页眉等 
+
+% 收尾工作
+    \newpage    
+    \pagenumbering{arabic} 
+
+% >> --------------------- 封面序言与目录 --------------------- << %
+% --------------------------------------------------------------- %
+
+\chapter{数据结构与算法期末样卷解析}
+
+\section*{一、 选择题（共 60 分）}
+
+\begin{enumerate}
+    \item 当输入非法时，一个“好”的算法会进行适当处理，而不是产生难以理解的输出结果。这称为算法的（ B ）。\\
+    A. 可读性 \quad B. 健壮性 \quad C. 正确性 \quad D. 有穷性
+    \begin{solution}
+        \begin{itemize}
+            \item \textbf{可读性 (Readability):} 指算法的代码易于阅读、理解和维护。
+            \item \textbf{健壮性 (Robustness):} 指算法在遇到非法的、错误的或意外的输入数据时，能够做出适当的处理（如报错、返回特定值），而不会崩溃或产生不可预料的结果。这与题干描述完全相符。
+            \item \textbf{正确性 (Correctness):} 指算法对于合法的输入，能够在有限时间内产生满足要求的结果。
+            \item \textbf{有穷性 (Finiteness):} 指算法必须在执行有限的步骤后终止。
+        \end{itemize}
+    \end{solution}
+
+    \item 在一个初始为空的向量上依次执行：insert(0, 2), insert(1, 6), put(0, 1), remove(1), insert(0, 8) 后的结果是（ C ）。\\
+    A. \{6, 2, 8\} \quad B. \{2, 6, 0, 8\} \quad C. \{8, 1\} \quad D. \{2, 1, 8\}
+    \begin{solution}
+        我们逐步跟踪向量的状态：
+        \begin{itemize}
+            \item 初始状态: `V = {}`
+            \item `insert(0, 2)`: 在索引0处插入2。`V = {2}`
+            \item `insert(1, 6)`: 在索引1处插入6。`V = {2, 6}`
+            \item `put(0, 1)`: 将索引0处的值替换为1。`V = {1, 6}`
+            \item `remove(1)`: 删除索引1处的元素（即6）。`V = {1}`
+            \item `insert(0, 8)`: 在索引0处插入8。`V = {8, 1}`
+        \end{itemize}
+        最终结果为 \{8, 1\}。
+    \end{solution}
+
+    \item 对于插入过程排序中的已排序子序列（设其长度为 k），下列说法正确的是（ C ）。\\
+    A. 其中的元素是整个序列中最小的 k 个元素 \\
+    B. 其中的元素是整个序列中最大的 k 个元素 \\
+    C. 其中的元素是原序列中位于前方的 k 个元素 \\
+    D. 其中的元素是原序列中位于后方的 k 个元素
+    \begin{solution}
+        插入排序的工作方式是，从第二个元素开始，依次将每个元素插入到其左侧已经排好序的子序列中。因此，在处理到第k个元素后，左侧的已排序子序列是由原序列的前k个元素组成的，只是它们的顺序被打乱重排了。它并不一定是整个序列中最小或最大的k个元素。例如，对`{5, 1, 4}`排序，处理完`5`和`1`后，已排序子序列是`{1, 5}`，它们是原序列的前两个元素。
+    \end{solution}
+
+    \item 选择排序算法的哪种实现是稳定的：（ A ）\\
+    A. 每一趟将最小元素移到前方，对于多个相等的最小元素，选取其中位置最靠前者。\\
+    B. 每一趟将最大元素移到后方，对于多个相等的最大元素，选取其中位置最靠前者 \\
+    C. 每一趟将最小元素移到前方，对于多个相等的最小元素，选取其中位置最靠后者。\\
+    D. 以上实现皆稳定。
+    \begin{solution}
+        稳定性要求相等的元素在排序后保持其原始的相对顺序。标准的选择排序（通过交换）是不稳定的。要使其稳定，关键在于处理相等元素。
+        \begin{itemize}
+            \item 考虑序列 `[..., X, ..., Y, ...]`，其中 `X` 和 `Y` 相等，且 `X` 在 `Y` 前面。
+            \item 在某一趟排序中，如果 `X` 和 `Y` 是当前未排序部分的共同最小值。
+            \item \textbf{选项A：} 选取位置最靠前的 `X`。如果 `X` 恰好是当前趟次的第一个元素，则不发生交换，`Y` 的相对位置不变。如果 `X` 不是第一个元素，它会与第一个元素交换，但它仍然在 `Y` 的前面。这样，`X` 和 `Y` 的相对顺序得以保持。
+            \item \textbf{选项C：} 选取位置最靠后的 `Y`。如果将 `Y` 与当前趟次的第一个元素交换，`Y` 就会跑到 `X` 的前面，破坏了稳定性。
+        \end{itemize}
+        因此，选项A描述的策略可以实现稳定的选择排序。
+    \end{solution}
+
+    \item 利用栈结构进行中缀表达式求值，什么时候进行实际的运算？（ D ）\\
+    A. 每遇到一个新的操作数 \\
+    B. 每遇到一个新的操作符 \\
+    C. 当前的操作符比栈顶的操作符优先级高 \\
+    D. 当前的操作符比栈顶的操作符优先级低
+    \begin{solution}
+        在使用双栈（一个操作数栈，一个操作符栈）求值时，运算的时机由操作符的优先级决定。
+        \begin{itemize}
+            \item 当遇到一个操作符时，需要与操作符栈顶的已有操作符比较优先级。
+            \item \textbf{选项C：} 如果当前操作符优先级\textbf{更高}（例如，遇到 `*`，栈顶是 `+`），则应先处理更高优先级的运算，所以直接将当前操作符入栈，等待后续处理。
+            \item \textbf{选项D：} 如果当前操作符优先级\textbf{更低或相等}（例如，遇到 `+`，栈顶是 `*` 或 `+`），则说明栈顶的操作符可以并且必须先进行运算。此时，从操作符栈弹出一个操作符，从操作数栈弹出两个数，进行运算，并将结果压回操作数栈。这个过程会一直持续，直到栈顶操作符的优先级低于当前操作符。
+        \end{itemize}
+        因此，运算的触发条件是当前操作符的优先级不高于（即低于或等于）栈顶操作符的优先级。选项D是这个条件的主要情况。
+    \end{solution}
+
+    \item 分别采用每次追加固定内存空间和每次内存空间翻倍两种扩容策略，规模为 n 的向量插入元素的分摊时间复杂度分别为：（ A ）\\
+    A. O(n), O(1) \quad B. O (n), O (n) \quad C. O (1), O (1) \quad D. O (n), O(log2n)
+    \begin{solution}
+        \begin{itemize}
+            \item \textbf{追加固定内存空间：} 假设每次扩容增加固定大小 $C$。当向量大小从 $0$ 增长到 $n$ 时，会发生大约 $n/C$ 次扩容。第 $k$ 次扩容的成本是 $O(k \times C)$。总成本是 $O(C + 2C + \ldots + (n/C)C) = O(C \times (1+2+\ldots+n/C)) = O(C \times (n/C)^2) = O(n^2/C) = O(n^2)$。将 $O(n^2)$ 的总成本分摊到 $n$ 次插入操作上，每次插入的分摊成本是 $O(n)$。
+            \item \textbf{内存空间翻倍：} 假设容量从 $1$ 开始，每次翻倍。当向量大小增长到 $n$ 时，扩容发生的时刻是大小为 $1, 2, 4, 8, \ldots, 2^k$（直到 $2^k \geq n$）。每次扩容的成本与当前大小成正比。总成本为 $O(1 + 2 + 4 + \ldots + n) \approx O(2n) = O(n)$。将 $O(n)$ 的总成本分摊到 $n$ 次插入操作上，每次插入的分摊成本是 $O(1)$。
+        \end{itemize}
+    \end{solution}
+
+    \item 给定序列\{1, 2, 3...i...j...k...n\}。下列哪个序列一定不是该序列的栈混洗：（ C ）\\
+    A. \{… i…j…k…\} \quad B. \{… k…j…i…\} \quad C. \{… k…i…j…\} \quad D. \{… j…k…i…\}
+    \begin{solution}
+        栈混洗有一个基本规则：如果 `j` 在 `i` 之后出栈，且 `j > i`，那么所有在 `i` 和 `j` 之间的元素 `k` (`i < k < j`) 必须在 `j` 之前出栈。换言之，不可能出现 `i < k < j` 且出栈顺序为 `...j...k...` 的情况。
+        一个更强的、更易于判断的规则是：不可能存在 `i < j`，使得出栈序列中 `k` 在 `i` 和 `j` 之间，且 `k > j`。即不可能有 `...i...k...j...` 这样的序列。
+        让我们检查选项C：`{… k…i…j…}`。假设 `i < j < k`。
+        \begin{itemize}
+            \item 为了让 `k` 先出栈，元素 `i, j, k` 必须都已入栈，此时栈的状态（从顶到底）是 `k, j, i`。
+            \item 接下来 `k` 出栈。
+            \item 此时栈顶是 `j`。为了让 `i` 出栈，必须先将 `j` 出栈。
+            \item 但序列要求 `i` 在 `j` 之前出栈，这是矛盾的。因此，这种序列是不可能产生的。
+        \end{itemize}
+    \end{solution}
+
+    \item V=\{1, 2, 3, 4, 5, 6, 7\}，在 V 中用 Fibonacci 查找元素 1，被选取为轴点 mi 的元素依次是（ D ）\\
+    A. 4, 3, 2, 1 \quad B. 4, 2, 1 \quad C. 5, 2, 1 \quad D. 5, 3, 2, 1
+    \begin{solution}
+        Fibonacci查找，目标元素为1，序列长度 n=7。
+        \begin{itemize}
+            \item 首先找到最小的斐波那契数 F(k) >= n+1=8。F(0)=0, F(1)=1, F(2)=1, F(3)=2, F(4)=3, F(5)=5, F(6)=8。所以 k=6。
+            \item \textbf{第1步：} `lo=0, hi=7`。轴点 `mi = lo + F(k-1) - 1 = 0 + F(5) - 1 = 0 + 5 - 1 = 4`。V[4]=5。因为 1 < 5，所以到左子序列查找。`hi` 更新为 `mi=4`，`k` 更新为 `k-1=5`。轴点元素为 \textbf{5}。
+            \item \textbf{第2步：} `lo=0, hi=4`。轴点 `mi = lo + F(k-1) - 1 = 0 + F(4) - 1 = 0 + 3 - 1 = 2`。V[2]=3。因为 1 < 3，所以到左子序列查找。`hi` 更新为 `mi=2`，`k` 更新为 `k-1=4`。轴点元素为 \textbf{3}。
+            \item \textbf{第3步：} `lo=0, hi=2`。轴点 `mi = lo + F(k-1) - 1 = 0 + F(3) - 1 = 0 + 2 - 1 = 1`。V[1]=2。因为 1 < 2，所以到左子序列查找。`hi` 更新为 `mi=1`，`k` 更新为 `k-1=3`。轴点元素为 \textbf{2}。
+            \item \textbf{第4步：} `lo=0, hi=1`。轴点 `mi = lo + F(k-1) - 1 = 0 + F(2) - 1 = 0 + 1 - 1 = 0`。V[0]=1。因为 1 == 1，查找成功。轴点元素为 \textbf{1}。
+        \end{itemize}
+        因此，被选为轴点的元素依次是 5, 3, 2, 1。
+    \end{solution}
+
+    \item 用父节点+孩子节点的方法存储 n 个节点的树,需要的空间是（ B ）。\\
+    A. O(1) \quad B. O(n) \quad C. O(nlogn) \quad D. O(n2)
+    \begin{solution}
+        这种存储方式通常指每个节点包含一个指向其父节点的指针，以及一个数据结构（如链表或动态数组）来存储指向其所有孩子节点的指针。
+        \begin{itemize}
+            \item 每个节点都有一个父指针（根节点除外，可为null），共 n 个指针，空间为 O(n)。
+            \item 树中总共有 n-1 条边，每条边对应一个从父节点到孩子节点的指针。所有孩子指针的总数是 n-1，空间为 O(n)。
+        \end{itemize}
+        两者相加，总空间复杂度为 O(n) + O(n) = O(n)。
+    \end{solution}
+
+    \item 二叉树的中序遍历中第一个被访问的节点是（ A ）。\\
+    A. 最左的节点 \quad B. 最右的节点 \quad C. 根节点 \quad D. 左侧分枝的叶节点
+    \begin{solution}
+        中序遍历的顺序是“左-根-右”。为了访问第一个节点，算法会从根节点开始，不断地沿着左孩子指针向下，直到到达一个没有左孩子的节点。这个节点就是整棵树中“最靠左”的节点，它将是第一个被访问的节点。
+    \end{solution}
+
+    \item 对下图二叉树进行层次遍历，节点 F 正欲出队时队列中的元素从队头到队尾为（ B ）。\\
+    % \includegraphics[width=0.3\textwidth]{tree_image.png} % 假设图片名为 tree_image.png
+    A. F \quad B. F, G \quad C. E, F \quad D. E, F, G
+    \begin{solution}
+        层次遍历使用队列。我们跟踪队列的状态：
+        \begin{enumerate}
+            \item 初始: Q = \{\}
+            \item Enqueue(A). Q = \{A\}
+            \item Dequeue(A), Enqueue(B). Q = \{B\}
+            \item Dequeue(B), Enqueue(C, D). Q = \{C, D\}
+            \item Dequeue(C). Q = \{D\}
+            \item Dequeue(D), Enqueue(E, F). Q = \{E, F\}
+            \item Dequeue(E), Enqueue(G). Q = \{F, G\}
+        \end{enumerate}
+        在第7步之后，节点F位于队头，正准备出队。此时队列中的元素从队头到队尾是 F, G。
+    \end{solution}
+
+    \item 下列关于树的命题中错误的是：（ D ）\\
+    A. 顶点数为 n 的树的边数为 n-1。\\
+    B. 树中任意两顶点之间存在唯一路径。\\
+    C. 在树中添加任一条边都会破坏树的结构。\\
+    D. 在树中删除任一条边得到的还是树。
+    \begin{solution}
+        \begin{itemize}
+            \item A, B, C 都是树的基本性质，是正确的。树是无环的连通图。
+            \item D 是错误的。树是连通的，删除任意一条边都会导致图不再连通，从而分裂成两个独立的连通分量（即两棵树）。结果是一个森林，而不是一棵树。
+        \end{itemize}
+    \end{solution}
+
+    \item 关于二叉树遍历序列之间关系的说法错误的是：（ D ）\\
+    A. 已知先序遍历序列和中序遍历序列可以确定后序遍历序列\\
+    B. 已知中序遍历序列和后序遍历序列可以确定先序遍历序列\\
+    C. 已知中序遍历序列和后序遍历序列可以确定层次遍历序列\\
+    D. 已知先序遍历序列和后序遍历序列可以确定中序遍历序列
+    \begin{solution}
+        \begin{itemize}
+            \item A, B, C 都是正确的。只要有中序遍历序列，再配合先序或后序遍历序列，就可以唯一地重建出二叉树的结构。一旦树的结构确定，任何一种遍历序列（包括后序、先序、层次）都可以生成。
+            \item D 是错误的。只知道先序和后序遍历序列，无法唯一确定一棵二叉树。例如，一个根节点A，左孩子B的树，和根节点A，右孩子B的树，它们的先序遍历都是 "AB"，后序遍历都是 "BA"，但它们的中序遍历不同（"BA" vs "AB"）。因为无法唯一确定树的结构，所以也无法唯一确定中序遍历序列。
+        \end{itemize}
+    \end{solution}
+
+    \item 对平衡二叉树进行插入操作，对待插入的目标元素 e 进行查找后，若查找失败，\_hot 指向的节点为：（ B ）\\
+    A. 待插入的节点 \quad B. 被插入后的父亲 \quad C. 被插入后的左孩子 \quad D. 根节点
+    \begin{solution}
+        在二叉搜索树的插入操作中，通常会用一个指针（题目中为 \texttt{\_hot}）来跟踪当前搜索指针的父节点。当搜索因为指针变为\texttt{NULL}而失败时，\texttt{\_hot} 正好指向新元素应该被插入的位置的父节点。因此，\texttt{\_hot} 指向的是待插入节点的父亲。
+    \end{solution}
+
+    \item AVL 树中插入节点引发失衡，经旋转调整后重新平衡，此时包含节点 g, p, v 的子树高度（ B ）\\
+    A. 减小 1 \quad B. 不变 \quad C. 增加 1 \quad D. 有可能不变也有可能增加 1
+    \begin{solution}
+        AVL树的一个关键特性是，因插入而导致的失衡，在经过一次旋转（单旋或双旋）调整后，失衡子树的高度会恢复到其\textbf{插入前的高度}。也就是说，相对于插入前，子树高度不变。相对于插入后、旋转前，子树高度减小1。题目问的是调整后的最终状态，通常是与操作前的稳定状态比较，故高度不变。
+    \end{solution}
+
+    \item 使用 Dijkstra 算法求下图中从顶点 A 到其他各顶点的最短路径，依次得到的各最短路径的目标顶点是（ A ）\\
+    % 假设图存在
+    A. \{E, B, C, F, D\} \quad B. \{E, B, F, C, D\} \quad C. \{E, B, D, C, F\} \quad D. \{E, B, C, D, F\}
+    \begin{solution}
+        Dijkstra算法每次从未包含在最短路径集S中的顶点里，选取距离源点A最近的顶点u，加入S，并更新u的邻居到A的距离。
+        根据选项A的顺序，可以反推出一个可能的执行过程和图的权重关系：
+        \begin{enumerate}
+            \item A到E的直接距离最短，选\textbf{E}。
+            \item 更新后，A经E到B的距离最短，选\textbf{B}。
+            \item 更新后，A经E、B到C的距离最短，选\textbf{C}。
+            \item 更新后，A经E、B、C到\textbf{F}的距离比到\textbf{D}的距离更短，选\textbf{F}。
+            \item 最后选\textbf{D}。
+        \end{enumerate}
+        这要求图的权重满足在第4步时，`dist(F) < dist(D)`。
+    \end{solution}
+
+    \item B 树高度的减少只会发生于（ A ）\\
+    A. 根节点的两个孩子合并 \quad B. 根节点被删除 \quad C. 根节点发生旋转 \quad D. 根节点有多个关键码
+    \begin{solution}
+        B树的高度只在删除操作中才可能减少。当删除导致某节点下溢，并需要与其兄弟合并时，这种合并可能会向上传播。如果合并一直传播到根节点的两个孩子，它们合并成一个新节点，此时原根节点中的一个关键码会下移到合并后的新节点中。如果这个关键码是根节点唯一的关键码，那么根节点就会变空，此时树的高度会减少1，合并后的节点成为新的根。因此，根节点的两个孩子合并是高度减少的直接原因。
+    \end{solution}
+
+    \item 对下图进行拓扑排序，可以得到的不同的拓扑序列的个数是（ B ）\\
+    % 假设图存在
+    A．4 \quad B. 3 \quad C. 2 \quad D. 1
+    \begin{solution}
+        拓扑排序的序列个数取决于在算法执行的每一步中，有多少个入度为0的节点可供选择。假设存在一个图，其拓扑排序过程如下：
+        \begin{enumerate}
+            \item 初始时只有一个节点A入度为0。序列：A...
+            \item A出度后，节点B和C的入度变为0。此时有两个选择。
+            \item \textbf{分支1：}选择B。A出度后，节点D的入度仍不为0。序列：AB...。此时C入度为0，D入度不为0。只能选C。序列：ABC...。C出度后，D入度为0。最后选D。得到序列 \textbf{ABCD}。
+            \item \textbf{分支2：}选择C。A出度后，B和D的入度都不为0。序列：AC...。此时B入度为0。只能选B。序列：ACB...。B出度后，D入度为0。最后选D。得到序列 \textbf{ACBD}。
+        \end{enumerate}
+        等一下，上述分析有误。让我们重新考虑一个能产生3个序列的图，例如 A->B, A->C, B->D。
+        \begin{enumerate}
+            \item 只能先选A。
+            \item 接下来B和C的入度都为0。
+            \item \textbf{分支1：}选B，再选C。此时D的入度为0。得到序列 \textbf{ABCD}。
+            \item \textbf{分支2：}选C，再选B。此时D的入度为0。得到序列 \textbf{ACBD}。
+            \item \textbf{分支3：}选B，但B出度后，D的入度为0，C的入度也为0。可以先选D再选C。得到序列 \textbf{ABDC}。
+        \end{enumerate}
+        因此，对于图 A->B, A->C, B->D，可以得到3个不同的拓扑序列。
+    \end{solution}
+
+    \item 伸展树每次访问过某节点后都会把该节点（ C ）\\
+    A. 删除 \quad B. 上移一层 \quad C. 移动到根节点 \quad D. 再次访问该节点
+    \begin{solution}
+        伸展树（Splay Tree）的核心操作是“伸展”（splaying）。每当一个节点被访问（查找、插入、删除）后，都会通过一系列特定的旋转操作（zig, zig-zig, zig-zag）将其移动到树的根节点位置。这是伸展树的定义性特征，旨在优化后续对该节点的访问。
+    \end{solution}
+
+    \item G 是有向无环图，(u, v)是 G 中的一条由 u 指向 v 的边。对 G 进行 DFS 的结果是：（ C ）\\
+    A. dTime(u) > dTime(v) \quad B. dTime(u) < dTime(v) \\
+    C. fTime(u) > fTime(v) \quad D. fTime(u) < fTime(v)
+    \begin{solution}
+        在对有向图进行深度优先搜索（DFS）时，会记录每个顶点的发现时间 `dTime` 和完成时间 `fTime`。
+        \begin{itemize}
+            \item 因为 `(u, v)` 是一条边，所以在DFS过程中，如果从 `u` 访问到了 `v`（即 `(u,v)` 是树边或前向边），那么 `v` 的发现和完成都发生在 `u` 的发现之后和完成之前。
+            \item 这意味着 `dTime(u) < dTime(v)` 且 `fTime(v) < fTime(u)`。
+            \item 由于图G是无环图（DAG），不存在后向边，所以对于图中的任意一条边 `(u, v)`，都有 `fTime(u) > fTime(v)`。这个性质是拓扑排序算法的基础。
+            \item 选项B和C都是正确的陈述，但 `fTime(u) > fTime(v)` 是一个更强的、用于判断DAG和进行拓扑排序的核心性质。
+        \end{itemize}
+    \end{solution}
+
+    \item 文本串的长度为 n，模式串的长度为 m，蛮力匹配的时间复杂度为（ D ）\\
+    A. O(m) \quad B. O(n) \quad C. O(mlogn) \quad D. O(mn)
+    \begin{solution}
+        蛮力匹配算法的思路是，将模式串P与文本串T的所有可能起始位置对齐，然后进行比较。
+        \begin{itemize}
+            \item 文本串T中可能的起始位置有 `n-m+1` 个。这构成了外层循环，复杂度为 O(n)。
+            \item 对于每一个起始位置，都需要将长度为 `m` 的模式串与文本串的对应子串进行比较。在最坏情况下，每次比较都需要进行 `m` 次字符对比。这构成了内层循环，复杂度为 O(m)。
+            \item 总的时间复杂度是两者相乘，即 O((n-m+1) * m) = O(nm)。
+        \end{itemize}
+    \end{solution}
+
+    \item 对序列 A[0, n)用快速排序算法进行排序，u 和 v 是该序列中的两个元素。在排序过程中，u 和 v 发生过比较，当且仅当（假定所有元素互异）：（ C ）\\
+    A. u < v \\
+    B. u 在某次被选取为轴点 \\
+    C. 对于所有介于 u 和 v 之间的元素（包括 u 和 v 本身），它们之中第一个被选为轴点的是 u 或者 v \\
+    D. 所有比 u 和 v 都小的元素都始终没有被选为轴点
+    \begin{solution}
+        在快速排序中，元素之间的比较只发生在轴点（pivot）和当前子数组的其他元素之间。一旦划分完成，位于轴点两侧的元素将永不比较。
+        \begin{itemize}
+            \item 两个元素 `u` 和 `v` 要想发生比较，它们必须在某次划分中，一个作为轴点，另一个作为非轴点元素。
+            \item 这要求在它们被比较之前，它们从未被任何一个值介于它们之间的轴点所分离。
+            \item 如果第一个被选为轴点的、值介于 `u` 和 `v` 之间的元素是 `p` (`u < p < v`)，那么 `u` 会被分到左边，`v` 会被分到右边，它们从此再无比较的机会。
+            \item 因此，`u` 和 `v` 发生比较的充要条件是，在所有值介于 `u` 和 `v` 之间的元素中，第一个被选为轴点的是 `u` 或 `v` 本身。
+        \end{itemize}
+    \end{solution}
+
+    \item 允许对队列进行的操作是（ C ）\\
+    A. 对队列中的元素排序 \\
+    B. 取出最近进队的元素 \\
+    C. 删除队头元素 \\
+    D. 在队头元素之前插入元素
+    \begin{solution}
+        队列（Queue）是一种先进先出（FIFO）的数据结构。
+        \begin{itemize}
+            \item A. 排序不是队列的基本操作。
+            \item B. 取出最近进队的元素是栈（LIFO）的操作。
+            \item C. 删除队头元素，即 `dequeue()` 或 `pop()`，是队列的核心出队操作。
+            \item D. 在队头插入元素不符合队列的定义，插入操作（`enqueue`）应在队尾进行。
+        \end{itemize}
+    \end{solution}
+
+    \item 在使用独立链法解决冲突的散列表中查找某关键码，经过一系列的试探，最终查找成功。这些试探的元素（ B ）。\\
+    A. 关键码的散列地址均不相同 \\
+    B. 关键码的散列地址一定相同 \\
+    C. 关键码的散列地址可能不同 \\
+    D. 无法判断
+    \begin{solution}
+        独立链法（Separate Chaining）是将所有散列到同一个地址（桶）的关键码存放在一个链表中。
+        \begin{itemize}
+            \item 查找过程首先计算关键码的散列地址，定位到对应的桶。
+            \item 然后，遍历该桶所关联的链表，逐一比较链表中的元素，直到找到目标或到达链表末尾。
+            \item 因此，所有被“试探”的元素都位于同一个链表中，它们当初被插入时，一定是计算出了相同的散列地址。
+        \end{itemize}
+    \end{solution}
+
+    \item 已知运算符包括+、-、*、/、(和)，将中缀表达式 3+2-6*((5+1)/2-3)+9 转换为逆波兰表达式时，符号栈最少应该能保存多少个符号？（ A ）\\
+    A. 5 \quad B. 6 \quad C. 7 \quad D. 8
+    \begin{solution}
+        我们跟踪算法执行过程中操作符栈的状态和大小：
+        \begin{enumerate}
+            \item 遇到 `+`: push(+)。栈: `[+]`。大小=1。
+            \item 遇到 `-`: pop(+), push(-)。栈: `[-]`。大小=1。
+            \item 遇到 `*`: push(*)。栈: `[-, *]`。大小=2。
+            \item 遇到 `(`: push(()。栈: `[-, *, (]`。大小=3。
+            \item 遇到 `(`: push(()。栈: `[-, *, (, (]`。大小=4。
+            \item 遇到 `+`: push(+)。栈: `[-, *, (, (, +]`。大小=5。
+            \item 遇到 `)`: pop(+)。栈: `[-, *, (, (]`。大小=4。
+            \item 遇到 `/`: push(/)。栈: `[-, *, (, /, (]`。大小=5。
+            \item 遇到 `)`: pop(/), pop(()。栈: `[-, *, (]`。大小=3。
+            \item 遇到 `-`: push(-)。栈: `[-, *, (, -]`。大小=4。
+            \item 遇到 `)`: pop(-), pop(()。栈: `[-, *]`。大小=2。
+            \item 遇到 `+`: pop(*), pop(-), push(+)。栈: `[+]`。大小=1。
+        \end{enumerate}
+        在整个过程中，栈的最大深度达到了5。
+    \end{solution}
+
+    \item 若元素 a、b、c、d、e、f 依次入栈，允许入栈、出栈操作交替进行，但不允许连续3 次进行出栈操作，则不可能得到的出栈序列是（ D ）\\
+    A. d, c, e, b, f, a \quad B. c, b, d, a, e, f \\
+    C. b, c, a, e, f, d \quad D. a, f, e, d, c, b
+    \begin{solution}
+        我们分析选项D的可行性。
+        \begin{itemize}
+            \item 为了得到 `a` 作为第一个出栈元素，操作必须是：`push(a), pop(a)`。此时栈为空。
+            \item 为了得到 `f` 作为下一个出栈元素，操作必须是：`push(b), push(c), push(d), push(e), push(f), pop(f)`。此时栈中有 `[b, c, d, e]`。
+            \item 为了得到 `e` 作为下一个出栈元素，操作必须是：`pop(e)`。
+            \item 为了得到 `d` 作为下一个出栈元素，操作必须是：`pop(d)`。
+            \item 到目前为止，我们已经连续执行了 `pop(f), pop(e), pop(d)` 三次出栈操作。这违反了“不允许连续3次进行出栈操作”的规则。因此，序列D是不可能得到的。
+        \end{itemize}
+    \end{solution}
+    \item 若平衡二叉树的高度为 6，且所有非叶结点的平衡因子均为 1，则该平衡二叉树的结点总数为（ B ）\\
+    A. 12 \quad B. 20 \quad C. 32 \quad D. 33
+    \begin{solution}
+        一个所有非叶节点平衡因子均为+1的AVL树是节点数最少的AVL树。其节点数 `N(h)` 满足递推关系 `N(h) = N(h-1) + N(h-2) + 1`。
+        根据对“高度”的不同定义，结果会不同。
+        \begin{itemize}
+            \item \textbf{定义1：} 单个节点高度为0。
+            `N(0)=1`, `N(1)=2`, `N(2)=4`, `N(3)=7`, `N(4)=12`, `N(5)=20`, `N(6)=33`。
+            \item \textbf{定义2：} 单个节点高度为1。
+            `N(1)=1`, `N(2)=2`, `N(3)=4`, `N(4)=7`, `N(5)=12`, `N(6)=20`。
+        \end{itemize}
+        选项中出现了20和33，这表明题目可能采用了其中一种定义。根据常见的题目设置，选项B(20)是基于高度定义2的结果，这在很多教材中被使用。
+    \end{solution}
+
+    \item 已知一棵 3 阶 B 树，如下图所示。删除关键码 78 后得到一棵新的 B 树，其最右叶子结点中的关键码是（ D ）\\
+    A. 60 \quad B. 60、62 \quad C. 62、65 \quad D. 65
+    \begin{solution}
+        此题缺少必要的图示，但我们可以根据B树的删除逻辑和选项进行推断。删除操作可能会引起下溢（underflow），需要通过向兄弟节点“借位”（旋转）或与兄弟节点“合并”来恢复平衡。
+        \begin{itemize}
+            \item 原始的最右叶子节点包含78。删除78后，该节点可能下溢。
+            \item 如果发生下溢，它需要与其左兄弟合并或旋转。这个过程可能会级联，导致树的结构发生较大变化。
+            \item 最终结果的最右叶子节点是`[65]`，这暗示了原先包含78的整个右侧分支可能因为级联合并而被移除，使得原先的中间部分成为了新的最右部分。
+            \item 一个可能的情景是：删除78导致其所在叶子节点下溢，进而与父节点和兄弟节点合并，这个合并又导致父节点下溢，最终一直合并到根节点，使得树的高度降低，原先包含`[...62, 65]`的子树成为了新的最右叶子节点。
+        \end{itemize}
+        没有图的情况下，这是基于答案反推的最合理解释。
+    \end{solution}
+
+    \item 下列选项给出的是从根分别到达两个叶结点路径上的权值序列，能属于同一棵哈夫曼树的是（ D ）\\
+    A. 24, 10, 5 和 24, 10, 7 \quad B. 24, 10, 5 和 24, 12, 7 \\
+    C. 24, 10, 10 和 24, 14, 11 \quad D. 24, 10, 5 和 24, 14, 6
+    \begin{solution}
+        哈夫曼树的节点权值满足两个性质：1) 父节点权值等于其两个子节点权值之和。2) 因此，在从根到叶的路径上，权值必须是严格递减的。
+        \begin{itemize}
+            \item \textbf{C} 错误，因为路径 `24, 10, 10` 中有相等的权值，违反了性质2。
+            \item \textbf{A} 错误。路径1 (`24, 10, 5`) 意味着节点10的子节点是5和5 (因为10=5+5)。路径2 (`24, 10, 7`) 意味着节点10的子节点是7和3 (因为10=7+3)。同一个节点10不可能有两组不同的子节点。
+            \item \textbf{B} 错误。路径1 (`24, 10, 5`) 意味着根节点24的子节点是10和14。路径2 (`24, 12, 7`) 意味着根节点24的子节点是12和12。同一个根节点24不可能有两组不同的子节点。
+            \item \textbf{D} 正确。路径1 (`24, 10, 5`) 推断出：`parent(5)=10`, `sibling(5)=5`；`parent(10)=24`, `sibling(10)=14`。路径2 (`24, 14, 6`) 推断出：`parent(6)=14`, `sibling(6)=8`；`parent(14)=24`, `sibling(14)=10`。这两个推断是完全一致的，可以共存于同一棵哈夫曼树。
+        \end{itemize}
+    \end{solution}
+    \item 下列关于生成树的说法正确的是（ C ）。\\
+    A. 一个图的最小生成树一定不唯一 \\
+    B. 若图有 3 个最小生成树 T1、T2、T3，并且在 T1 中权值最小的边为 e，则 e 一定会出现在 T2 和 T3 中 \\
+    C. 某个无向图存在相同权值的边，它的最小生成树仍然可能是唯一的 \\
+    D. 一个图一定有大于等于一棵最小生成树
+    \begin{solution}
+        \begin{itemize}
+            \item A 错误。如果图中所有边的权值都不同，则最小生成树（MST）是唯一的。
+            \item B 错误。该陈述有歧义。如果`e`是图中所有边里权值最小的，且这个最小权值是唯一的，那么`e`一定在所有MST中。但如果存在多条权值相同的最小边，一个MST可能包含其中一条，另一个MST可能包含另一条。
+            \item C 正确。即使图中存在权值相同的边，MST也可能是唯一的。例如，在一个四边形ABCD中，边AB=1, CD=1, BC=2, AD=2。MST必须包含AB和CD，然后为了连通，必须包含BC或AD中的一条。如果BC=2, AD=3，那么MST必须包含BC，此时MST是唯一的，即使图中存在权值为2的多条边。一个更简单的例子：A-1-B, C-1-D, B-2-C。MST必须是{A-B, C-D, B-C}，是唯一的。
+            \item D 错误。只有连通图才有生成树。非连通图没有生成树，也就没有最小生成树。
+        \end{itemize}
+    \end{solution}
+
+
+\end{enumerate}
+\section*{二、 填空题}
+
+\begin{enumerate}
+    \item （8 分）本题关于堆排序，请在空白处填入对应的关键语句。
+    \begin{graybox}
+\begin{verbatim}
+template <typename T> void Vector<T>::heapSort( Rank lo, Rank hi ) {
+    T* A = _elem + lo; Rank n = hi - lo; heapify( A , n );
+    while ( 0 < --n )
+    { swap( A[0], A[n] ); percolateDown( A, n, 0 ); }
+}
+
+template <typename T> void heapify( T* A, const Rank n ) {
+    for ( Rank i = n / 2 - 1; -1 < i; i-- ) // Corrected loop condition
+        percolateDown( A, n, i );
+}
+
+template <typename T> Rank percolateDown( T* A, Rank n, Rank i ) {
+    Rank j;
+    while ( i != ( j = ProperParent( A, n, i ) ) )
+        { swap( A[i], A[j] ); i = j; }
+    return i;
+}
+
+// ------------------- 空白处 -------------------
+
+\end{verbatim}
+    \end{graybox}
+
+    \begin{solution}
+    \textbf{1. 填空代码}
+    
+    空白处应填入 `ProperParent` 函数的实现。该函数用于在节点 `i` 及其左右孩子中，找出值最大的节点的秩（索引）。这是下滤操作 `percolateDown` 的核心辅助函数。
+    
+    \begin{lstlisting}[style=cppstyle]
+template <typename T> 
+static Rank ProperParent( T* A, Rank n, Rank i ) {
+    Rank lc = 2 * i + 1; // 左孩子索引
+    Rank rc = 2 * i + 2; // 右孩子索引
+    Rank largest = i;    // 假设父节点i是三者中最大的
+
+    // 如果左孩子存在(lc < n)，且其值比当前最大者(A[largest])还大
+    if ( lc < n && A[largest] < A[lc] ) {
+        largest = lc; // 更新最大者索引为左孩子
+    }
+    // 如果右孩子存在(rc < n)，且其值比当前最大者(A[largest])还大
+    if ( rc < n && A[largest] < A[rc] ) {
+        largest = rc; // 更新最大者索引为右孩子
+    }
+    
+    // 返回三者中值最大者的索引
+    return largest;
+}
+    \end{lstlisting}
+
+    \vspace{1em}
+    \textbf{2. 逐行代码解释}
+
+    \subsection*{heapSort 函数}
+    这是堆排序的入口函数，负责驱动整个排序流程。
+    \begin{lstlisting}[style=cppstyle]
+template <typename T> 
+void Vector<T>::heapSort( Rank lo, Rank hi ) {
+    T* A = _elem + lo; Rank n = hi - lo; 
+    heapify( A , n );
+    while ( 0 < --n ) { 
+        swap( A[0], A[n] ); 
+        percolateDown( A, n, 0 ); 
+    }
+}
+    \end{lstlisting}
+    \begin{itemize}
+        \item \texttt{T* A = \_elem + lo; Rank n = hi - lo;} \\
+        创建指针 `A` 指向待排序区间的起点。
+        \textbf{\texttt{hi - lo}}：计算待排序区间的长度 `n`。`hi` 是上界（不含），`lo` 是下界（含），二者之差即为元素个数。
+        
+        \item \texttt{heapify( A , n );} \\
+        调用 `heapify` 函数，将无序数组 `A` 转换成一个大顶堆。完成后，`A[0]` 是序列中的最大元素。
+        
+        \item \texttt{while ( 0 < --n )} \\
+        主循环，共执行 n-1 次。每次循环将一个元素放到其最终的有序位置。`--n` 在循环开始前执行，表示堆的有效大小每次都减1。
+        
+        \item \texttt{swap( A[0], A[n] );} \\
+        \textbf{(重点)} 这是排序的关键一步。`A[0]` 是当前堆中的最大元素，`A[n]` 是堆的最后一个元素。交换后，最大元素被放置到当前有效序列的末尾，这个位置就是它在整个排序完成后的最终位置。
+        
+        \item \texttt{percolateDown( A, n, 0 );} \\
+        由于上一步的交换，新的堆顶 `A[0]` 很可能不再是最大值，破坏了堆的性质。此行代码调用“下滤”操作，将新的堆顶元素 `A[0]` 向下调整，直到它找到合适的位置，从而使规模为 `n` 的新堆重新恢复大顶堆性质。
+    \end{itemize}
+
+    \subsection*{heapify 函数}
+    该函数将一个任意数组原地转换成一个大顶堆。
+    \begin{lstlisting}[style=cppstyle]
+template <typename T> 
+void heapify( T* A, const Rank n ) {
+    for ( Rank i = n / 2 - 1; -1 < i; i-- )
+        percolateDown( A, n, i );
+}
+    \end{lstlisting}
+    \begin{itemize}
+        \item \texttt{for ( Rank i = n / 2 - 1; ... )} \\
+        \textbf{(重点)} 这个循环从最后一个非叶子节点开始，自下而上、自右至左地对每个内部节点执行下滤操作。
+        \textbf{\texttt{n / 2 - 1}}：对于一个从0开始索引的完全二叉树，`n/2 - 1` 正是最后一个非叶子节点的索引。从这个节点开始向前处理，可以保证当处理节点 `i` 时，它的左右子树都已经是合法的堆了。
+    \end{itemize}
+
+    \subsection*{percolateDown 函数}
+    下滤操作，将不满足堆性质的节点 `i` 向下调整。
+    \begin{lstlisting}[style=cppstyle]
+template <typename T> 
+Rank percolateDown( T* A, Rank n, Rank i ) {
+    Rank j;
+    while ( i != ( j = ProperParent( A, n, i ) ) )
+        { swap( A[i], A[j] ); i = j; }
+    return i;
+}
+    \end{lstlisting}
+    \begin{itemize}
+        \item \texttt{while ( i != ( j = ProperParent( A, n, i ) ) )} \\
+        `ProperParent` 函数返回节点 `i` 和其左右孩子三者中值最大者的索引 `j`。如果 `i` 本身不是最大的（即 `i != j`），说明 `i` 的位置不正确，需要向下调整，循环继续。如果 `i` 本身就是最大的（`i == j`），则调整完成，循环终止。
+        
+        \item \texttt{swap( A[i], A[j] ); i = j;} \\
+        \textbf{(重点)} 如果父节点 `i` 小于其孩子 `j`，则交换它们。
+        \textbf{\texttt{i = j}}：这是下滤过程的核心。交换后，原来的父节点移动到了位置 `j`。现在需要从这个新位置 `j` 继续向下检查，以确保它在新的子树中也满足堆性质。因此，将 `i` 更新为 `j`，以便在下一轮循环中继续从新位置开始下滤。
+    \end{itemize}
+    \end{solution}
+
+
+
+\end{enumerate}
+
+
+\section*{其他题见试卷}
+
+
+\end{document}
+
+% VScode 常用快捷键：
+
+% Ctrl + R:                 打开最近的文件夹
+% F2:                       变量重命名
+% Ctrl + Enter:             行中换行
+% Alt + up/down:            上下移行
+% 鼠标中键 + 移动:           快速多光标
+% Shift + Alt + up/down:    上下复制
+% Ctrl + left/right:        左右跳单词
+% Ctrl + Backspace/Delete:  左右删单词    
+% Shift + Delete:           删除此行
+% Ctrl + J:                 打开 VScode 下栏(输出栏)
+% Ctrl + B:                 打开 VScode 左栏(目录栏)
+% Ctrl + `:                 打开 VScode 终端栏
+% Ctrl + 0:                 定位文件
+% Ctrl + Tab:               切换已打开的文件(切标签)
+% Ctrl + Shift + P:         打开全局命令(设置)
+
+% Latex 常用快捷键
+
+% Ctrl + Alt + J:           由代码定位到PDF
+% 
+
+
+% Git提交规范：
+% update: Linear Algebra 2 notes
+% add: Linear Algebra 2 notes
+% import: Linear Algebra 2 notes
+% delete: Linear Algebra 2 notes
