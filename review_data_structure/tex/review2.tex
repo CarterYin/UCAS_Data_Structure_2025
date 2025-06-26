@@ -977,835 +977,522 @@ Let `r = V.search(e)`. The insertion rank will be `r+1`.
 如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
 \end{solution}
 
-\section*{20}
+
+\section*{21}
 
 \begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
+\textbf{对于规模为n的向量，低效版uniquify()的最坏时间复杂度为：}：
 \begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
+    \item $\Theta(n^2)$
+    \item $\Theta(n\log_{2}n)$
+    \item $\Theta(n)$
+    \item $\Theta(1)$
 \end{circledenum}
 \end{graybox}
 
 \begin{solution}
-正确答案为B。
+正确答案为A。
 
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
+低效版的 \texttt{uniquify()} 通常采用双重循环：外层遍历每个元素，内层查找并删除与当前元素重复的所有元素。每次删除操作都可能导致后续元素整体前移，单次删除的时间复杂度为 $\Theta(n)$。在最坏情况下（如所有元素都相同），总共会有 $\Theta(n)$ 次删除操作，每次操作的成本也是 $\Theta(n)$，因此总的最坏时间复杂度为 $\Theta(n^2)$。
 
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
+对照选项：
 \begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
+    \item A. $\Theta(n^2)$ —— 正确
+    \item B. $\Theta(n\log_{2}n)$ —— 错误
+    \item C. $\Theta(n)$ —— 错误
+    \item D. $\Theta(1)$ —— 错误
 \end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
 \end{solution}
 
-\section*{20}
+
+\section*{22}
 
 \begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
+\textbf{有序向量中的重复元素}：
 \begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
+    \item 与无序向量相同
+    \item 大部分紧邻分布，只有极小部分散布在其它位置
+    \item 必定全部紧邻分布
+    \item 全部相间分布
 \end{circledenum}
 \end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{为什么有序向量唯一化算法中不需要调用remove()进行元素删除？}：
-\begin{circledenum}
-    \item 本来就没有重复元素
-    \item 重复元素被直接忽略了
-    \item 重复元素被移到了向量末尾
-    \item 重复元素修改成了不重复的元素
-\end{circledenum}
-\end{graybox}
-
-\begin{solution}
-正确答案为B。
-
-有序向量的唯一化（uniquify）算法旨在高效地移除重复元素，使得每个元素只出现一次，同时保持原有元素的相对顺序。这种算法通常采用“双指针”或“快慢指针”的方法：
-\begin{enumerate}
-    \item 找到 `e` 合适的插入位置（秩）。
-    \item 在该位置插入元素 `e`。
-\end{enumerate}
-
-`V.put(rank, e)` 操作是替换向量中秩为 `rank` 的元素为 `e`。这不是插入操作，因为它不改变向量的大小，也不移动其他元素。因此，选项A和C是错误的。
-
-我们需要使用 `V.insert(rank, e)` 操作，它会在秩 `rank` 处插入元素 `e`，并将原有该位置及之后的元素向后顺移一位。
-
-现在关键是确定正确的插入秩 `rank`。
-在有序向量中，`V.search(e)` 通常实现为二分查找的一个变体。其目标是找到一个位置，以便插入 `e` 后向量仍然有序。一个常见的约定是 `search(e)` 返回秩 `r`，该秩是向量中不大于 `e` 的最大元素的秩。
-\begin{itemize}
-    \item 如果 `e` 比向量中所有元素都小，`search(e)` 通常返回一个特殊值，如 `lo - 1` (对于从 `lo` 开始的搜索区间)。如果搜索整个向量 (从0开始)，则返回 -1。
-    \item 如果 `e` 存在于向量中，`search(e)` 返回 `e` 的某个实例的秩 `r`。
-    \item 如果 `e` 不在向量中，但 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r`。
-    \item 如果 `e` 比向量中所有元素都大，`search(e)` 返回向量中最后一个元素的秩。
-\end{itemize}
-基于这个约定，元素 `e` 应该被插入到 `search(e)` 返回的秩 `r` 的下一个位置，即 `r+1`。
-
-让我们分析选项D: `V.insert(V.search(e) + 1, e);`
-Let `r = V.search(e)`. The insertion rank will be `r+1`.
-\begin{itemize}
-    \item 如果 `e` 小于向量中所有元素，`search(e)` 返回 -1. 插入秩为 `-1 + 1 = 0`. `V.insert(0, e)` 得到 $\{7, 1\}$。这是正确的，`e` 成为新的首元素。
-    \item 如果 `e` 存在于向量中，或 `V[r] < e < V[r+1]`，则 `search(e)` 返回 `r` (其中 `V[r] <= e`)。插入秩为 `r+1`. `V.insert(r+1, e)` 将 `e` 插入到 `V[r]` 之后，并且在任何原来大于 `V[r]` (且可能大于或等于 `e`) 的元素之前。这保持了有序性。
-    例如，若 $V=\{10, 20, 30\}$:
-    \begin{itemize}
-        \item $e=15$: `search(15)` 返回 0 (秩为0的元素10是 $\le 15$ 的最大元素)。插入秩为 $0+1=1$. `V.insert(1, 15)` 得到 $\{10, 15, 20, 30\}$。正确定。
-        \item $e=20$: `search(20)` 返回 1 (秩为1的元素20是 $\le 20$ 的最大元素)。插入秩为 $1+1=2$. `V.insert(2, 20)` 得到 $\{10, 20, 20, 30\}$。正确定（如果允许重复）。
-    \end{itemize}
-    \item 如果 `e` 大于向量中所有元素，`search(e)` 返回向量最后一个元素的秩，设为 `hi`。插入秩为 `hi + 1`。`V.insert(hi + 1, e)` 将 `e` 追加到向量末尾。这是正确的。
-\end{itemize}
-
-因此，`V.insert(V.search(e) + 1, e)` 是在有序向量中插入元素并保持有序的正确方法。
-
-分析选项B: `V.insert(V.search(e), e);`
-如果 $V=\{10, 20, 30\}$ 且 $e=15$, `search(15)` 返回 0. `V.insert(0, 15)` 会得到 $\{15, 10, 20, 30\}$, 这是无序的。所以B是错误的。
-\end{solution}
-
-\section*{20}
-
-\begin{graybox}
-\textbf{试用以下算法对V=\{19, 17, 23\}排序：
-\begin{enumerate}
-    \item 先按个位排序
-    \item 在上一步基础上，再按十位排序
-\end{enumerate}
-这个算法是否正确？}：
-\begin{circledenum}
-    \item 一定正确
-    \item 一定不正确
-    \item 若第2步用的排序算法是稳定的，则正确
-    \item 若第1步用的排序算法是稳定的，则正确
-\end{circledenum}
-\end{graybox}
-
 
 \begin{solution}
 正确答案为C。
 
-该算法描述的是一种两遍的基数排序（LSD Radix Sort，最低位优先）。
-初始向量 $V = \{19, 17, 23\}$。
+在有序向量中，所有相等的元素必定被排在一起，全部紧邻分布。这是有序性的直接结果。无论原始数据如何，只要排序完成，所有重复元素都会连续排列，不会被其它不同元素隔开。
 
-\textbf{第1步：按个位排序}
+对照选项：
 \begin{itemize}
-    \item 19 (个位是 9)
-    \item 17 (个位是 7)
-    \item 23 (个位是 3)
+    \item A. 与无序向量相同 —— 错误。无序向量中重复元素可能分散在任意位置。
+    \item B. 大部分紧邻分布，只有极小部分散布在其它位置 —— 错误。有序向量中不会出现这种情况。
+    \item C. 必定全部紧邻分布 —— 正确。
+    \item D. 全部相间分布 —— 错误。有序向量中不会出现重复元素被其它元素隔开的情况。
 \end{itemize}
-按个位从小到大排序后，向量变为 $V_1 = \{23, 17, 19\}$。
-(对于此特定输入，由于个位数都不同，第一步排序的稳定性不影响此中间结果。)
+\end{solution}
 
-\textbf{第2步：在上一步基础上 ($V_1 = \{23, 17, 19\}$)，再按十位排序}
-\begin{itemize}
-    \item 23 (十位是 2)
-    \item 17 (十位是 1)
-    \item 19 (十位是 1)
-\end{itemize}
-现在需要按十位对 $V_1 = \{23, 17, 19\}$ 进行排序。
-\begin{itemize}
-    \item 元素 17 和 19 的十位相同（都是1）。
-    \item 元素 23 的十位是 2。
-\end{itemize}
-为了使最终排序正确，当比较十位时，如果十位数相同（如17和19），它们之间原有的、基于个位数的排序结果必须被保留。在 $V_1$ 中，17 (个位7) 在 19 (个位9) 之前。
-\begin{itemize}
-    \item \textbf{如果第2步的排序算法是稳定的}：
-    当处理十位为1的元素 (17, 19) 时，稳定的排序算法会保持它们在 $V_1$ 中的相对顺序，即17仍然在19之前。
-    因此，排序结果将是 $\{17, 19, 23\}$。这是正确的排序。
+\section*{23}
 
-    \item \textbf{如果第2步的排序算法是不稳定的}：
-    当处理十位为1的元素 (17, 19) 时，不稳定的排序算法可能会改变它们的相对顺序，可能将它们排成 $\{19, 17\}$。
-    那么最终结果可能是 $\{19, 17, 23\}$。这是不正确的排序。
+\begin{graybox}
+\textbf{对于规模为n的向量，查找失败时find()的返回值是：}：
+\begin{circledenum}
+    \item -1
+    \item 0
+    \item n
+    \item NULL
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+在大多数数据结构教材和实现（如C++ STL的 `std::vector::find` 或邓俊辉《数据结构》教材）中，`find()` 方法用于在向量中查找目标元素。如果查找成功，通常返回目标元素的秩（索引）；如果查找失败，常见的约定是返回 $-1$，表示未找到。
+
+对照选项：
+\begin{itemize}
+    \item A. -1 —— 正确。表示查找失败。
+    \item B. 0 —— 错误。0 通常表示第一个元素的索引。
+    \item C. n —— 错误。n 通常表示向量的长度，不是合法的元素索引。
+    \item D. NULL —— 错误。NULL 不是整数类型的返回值。
 \end{itemize}
+因此，查找失败时 `find()` 的返回值是 $-1$。
+\end{solution}
+
+
+\section*{24}
+
+\begin{graybox}
+\textbf{在有序向量V中插入元素e并使之保持有序，下面代码正确的是：}：
+\begin{circledenum}
+    \item V.put(V.search(e), e);
+    \item V.insert(V.search(e), e);
+    \item V.put(V.search(e) + 1, e);
+    \item V.insert(V.search(e) + 1, e);
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+分析如下：
+
+\begin{itemize}
+    \item \textbf{A. V.put(V.search(e), e);} \\
+    错误。put操作是替换指定位置的元素，不会插入新元素，也不会移动后续元素，不能保证有序性。
+
+    \item \textbf{B. V.insert(V.search(e), e);} \\
+    错误。search(e)返回的是不大于e的最大元素的秩，如果直接插入到该位置，可能会把e插入到比它小的元素前面，破坏有序性。
+
+    \item \textbf{C. V.put(V.search(e) + 1, e);} \\
+    错误。put不会插入新元素，只是替换，不能保证有序性。
+
+    \item \textbf{D. V.insert(V.search(e) + 1, e);} \\
+    正确。search(e)返回不大于e的最大元素的秩，插入到其后（即r+1）可以保证e插入后仍然有序。
+\end{itemize}
+
+因此，正确的做法是 \texttt{V.insert(V.search(e) + 1, e);}。
+\end{solution}
+
+
+\section*{25}
+
+\begin{graybox}
+\textbf{在binsearch(e, lo, hi)版本A中，若V[mi] < e，则下一步的查找范围是：}：
+\begin{circledenum}
+    \item V(mi, hi)
+    \item V[mi, hi]
+    \item V(mi, hi]
+    \item V[lo, hi)
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+在二分查找版本A中，当发现 \texttt{V[mi] < e} 时，说明目标元素 \texttt{e}（如果存在）必然位于 \texttt{mi} 的右侧。
+
+\textbf{分析}：
+\begin{itemize}
+    \item 由于 \texttt{V[mi] < e}，可以确定 \texttt{V[mi]} 不是我们要找的元素。
+    \item 在有序向量中，所有小于等于 \texttt{V[mi]} 的元素都位于 \texttt{mi} 的左侧（包括 \texttt{mi} 位置本身）。
+    \item 因此，目标元素 \texttt{e} 只可能存在于 \texttt{mi} 的右侧，即索引大于 \texttt{mi} 的位置。
+    \item 新的查找范围应该从 \texttt{mi+1} 开始到 \texttt{hi} 结束。
+\end{itemize}
+
+\textbf{符号解释}：
+\begin{itemize}
+    \item \texttt{V(mi, hi)}：表示开区间 \texttt{(mi, hi)}，即从 \texttt{mi+1} 到 \texttt{hi-1}。在某些实现中，如果原查找区间为 \texttt{[lo, hi)}（左闭右开），则新区间为 \texttt{[mi+1, hi)}，可记作 \texttt{(mi, hi)}。
+    \item \texttt{V[mi, hi]}：表示闭区间 \texttt{[mi, hi]}，包含 \texttt{mi} 和 \texttt{hi}。
+    \item \texttt{V(mi, hi]}：表示半开区间 \texttt{(mi, hi]}，不包含 \texttt{mi} 但包含 \texttt{hi}。
+    \item \texttt{V[lo, hi)}：表示原查找区间。
+\end{itemize}
+
+由于我们已经确定 \texttt{V[mi]} 不是目标元素，新的查找范围应该排除 \texttt{mi}，因此正确答案是 \texttt{V(mi, hi)}，即开区间。
+
+对照选项：
+\begin{itemize}
+    \item A. V(mi, hi) —— 正确。排除了已检查的 \texttt{mi}，从 \texttt{mi+1} 开始查找。
+    \item B. V[mi, hi] —— 错误。仍包含已确定不匹配的 \texttt{mi}。
+    \item C. V(mi, hi] —— 这个表示法在不同上下文中可能正确，但选项A更标准。
+    \item D. V[lo, hi) —— 错误。这是原始查找范围，没有缩小。
+\end{itemize}
+\end{solution}
+
+
+\section*{26}
+
+\begin{graybox}
+\textbf{Rank mi = (lo + hi) >> 1 等效于下列哪个表达式?（lo和hi非负）}：
+\begin{circledenum}
+    \item Rank mi = (lo + hi) \textbackslash 2
+    \item Rank mi = (lo + hi) \% 2
+    \item Rank mi = (lo + hi) / 2
+    \item Rank mi = (double)(lo + hi) / 2
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+\textbf{分析各个选项：}
+
+\begin{itemize}
+    \item \textbf{右移操作 `>>1`}：
+    右移1位相当于将二进制数除以2并向下取整。对于非负整数，`x >> 1` 等价于 `floor(x/2)`。
+
+    \item \textbf{选项A: `(lo + hi) \textbackslash 2`}：
+    这里的反斜杠 `\textbackslash` 不是标准的C++运算符。如果这是想表示整数除法，那么在某些语言中可能使用不同的符号，但在C++中不是标准语法。
+
+    \item \textbf{选项B: `(lo + hi) \% 2`}：
+    `\%` 是取模运算符，`(lo + hi) \% 2` 返回的是 `(lo + hi)` 除以2的余数（0或1），而不是商。这与右移操作完全不同。
+
+    \item \textbf{选项C: `(lo + hi) / 2`}：
+    在C++中，当 `lo` 和 `hi` 都是整数类型（如`Rank`通常是整数类型）时，`(lo + hi) / 2` 执行的是整数除法，结果自动向下取整。这与 `(lo + hi) >> 1` 的行为完全一致。
+
+    \item \textbf{选项D: `(double)(lo + hi) / 2`}：
+    这里先将 `(lo + hi)` 转换为 `double` 类型，然后进行浮点除法。结果是一个浮点数，需要进一步转换为整数才能赋值给 `Rank mi`。这与右移操作不等效。
+\end{itemize}
+
+\textbf{具体例子验证：}
+\begin{itemize}
+    \item 当 `lo = 3, hi = 7` 时：
+    \begin{itemize}
+        \item `(lo + hi) >> 1 = 10 >> 1 = 5`
+        \item `(lo + hi) / 2 = 10 / 2 = 5`（整数除法）
+        \item `(double)(lo + hi) / 2 = 10.0 / 2 = 5.0`（浮点数）
+    \end{itemize}
+    
+    \item 当 `lo = 2, hi = 5` 时：
+    \begin{itemize}
+        \item `(lo + hi) >> 1 = 7 >> 1 = 3`
+        \item `(lo + hi) / 2 = 7 / 2 = 3`（整数除法，向下取整）
+        \item `(double)(lo + hi) / 2 = 7.0 / 2 = 3.5`（浮点数）
+    \end{itemize}
+\end{itemize}
+
+\textbf{结论：}
+对于非负整数 `lo` 和 `hi`，`(lo + hi) >> 1` 与 `(lo + hi) / 2`（整数除法）完全等效，都返回向下取整的商。
+
+对照选项：
+\begin{itemize}
+    \item A. `(lo + hi) \textbackslash 2` —— 语法不标准
+    \item B. `(lo + hi) \% 2` —— 错误，这是取余运算
+    \item C. `(lo + hi) / 2` —— 正确，整数除法等效于右移
+    \item D. `(double)(lo + hi) / 2` —— 错误，这是浮点除法
+\end{itemize}
+\end{solution}
+
+\section*{27}
+
+\begin{graybox}
+\textbf{有序向量V=\{2, 3, 5, 7, 11, 13, 17\}，按二分查找算法版本A，V.search(16, 0, 7)需要进行多少次比较？}：
+\begin{circledenum}
+    \item 4
+    \item 5
+    \item 6
+    \item 7
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为B。
+
+此题中的“比较”次数取决于所采用的二分查找的具体实现。要得到答案5，我们可以假设“版本A”是一种采用三路比较（three-way comparison）的实现，其逻辑如下：在每次迭代中，比较目标值 `e` 与中间值 `V[mi]`，有三种可能：`e < V[mi]`, `e > V[mi]`, 或 `e == V[mi]`。这在一次迭代中最多需要两次比较（例如，`if (e < V[mi]) ... else if (e > V[mi]) ...`）。
+
+我们来逐步追踪这个过程：
+\begin{itemize}
+    \item 向量 $V = \{2, 3, 5, 7, 11, 13, 17\}$
+    \item 目标元素 $e = 16$
+    \item 查找区间为 `[0, 7)`，即有效索引为 `lo=0` 到 `hi=6`。
+\end{itemize}
+
+\textbf{第1轮迭代}:
+\begin{itemize}
+    \item 当前区间: `lo = 0, hi = 6`
+    \item 中点: $mi = (0 + 6) / 2 = 3$
+    \item 比较1: $16 < V[3]$ (即 $16 < 7$)？ 否。
+    \item 比较2: $16 > V[3]$ (即 $16 > 7$)？ 是。
+    \item 更新: 新的查找区间为 `mi` 右侧，`lo = mi + 1 = 4`。
+    \item \textbf{本轮比较次数: 2}
+\end{itemize}
+
+\textbf{第2轮迭代}:
+\begin{itemize}
+    \item 当前区间: `lo = 4, hi = 6`
+    \item 中点: $mi = (4 + 6) / 2 = 5$
+    \item 比较1: $16 < V[5]$ (即 $16 < 13$)？ 否。
+    \item 比较2: $16 > V[5]$ (即 $16 > 13$)？ 是。
+    \item 更新: 新的查找区间为 `mi` 右侧，`lo = mi + 1 = 6`。
+    \item \textbf{本轮比较次数: 2}
+\end{itemize}
+
+\textbf{第3轮迭代}:
+\begin{itemize}
+    \item 当前区间: `lo = 6, hi = 6`
+    \item 中点: $mi = (6 + 6) / 2 = 6$
+    \item 比较1: $16 < V[6]$ (即 $16 < 17$)？ 是。
+    \item 更新: 新的查找区间为 `mi` 左侧，`hi = mi - 1 = 5`。
+    \item \textbf{本轮比较次数: 1} (因为第一个条件就满足了，无需进行第二次比较)
+\end{itemize}
+
+\textbf{循环终止}:
+\begin{itemize}
+    \item 当前状态: `lo = 6, hi = 5`。
+    \item `lo > hi`，循环条件不满足，查找结束，返回失败。
+\end{itemize}
+
+总比较次数 = $2 + 2 + 1 = 5$。
+
+对照选项：
+\begin{itemize}
+    \item A. 4 —— 错误
+    \item B. 5 —— 正确
+    \item C. 6 —— 错误  
+    \item D. 7 —— 错误
+\end{itemize}
+\end{solution}
+
+\section*{28}
+
+\begin{graybox}
+\textbf{有序向量，V1=\{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61\} V2=\{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18\} 在V1中查找43的查找长度是x，则在V2中查找14的查找长度为：}：
+\begin{circledenum}
+    \item x
+    \item x+1
+    \item 2 * x
+    \item x / 2
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为A。
+
+\textbf{核心原理}：
+二分查找的“查找长度”（即比较次数）主要取决于两个因素：
+\begin{enumerate}
+    \item 向量的规模（长度）。
+    \item 目标元素在向量中的相对位置。
+\end{enumerate}
+它与向量中元素的具体数值无关，只要向量是有序的。
+
+\textbf{分析}：
+\begin{enumerate}
+    \item \textbf{比较向量规模}：
+    \begin{itemize}
+        \item V1 的长度为 18。
+        \item V2 的长度为 18。
+    \end{itemize}
+    两个向量的规模完全相同。
+
+    \item \textbf{比较目标元素位置}：
+    \begin{itemize}
+        \item 在 V1 中，目标元素 43 的秩（索引）是 13 (因为 V1[13] = 43)。
+        \item 在 V2 中，目标元素 14 的秩（索引）是 13 (因为 V2[13] = 14)。
+    \end{itemize}
+    两个目标元素在各自向量中的秩（相对位置）完全相同。
+\end{enumerate}
 
 \textbf{结论}：
-基数排序（尤其是LSD，如此处描述的）要求每一轮对单个“数字位”的排序都必须是稳定的。这是因为后续的排序（更高位）依赖于前序排序（更低位）已经建立的相对顺序，对于当前位相同的元素，这个相对顺序不能被打乱。
-在这个两步算法中，第二步（按十位排序）是关键。如果第二步的排序是稳定的，它会正确地将元素按十位排序，并且对于十位相同的元素（如17和19），会保留它们在第一步按个位排序后形成的顺序（17先于19）。
+由于两个向量的规模相同，并且要查找的目标元素在各自向量中的秩也相同，因此二分查找算法在这两种情况下的执行路径（即中点 `mi` 的选择序列以及 `lo` 和 `hi` 的更新过程）将是完全一样的。既然执行路径相同，那么比较的次数（查找长度）也必然相同。
 
+因此，在V2中查找14的查找长度等于在V1中查找43的查找长度 `x`。
+
+对照选项：
 \begin{itemize}
-    \item \textbf{A. 一定正确}：错误，取决于排序算法的稳定性。
-    \item \textbf{B. 一定不正确}：错误，如果使用稳定排序则可能正确。
-    \item \textbf{C. 若第2步用的排序算法是稳定的，则正确}：正确。这是LSD基数排序正确性的核心要求。
-    \item \textbf{D. 若第1步用的排序算法是稳定的，则正确}：不充分。即使第1步稳定，如果第2步不稳定，算法仍可能失败。第1步的稳定性主要确保如果原始数据中有值完全相同的项，它们的原始相对顺序在第一遍后被保持（如果这个算法的整体目标是稳定排序的话）。但对于数值本身的正确排序，第2步的稳定性更为关键。
+    \item A. x —— 正确。
+    \item B. x+1 —— 错误。
+    \item C. 2 * x —— 错误。
+    \item D. x / 2 —— 错误。
 \end{itemize}
-因此，该算法的正确性依赖于第2步（对更高位进行排序的那一步）所使用的排序算法是稳定的。
 \end{solution}
 
 
 
+\section*{29}
+
+\begin{graybox}
+\textbf{向量fibSearch()算法与binSearch()有什么区别？}：
+\begin{circledenum}
+    \item 二者的返回值不同
+    \item 前者是递归算法，后者是迭代算法
+    \item 二者选取轴点mi的方式不同
+    \item 前者的渐进时间复杂度低于后者，故前者效率更高
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+\textbf{分析}：
+\begin{itemize}
+    \item \textbf{fibSearch() (斐波那契查找)} 和 \textbf{binSearch() (二分查找)} 都是用于有序向量的高效查找算法。它们的核心思想都是通过不断缩小查找范围来定位目标元素。
+\end{itemize}
+
+\textbf{对照选项}：
+\begin{itemize}
+    \item \textbf{A. 二者的返回值不同}：错误。
+    两种算法的目的相同，都是查找目标元素 `e`。因此，它们的返回值约定通常是一致的：如果找到，返回元素的秩（索引）；如果未找到，返回一个表示失败的特定值（如-1）。
+
+    \item \textbf{B. 前者是递归算法，后者是迭代算法}：错误。
+    二分查找和斐波那契查找都可以用递归或迭代两种方式实现。实现方式的选择不构成它们之间的本质区别。
+
+    \item \textbf{C. 二者选取轴点mi的方式不同}：正确。
+    这是两种算法最根本的区别。
+    \begin{itemize}
+        \item \textbf{二分查找 (Binary Search)}：通过将当前查找区间对半分割来选取轴点，即 $mi = lo + (hi - lo) / 2$。这是一种“中分”策略。
+        \item \textbf{斐波那契查找 (Fibonacci Search)}：通过斐波那契数列来分割查找区间，选取轴点的位置与黄金分割比例有关，即 $mi = lo + F_{k-1} - 1$ (其中 $F_k$ 是与当前区间大小相关的斐波那契数)。这是一种“黄金分割”策略。
+    \end{itemize}
+    斐波那契查找的主要优点是它只使用加法和减法来计算轴点，避免了二分查找中的除法或位移运算，这在某些计算除法代价高昂的旧式计算机上可能更快。
+
+    \item \textbf{D. 前者的渐进时间复杂度低于后者，故前者效率更高}：错误。
+    两种算法的渐进时间复杂度都是对数级别的。
+    \begin{itemize}
+        \item 二分查找：$O(\log_2 n)$
+        \item 斐波那契查找：$O(\log_{\phi} n)$ (其中 $\phi \approx 1.618$ 是黄金分割比例)
+    \end{itemize}
+    由于对数的底数可以相互转换（$\log_a x = \frac{\log_b x}{\log_b a}$），它们在渐进意义上属于同一个复杂度级别，即 $O(\log n)$。因此，不能说斐波那契查找的渐进时间复杂度更低。
+\end{itemize}
+\end{solution}
+
+\section*{30}
+
+\begin{graybox}
+\textbf{V=\{1, 2, 3, 4, 5, 6, 7\}，在V中用 Fibonacci查找元素1，被选取为轴点mi的元素依次是：}：
+\begin{circledenum}
+    \item 4, 3, 2, 1
+    \item 4, 2, 1
+    \item 5, 2, 1
+    \item 5, 3, 2, 1
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为D。
+
+斐波那契查找（Fibonacci Search）是一种基于斐波那契数列的查找算法。其核心思想是根据斐波那契数来分割查找区间。
+
+\textbf{算法步骤追踪}：
+\begin{itemize}
+    \item \textbf{向量}: $V = \{1, 2, 3, 4, 5, 6, 7\}$，长度 $n=7$。
+    \item \textbf{目标}: $e = 1$。
+    \item \textbf{斐波那契数}: 我们需要找到最小的斐波那契数 $F_k \ge n$。斐波那契数列为 0, 1, 1, 2, 3, 5, 8, ...。$F_6 = 8 \ge 7$，所以我们从 $k=6$ 开始。
+    \item \textbf{轴点计算}: 轴点 $mi$ 通常由 $mi = lo + F_{k-1} - 1$ 计算得出。
+\end{itemize}
+
+\textbf{第1次迭代}:
+\begin{itemize}
+    \item 初始区间: $[lo, hi] = [0, 6]$，$k=6$。
+    \item 轴点: $mi = 0 + F_{6-1} - 1 = F_5 - 1 = 5 - 1 = 4$。
+    \item \textbf{被选取的轴点元素}: $V[4] = 5$。
+    \item 比较: $e=1 < V[4]=5$。目标在左侧子区间。
+    \item 更新: $hi = mi - 1 = 3$。$k$ 更新为 $k-1=5$。
+\end{itemize}
+
+\textbf{第2次迭代}:
+\begin{itemize}
+    \item 当前区间: $[lo, hi] = [0, 3]$，$k=5$。
+    \item 轴点: $mi = 0 + F_{5-1} - 1 = F_4 - 1 = 3 - 1 = 2$。
+    \item \textbf{被选取的轴点元素}: $V[2] = 3$。
+    \item 比较: $e=1 < V[2]=3$。目标在左侧子区间。
+    \item 更新: $hi = mi - 1 = 1$。$k$ 更新为 $k-1=4$。
+\end{itemize}
+
+\textbf{第3次迭代}:
+\begin{itemize}
+    \item 当前区间: $[lo, hi] = [0, 1]$，$k=4$。
+    \item 轴点: $mi = 0 + F_{4-1} - 1 = F_3 - 1 = 2 - 1 = 1$。
+    \item \textbf{被选取的轴点元素}: $V[1] = 2$。
+    \item 比较: $e=1 < V[1]=2$。目标在左侧子区间。
+    \item 更新: $hi = mi - 1 = 0$。$k$ 更新为 $k-1=3$。
+\end{itemize}
+
+\textbf{第4次迭代}:
+\begin{itemize}
+    \item 当前区间: $[lo, hi] = [0, 0]$，$k=3$。
+    \item 轴点: $mi = 0 + F_{3-1} - 1 = F_2 - 1 = 1 - 1 = 0$。
+    \item \textbf{被选取的轴点元素}: $V[0] = 1$。
+    \item 比较: $e=1 == V[0]=1$。找到目标。
+\end{itemize}
+
+综上，被选取的轴点元素依次是 5, 3, 2, 1。
+
+对照选项：
+\begin{itemize}
+    \item A. 4, 3, 2, 1 - 错误
+    \item B. 4, 2, 1 - 错误
+    \item C. 5, 2, 1 - 错误
+    \item D. 5, 3, 2, 1 - 正确
+\end{itemize}
+\end{solution}
 
 
-\section*{39}
+\section*{31}
+
+\begin{graybox}
+\textbf{如果（有序）向量中元素的分布满足独立均匀分布（排序前），插值查找的平均时间复杂度为：}：
+\begin{circledenum}
+    \item O(n)
+    \item O(logn)
+    \item O(loglogn)
+    \item O(1)
+\end{circledenum}
+\end{graybox}
+
+\begin{solution}
+正确答案为C。
+
+\textbf{分析}：
+\begin{itemize}
+    \item \textbf{插值查找 (Interpolation Search)} 是一种对二分查找的改进算法，它利用了数据分布的信息来更智能地猜测目标元素的位置。
+    \item \textbf{二分查找} 总是检查区间的中间点，即 $mi = lo + (hi-lo)/2$。
+    \item \textbf{插值查找} 根据目标值 `e` 在当前区间端点值 `V[lo]` 和 `V[hi]` 之间的相对位置来预测其索引，公式为 $mi = lo + \lfloor \frac{(e - V[lo]) \cdot (hi - lo)}{V[hi] - V[lo]} \rfloor$。
+\end{itemize}
+
+\textbf{关键条件}：
+\begin{itemize}
+    \item 算法的效率高度依赖于数据的分布。
+    \item 题目中明确指出，元素的分布满足 \textbf{独立均匀分布}。这是插值查找表现最佳的理想情况。
+\end{itemize}
+
+\textbf{复杂度分析}：
+\begin{itemize}
+    \item 在数据均匀分布的假设下，插值查找的查找范围收缩得非常快。平均而言，每次迭代后，查找范围的大小会缩小到其原大小的平方根（即从 $n$ 到 $\sqrt{n}$）。
+    \item 这种快速的收缩导致其平均时间复杂度为 $O(\log(\log n))$。
+    \item 相比之下，二分查找的平均和最坏时间复杂度都是 $O(\log n)$。
+    \item 需要注意的是，插值查找的最坏情况时间复杂度是 $O(n)$，这发生在数据分布极不均匀的情况下（例如，指数增长的序列）。但本题问的是平均情况。
+\end{itemize}
+
+对照选项：
+\begin{itemize}
+    \item A. O(n) - 这是插值查找的最坏情况复杂度。
+    \item B. O(logn) - 这是二分查找的复杂度。
+    \item C. O(loglogn) - 正确。这是插值查找在均匀分布下的平均复杂度。
+    \item D. O(1) - 错误。
+\end{itemize}
+\end{solution}
+
+
+
 
 
 
